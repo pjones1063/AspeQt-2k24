@@ -17,6 +17,9 @@ See readme.txt for more info
 
 #### Support and other inquiries can be made on our BBS at:   $ telnet 13leader.net 8023 or http://13leader.net
 
+#### Package builds for Windows, Linux, MacOS, and RasPi at:  https://sourceforge.net/projects/respeqt/files/
+
+
 ####  Raspberry Pi or other Debian based Linux installation 
 
 * 1- Build a USB2PC cable outlined in usb2pc_build_instructions.pdf
@@ -50,6 +53,4 @@ See readme.txt for more info
     $ ./AspeQt
    
    
-   
-Others OS at https://github.com/jzatarski/AspeQt/releases
 
