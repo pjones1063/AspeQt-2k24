@@ -14,10 +14,13 @@ See readme.txt for more info
 
 ### AspeQt Client module MENU.COM. Runs on the Atari and is used to get/set Date/Time (SpartaDos) on the Atari plus a variety of other remote tasks (on any DOS). 
 
+### Package builds for Windows, Linux, MacOS, and RasPi at:  https://sourceforge.net/projects/respeqt/files/
+
+### Do it yourself Atari usb2pc cable - see: usb2pc_build_instructions.pdf (for under $20.00!)
+
 
 #### Support and other inquiries can be made on our BBS at:   $ telnet 13leader.net 8023 or http://13leader.net
 
-#### Package builds for Windows, Linux, MacOS, and RasPi at:  https://sourceforge.net/projects/respeqt/files/
 
 
 ####  Raspberry Pi or other Debian based Linux installation 
