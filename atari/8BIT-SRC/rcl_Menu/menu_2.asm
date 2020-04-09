@@ -131,8 +131,8 @@ OneSlot
    rts
 OKa
     adb drive #$30
-jsr Printf
-	.byte 155,' Slot %c: %s',0
+    jsr Printf
+	.byte 155,' %c %s',0
 	.word Drive, Path
 	clc
 	rts	
@@ -871,7 +871,7 @@ DCBGetSL
 	.byte $40		  
 	.word Path        
 	.byte $06,$00	  
-	.word $16		  
+	.word $20		  
 	.byte $00,$00	  
 DCBGetTD
 	.byte Cmd.GetTD	

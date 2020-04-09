@@ -1,4 +1,4 @@
-﻿/*
+/*
  * miscdevices.cpp
  *
  * Copyright 2015, 2017 Joseph Zatarski
@@ -257,9 +257,9 @@ void RCl::handleCommand(quint8 command, quint16 aux)
                 QFileInfo fileInfo = list.at(i);
                 QString dosfilname = fileInfo.fileName();
                 QString atarifilname = toAtariFileName(dosfilname);
-                QString atariFilenum = QString(QChar::fromLatin1(i-offset+0x41));
-                QString atariFileDsc = toAtariFileDesc(dosfilname , atarifilname.length());
-                QByteArray fn  = (" "+atariFilenum+" "+atarifilname+atariFileDsc).toUtf8();
+                QString atarifilnum = QString(QChar::fromLatin1(i-offset+0x41));
+                QString atarifilDsc = toAtariFileDesc(dosfilname , atarifilname.length());
+                QByteArray fn  = (" "+atarifilnum+" "+atarifilname+atarifilDsc).toUtf8();
 
                 if(index + fn.length() < 252 && i-offset < 16) {
                     for(int n = 0; n < fn.length(); n++)
@@ -300,8 +300,8 @@ void RCl::handleCommand(quint8 command, quint16 aux)
                 if ((i != -1) || (img->originalFileName().mid(0, 14) == "Untitled image")) {
                     QString dosfilname =  img->originalFileName().right(img->originalFileName().size() - ++i);
                     QString atarifilname = toAtariFileName(dosfilname);
-                    QString atariFileDsc = toAtariFileDesc(dosfilname , atarifilname.length());
-                    filename = atarifilname+atariFileDsc;;
+                    QString atarifilDsc = toAtariFileDesc(dosfilname , atarifilname.length());
+                    filename = atarifilname+atarifilDsc;;
                   }
               }
 
