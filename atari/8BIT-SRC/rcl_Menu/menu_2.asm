@@ -23,8 +23,8 @@ Menu
     .byte 'D UnMount Disk   L Set Date',155
 	.byte 'E Save Disk      M TD Line On',155	
 	.byte 'F Swap Slot      N TD Line Off',155
-	.byte 'G Boot Disk      O Exit to Dos',155
-	.byte 'H Boot XEX/Exe   P Cold Reboot',155,0
+	.byte 'G Boot .ATR      O Exit to Dos',155
+	.byte 'H Boot .XEX/EXE  P Cold Reboot',155,0
 	
 Main	
     jsr printf
@@ -156,7 +156,7 @@ jsr Printf
 
 .proc  MountAndBoot
     jsr printf
-	.byte 155,'Enter [FILENAME.ATR]: ',0
+	.byte 155,'Enter [FILENAME.xxx] : ',0
     jsr input
     jcs main
     cpy #03
@@ -175,7 +175,7 @@ StoreB
    
 .proc doMountAndBoot
 	lda #0
-	sta IOBuf,x       	
+	sta IOBuf,x
 	lda #DCB.MountAndBoot	
 	jsr SetUpDCB
 	mva ArgFlag DAUX2
@@ -265,34 +265,32 @@ FlFin1
 AllDone1
 	lda #0
 	sta IOBuf,x       	
-	lda #DCB.Mount
-	
+
+    jsr printf
+	.byte 155,'Enter Slot [1-9] [J-O] : ',0	
+    jsr input1
+    jcs main
+    jsr toUpper   
+    jsr GetDrvWC
+    jcs main
+    sta Drive
+
+    lda #DCB.Mount
+	ldy CreateFlag
 	cpy #0
 	beq goMount
 	lda #DCB.CreateAndMount
 goMount
-	jsr SetUpDCB
+	jsr SetUpDCB  
+    mva Drive   DAUX1
 	jsr SIOV
 	bpl OK3
 	jsr Printf
 	.byte 155,'Error mounting image!',155,0
 	sec
 	jmp main
-
-OK3			; image mounted, so now get drive number
-	lda #DCB.GetDrvNum
-	jsr SetUpDCB
-	jsr SIOV
-	bpl OK4
-	
-	jsr Printf
-	.byte 'Error obtaining drive number!',155,0
-	sec
-	jmp main
-OK4
-	lda IOBuf
-	clc
-	adc #1	; bump drive number since server returns drive-1
+OK3		
+	lda Drive	
 	jsr MakeDriveID
 	sta DriveID1
 	jsr Printf

@@ -458,7 +458,6 @@ void RCl::handleCommand(quint8 command, quint16 aux)
         } else {
             len = 14;
         }
-        if (aux == 0) {
             QByteArray data(len, 0);
             data = sio->port()->readDataFrame(len);
             if (data.isEmpty()) {
@@ -574,21 +573,18 @@ void RCl::handleCommand(quint8 command, quint16 aux)
 
             } // Cmd 0x97 -- Create new image file first
 
+            qint8 mountDisk;
+            mountDisk = aux % 256 - 1;
+            if (mountDisk > 9) mountDisk -= 16;
+            if (mountDisk != -7 && (mountDisk <0 || mountDisk > 14)) {
+                sio->port()->writeCommandNak();
+                return;
+            }
+
+            imageFileName = "*" + imageFileName;
+            emit mountFile(mountDisk,imageFileName);
             sio->port()->writeDataAck();
 
-            imageFileName = "*" + toDosFileName(imageFileName);
-
-            // Ask the MainWindow for the next available slot number
-            emit findNewSlot(0, true);
-
-        } else {
-
-            // Return the last mounted drive number
-            QByteArray data(1,0);
-            data[0] = g_rclSlotNo;
-            sio->port()->writeComplete();
-            sio->port()->writeDataFrame(data);
-        }
     }
         break;
 
@@ -681,6 +677,7 @@ void RCl::handleCommand(quint8 command, quint16 aux)
         }
 
         bool isDiskTmage = (aux/256)?false:true;
+
         // If no Folder Image has ever been mounted abort the command as we won't
         // know which folder to use to remotely create/mount an image file.
         if(respeqtSettings->lastRclDir() == "") {
@@ -713,15 +710,17 @@ void RCl::handleCommand(quint8 command, quint16 aux)
         isDiskTmage = (imageFileName.endsWith("XEX") || imageFileName.endsWith("EXE")
                        || imageFileName.endsWith("COM")) ?false: true;
 
-        if(isDiskTmage ) {
+        if(isDiskTmage) {
             imageFileName = "*" + toDosFileName(imageFileName);
-            emit mountFile(0,imageFileName);
+             emit mountFile(0,imageFileName);
         }
         else
         {
             imageFileName = toDosFileName(imageFileName);
             emit bootExe(imageFileName);
         }
+
+
     }
         break;
 
@@ -789,7 +788,7 @@ QString RCl::toAtariFileName(QString dosFileName) {
     }     
     QChar c = (hsh % 9)+0x30;
     name.remove(QRegExp("[^A-Z0-9_]"));
-    name = (name.length() > 8)?name.left(6)+"^"+c: name;
+    name = (name.length() > 8)?name.left(6)+"_"+c: name;
     ext.remove(QRegExp("[^A-Z0-9_]"));
     return name + "." +ext;
 }

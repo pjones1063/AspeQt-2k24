@@ -42,7 +42,6 @@ SOURCES += main.cpp \
     drivewidget.cpp \
     pclink.cpp \
     infowidget.cpp \
-    diskimageatx.cpp \
     aspeqtsettings.cpp
 win32:LIBS += -lwinmm -lz
 unix:LIBS += -lz
@@ -72,7 +71,6 @@ HEADERS += mainwindow.h \
     drivewidget.h \
     pclink.h \
     infowidget.h \
-    diskimageatx.h \
     aspeqtsettings.h
 
 win32:HEADERS += serialport-win32.h
@@ -118,6 +116,9 @@ TRANSLATIONS = \
     i18n/respeqt_tr.ts
 
 # RC_FILE = RespeQt.rc \
+
+DISTFILES += \
+    atari/autoboot/autoboot.bin
 
 
 
