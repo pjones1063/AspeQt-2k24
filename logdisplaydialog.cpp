@@ -1,13 +1,7 @@
 /*
  * logdisplaydialog.cpp
- *
- * Copyright 2017 josch1710
- * Copyright 2017 blind
- *
- * This file is copyrighted by either Fatih Aygun, Ray Ataergin, or both.
- * However, the years for these copyrights are unfortunately unknown. If you
- * know the specific year(s) please let the current maintainer know.
  */
+
 
 #include "logdisplaydialog.h"
 #include "ui_logdisplaydialog.h"

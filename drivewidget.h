@@ -1,8 +1,5 @@
 /*
  * drivewidget.h
- *
- * Copyright 2017 blind
- *
  */
 
 #ifndef DRIVEWIDGET_H

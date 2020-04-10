@@ -1,12 +1,5 @@
 ﻿/*
  * miscdevices.cpp
- *
- * Copyright 2015, 2017 Joseph Zatarski
- * Copyright 2016, 2017 TheMontezuma
- *
- * This file is copyrighted by either Fatih Aygun, Ray Ataergin, or both.
- * However, the years for these copyrights are unfortunately unknown. If you
- * know the specific year(s) please let the current maintainer know.
  */
 
 #ifdef Q_WS_WIN
@@ -381,53 +374,41 @@ void RCl::handleCommand(quint8 command, quint16 aux)
         if (unmountDisk == -6) unmountDisk = 0;        // All drives
         if (unmountDisk > 9)   unmountDisk -= 16;        // Drive 10-15
         if (unmountDisk >= 0 and unmountDisk <= 15) {
-
             if (unmountDisk == 0) {
                 // Eject All disks
-                int toBeSaved = 0;
+
                 for (int i = 0; i <= 14; i++) {    //
                     SimpleDiskImage *img = qobject_cast <SimpleDiskImage*> (sio->getDevice(i + DISK_BASE_CDEVIC));
-                    if (img && img->isModified()) {
-                        toBeSaved++;
+                    if (img && img->isModified() && !img->isUnnamed()) {
+                        img->save();
                     }
                 }
+                for (int i = 14; i >= 0; i--) {
+                    SimpleDiskImage *img = qobject_cast <SimpleDiskImage*> (sio->getDevice(i + DISK_BASE_CDEVIC));
+                    sio->uninstallDevice(i + DISK_BASE_CDEVIC);
+                    delete img;
+                    respeqtSettings->unmountImage(i);
+                    qDebug() << "!n" << tr("[%1] Unmounted disk %2")
+                                .arg(deviceName())
+                                .arg(i + 1);
+                }
+                qDebug() << "!n" << tr("[%1] ALL images were remotely unmounted")
+                            .arg(deviceName());
 
-                if (!toBeSaved) {
-                    for (int i = 14; i >= 0; i--) {
-                        SimpleDiskImage *img = qobject_cast <SimpleDiskImage*> (sio->getDevice(i + DISK_BASE_CDEVIC));
-                        sio->uninstallDevice(i + DISK_BASE_CDEVIC);
-                        delete img;
-                        respeqtSettings->unmountImage(i);
-                        qDebug() << "!n" << tr("[%1] Unmounted disk %2")
-                                    .arg(deviceName())
-                                    .arg(i + 1);
-                    }
-                    qDebug() << "!n" << tr("[%1] ALL images were remotely unmounted")
-                                .arg(deviceName());
-                } else {
-                    sio->port()->writeCommandNak();
-                    qDebug() << "!e" << tr("[%1] Can not remotely unmount ALL images due to pending changes.")
-                                .arg(deviceName());
-                }
             } else {
                 // Single Disk Eject
                 SimpleDiskImage *img = qobject_cast <SimpleDiskImage*> (sio->getDevice(unmountDisk - 1 + DISK_BASE_CDEVIC));
-
-                if (img && img->isModified()) {
-                    sio->port()->writeCommandNak();
-                    qDebug() << "!e" << tr("[%1] Can not remotely unmount disk %2 due to pending changes.")
-                                .arg(deviceName())
-                                .arg(unmountDisk);
-                } else {
-                    sio->uninstallDevice(unmountDisk - 1 + DISK_BASE_CDEVIC);
-                    delete img;
-                    respeqtSettings->unmountImage(unmountDisk - 1);
-                    qDebug() << "!n" << tr("[%1] Remotely unmounted disk %2")
-                                .arg(deviceName())
-                                .arg(unmountDisk);
+                if (img && img->isModified() && !img->isUnnamed()) {
+                    img->save();
                 }
-            }
+                sio->uninstallDevice(unmountDisk - 1 + DISK_BASE_CDEVIC);
+                delete img;
+                respeqtSettings->unmountImage(unmountDisk - 1);
+                qDebug() << "!n" << tr("[%1] Remotely unmounted disk %2")
+                            .arg(deviceName())
+                            .arg(unmountDisk);
 
+            }
         } else {
             sio->port()->writeCommandNak();
             qDebug() << "!e" << tr("[%1] Invalid drive number: %2 for remote unmount")
@@ -585,9 +566,11 @@ void RCl::handleCommand(quint8 command, quint16 aux)
                 return;
             }
 
+            sio->port()->writeDataAck();
+            sio->port()->writeComplete();
             imageFileName = "*" + toDosFileName(imageFileName);
             emit mountFile(mountDisk,imageFileName);
-            sio->port()->writeDataAck();
+
 
     }
         break;

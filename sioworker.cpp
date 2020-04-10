@@ -1,12 +1,5 @@
 /*
  * sioworker.cpp
- *
- * Copyright 2015, 2017 Joseph Zatarski
- * Copyright 2016 TheMontezuma
- *
- * This file is copyrighted by either Fatih Aygun, Ray Ataergin, or both.
- * However, the years for these copyrights are unfortunately unknown. If you
- * know the specific year(s) please let the current maintainer know.
  */
 
 #include "sioworker.h"

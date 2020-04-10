@@ -1,8 +1,5 @@
 /*
  * drivewidget.cpp
- *
- * Copyright 2017 blind
- *
  */
  
 #include "drivewidget.h"

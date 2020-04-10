@@ -1,10 +1,5 @@
 /*
  * pclink.h
- *
- * This file contains code from the SIO2BSD project by KMK (drac030)
- *
- * Copyright 2016 TheMontezuma
- *
  */
 
 #ifndef PCLINK_H
