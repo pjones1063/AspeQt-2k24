@@ -22,7 +22,8 @@ Menu
     jsr printf
     .byte 'D UnMount Disk   L Set Date',155
 	.byte 'E Save Disk      M TD Line On',155	
-	.byte 'F Swap Slot      N TD Line Off',155
+	.byte 'F Swap Slot      N TD Line Off',155,0
+	jsr printf
 	.byte 'G Boot .ATR      O Exit to Dos',155
 	.byte 'H Boot .XEX/EXE  P Cold Reboot',155,0
 	
@@ -93,24 +94,24 @@ Main
 	bne OneSlot
 MultiSlot
     ldx #$01
-    stx lp
+    stx IOLp
 LOOPa
     txa  
     sta drive
     jsr getSlotFileName
-    adb lp #01
-    ldx lp
+    adb IOLp #01
+    ldx IOLp
     cpx #$0A
     bne LOOPa
 
     ldx #$1A
-    stx lp
+    stx IOLp
 LOOPb
     txa  
     sta drive
     jsr getSlotFileName
-    adb lp #01
-    ldx lp
+    adb IOLp #01
+    ldx IOLp
     cpx #$20
     bne LOOPb
     jmp Main       
@@ -471,7 +472,7 @@ AllDrives
 // 
 .proc ListDir
     ldx #$00
-    stx lp
+    stx IOLp
  
     jsr printf
 	.byte 155,'Enter Filter [*]: ',0
@@ -501,7 +502,7 @@ FlFin2
 list2    
     lda #DCB.GetDR
     jsr SetUpDCB
-    mva lp   DAUX1
+    mva IOLp DAUX1
     mva #$01 DAUX2
     jsr SIOV
     bpl OK2a
@@ -510,11 +511,17 @@ list2
     sec
     jmp Main
 OK2a
+    lda IOLc 
+	cmp #$00
+    beq allDone2;
+    sta se
     jsr Printf
-   .byte 155,'%s',155,0
-   .word IOBuf
+    .byte 155,'%s',155,0
+    .word IOBuf
 	jsr Printf
-	.byte 'Select [A-I] [Q=quit] [more]: ',0
+	.byte 'Select [A-'
+se  .byte 'A' 
+	.byte '] [Q=quit] [more]: ',0
 	jsr getkey
 	jsr ToUpper
 	cmp #'Q'
@@ -524,7 +531,7 @@ OK2a
     jsr ioBufLookup	
     jcc doMountAndBoot
 next2       
- 	ldx lp
+ 	ldx IOLp
  	cpx #00
  	jne list2 
 allDone2

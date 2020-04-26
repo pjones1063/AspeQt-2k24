@@ -245,8 +245,11 @@ void RCl::handleCommand(quint8 command, quint16 aux)
             dir.setNameFilters(filters);
             QFileInfoList list = dir.entryInfoList();
 
+            ddata[253] =  0x00;
+            ddata[254] =  0x00;
             ddata[index++] = 155;
-            for (quint8 i = offset; i < list.size() && i < 250;  ++i) {
+
+            for (quint8 i = offset; i < list.size() && i < 255;  ++i) {
                 QFileInfo fileInfo = list.at(i);
                 QString dosfilname = fileInfo.fileName();
                 QString atarifilname = toAtariFileName(dosfilname);
@@ -254,15 +257,16 @@ void RCl::handleCommand(quint8 command, quint16 aux)
                 QString atariFileDsc = toAtariFileDesc(dosfilname , atarifilname.length());
                 QByteArray fn  = (" "+atariFilenum+" "+atarifilname+atariFileDsc).toUtf8();
 
-                if(index + fn.length() < 252 && i-offset < 16) {
+                if(index + fn.length() < 252) {
                     for(int n = 0; n < fn.length(); n++)
                         ddata[index++] = fn[n] & 0xff;
+
                     ddata[index++] = 155;
-                    ddata[254] =  0x00;
                 } else  {
-                    ddata[254] =  i;
                     break;
                 }
+                ddata[253] =  0x41 + (i - offset);
+                ddata[254] =  i;
             }
 
             for(int n = index; n < 253 ; n++) ddata[index++] = 0x00;
@@ -294,7 +298,7 @@ void RCl::handleCommand(quint8 command, quint16 aux)
                     QString dosfilname =  img->originalFileName().right(img->originalFileName().size() - ++i);
                     QString atarifilname = toAtariFileName(dosfilname);
                     QString atariFileDsc = toAtariFileDesc(dosfilname , atarifilname.length());
-                    filename = atarifilname+atariFileDsc;;
+                    filename = atarifilname+atariFileDsc;
                   }
               }
 
@@ -755,7 +759,7 @@ QString RCl::toAtariFileDesc(QString dosFileName , int len) {
     for(int x = 12-len; x > 0; x--) {
         fil = " " + fil;
     }
-    name = fil+name.left(18);
+    name = fil+name.left(20);
     return name;
 }
 

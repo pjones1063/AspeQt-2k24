@@ -50,9 +50,11 @@ Path
 Filename
 	.ds 16		
 IOBuf
-	.ds 254
-lp
-    .ds   1		
+	.ds 253
+IOLc   
+    .ds   1	
+IOLp
+    .ds   1    			
 InputBuf
 	.ds 255
 
