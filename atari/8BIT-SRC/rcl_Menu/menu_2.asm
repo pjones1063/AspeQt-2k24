@@ -188,10 +188,8 @@ StoreB
 	jmp main
 OKB			; image mounted
 	jsr Printf
-	.byte 155,155,' Ready to reboot! - press [Return]'
-	.byte 155,    '  You may need to press [Option]: ',0	
-	jsr Input1
-	jmp $E477
+	.byte 155,155,'Image mounted on slot 1',0	
+	jmp Reboot
 .endp
 
 
@@ -514,14 +512,13 @@ OK2a
     lda IOLc 
 	cmp #$00
     beq allDone2;
-    sta se
+    sta SelectB
     jsr Printf
     .byte 155,'%s',155,0
     .word IOBuf
 	jsr Printf
-	.byte 'Select [A-'
-se  .byte 'A' 
-	.byte '] [Q=quit] [more]: ',0
+	.byte 'Select [A-%c] [Q=quit] [more]: ',0
+	.word SelectB
 	jsr getkey
 	jsr ToUpper
 	cmp #'Q'

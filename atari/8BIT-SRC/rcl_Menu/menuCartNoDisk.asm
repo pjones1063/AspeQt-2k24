@@ -31,8 +31,9 @@ Start
 	icl 'printf.asm'
 	
   	org $4500 		
+			
 SelectB
-	.byte 0 
+	.byte 0 	
 ArgFlag
 	.byte 0
 CreateFlag
@@ -57,4 +58,5 @@ IOLp
     .ds   1    			
 InputBuf
 	.ds 255
-    
+
+	 	

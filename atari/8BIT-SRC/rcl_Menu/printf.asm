@@ -141,7 +141,7 @@ FoundIt
 	lda PFControlAddr,x
 	pha
 	rts
-;
+ 
 
 PFControlTab
 	.byte 5
