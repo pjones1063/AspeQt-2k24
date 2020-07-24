@@ -1,6 +1,11 @@
 
 
-AspeQt, Atari Serial Peripheral Emulator for Qt
+AspeQt 2020 (13L), Atari Serial Peripheral Emulator for Qt
+
+www.13leader.net
+
+
+
 
 Summary
 =======
@@ -66,4 +71,4 @@ Contact
 =======
 Please include AspeQt in the subject field when emailing
 
-Maintainer - Joe Zatarski - jzatar2@illinois.edu
+Maintainer - www.13Leader.net

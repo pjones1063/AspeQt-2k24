@@ -1,7 +1,7 @@
-##  Atari AspeQt /w MENU.COM
+##  Atari AspeQt-2020 (13L)  /w MENU.COM
 
 
-### Atari Serial Peripheral Emulator for Qt
+### Atari Serial Peripheral Emulator for Qt (Version 5- 2020 13L)
 
 ### Summary
 
@@ -16,7 +16,7 @@ See readme.txt for more info
 
 #### * Package builds for Windows, Linux, MacOS, and RasPi at:  https://sourceforge.net/projects/respeqt/files/
 
-#### * Do it yourself Atari usb2pc cable - see: usb2pc_build_instructions.pdf (for under $20.00!)
+#### * Do it yourself Atari usb2pc cable - see: SIO2PC__Build_Instructions.pdf (for under $20.00!)
 
 
 #### Support and other inquiries can be made on our BBS at:   $ telnet 13leader.net 8023 or http://13leader.net
@@ -25,7 +25,7 @@ See readme.txt for more info
 
 ####  Raspberry Pi or other Debian based Linux installation 
 
-* 1- Build a USB2PC cable outlined in usb2pc_build_instructions.pdf
+* 1- Build a SIO2PC cable outlined in SIO2PC_Build_Instructions.pdf
 
 * 2- Download AspeQt source zip file.  
 
@@ -55,5 +55,3 @@ See readme.txt for more info
   
     $ ./AspeQt
    
-   
-
