@@ -16,7 +16,7 @@ See readme.txt for more info
 
 #### * Package builds for Windows, Linux, MacOS, and RasPi at:  https://sourceforge.net/projects/respeqt/files/
 
-#### * Do it yourself Atari usb2pc cable - see: SIO2PC__Build_Instructions.pdf (for under $20.00!)
+#### * Do it yourself Atari SIO2PC cable - see: SIO2PC__Build_Instructions.pdf (for under $20.00!)
 
 
 #### Support and other inquiries can be made on our BBS at:   $ telnet 13leader.net 8023 or http://13leader.net
