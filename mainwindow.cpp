@@ -314,6 +314,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect (this, SIGNAL(fileMounted(bool)), rcl, SLOT(fileMounted(bool)));
     connect (rcl, SIGNAL(toggleAutoCommit(int,bool)), this, SLOT(autoCommit(int,bool)));
     connect (rcl, SIGNAL(bootExe(QString)), this, SLOT(bootExeTriggered(QString)));
+    connect (rcl, SIGNAL(togglePrinterServer(bool)), this, SLOT(printServer(bool)));
+
 }
 
 MainWindow::~MainWindow()
@@ -801,17 +803,26 @@ void MainWindow::on_actionHideShowDrives_triggered()
 }
 
 // Toggle printer Emulation ON/OFF //
+
+
 void MainWindow::on_actionPrinterEmulation_triggered()
 {
-    if (respeqtSettings->printerEmulation()) {
-        setUpPrinterEmulationWidgets(false);
-        respeqtSettings->setPrinterEmulation(false);
+    if (respeqtSettings->printerEmulation())
+        printServer(false);
+     else
+        printServer(true);
+}
+
+
+void MainWindow::printServer(bool enable)
+{
+    setUpPrinterEmulationWidgets(enable);
+    respeqtSettings->setPrinterEmulation(enable);
+    if(!enable)
         qWarning() << "!i" << tr("Printer emulation stopped.");
-    } else {
-        setUpPrinterEmulationWidgets(true);
-        respeqtSettings->setPrinterEmulation(true);
+    else
         qWarning() << "!i" << tr("Printer emulation started.");
-    }
+
 }
 
 void MainWindow::setUpPrinterEmulationWidgets(bool enable)
@@ -1216,6 +1227,7 @@ void MainWindow::bootExeTriggered(const QString &fileName)
         bootExe(g_exefileName);
     }
 }
+
 
 
 void MainWindow::mountFileWithDefaultProtection(int no, const QString &fileName)

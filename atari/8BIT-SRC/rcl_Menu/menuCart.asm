@@ -16,6 +16,7 @@
 ;	OPT h-t+
 
 	icl 'menu_1.asm'
+	
 	org $BFFA
  	.word Start
  	.word $0500
@@ -28,10 +29,10 @@ Start
 	.byte         '[boot]              13leader.net ',155,155,155,0
 		
 	icl 'menu_2.asm'	
+	
 	icl 'printf.asm'
  		
   	org $4500 		
-
 		
 SelectB
 	.byte 0 	

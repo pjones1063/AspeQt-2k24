@@ -247,7 +247,7 @@ void RCl::handleCommand(quint8 command, quint16 aux)
 
             ddata[253] =  0x00;
             ddata[254] =  0x00;
-            ddata[index++] = 155;
+            ddata[index++] = (char)155;
 
             for (quint8 i = offset; i < list.size() && i < 255;  ++i) {
                 QFileInfo fileInfo = list.at(i);
@@ -261,7 +261,7 @@ void RCl::handleCommand(quint8 command, quint16 aux)
                     for(int n = 0; n < fn.length(); n++)
                         ddata[index++] = fn[n] & 0xff;
 
-                    ddata[index++] = 155;
+                    ddata[index++] = (char)155;
                 } else  {
                     break;
                 }
@@ -667,6 +667,13 @@ void RCl::handleCommand(quint8 command, quint16 aux)
             return;
         }
 
+        qint8 mountDisk;
+        mountDisk = aux % 256 - 1;
+        if (mountDisk > 9) mountDisk -= 16;
+        if (mountDisk != -7 && (mountDisk <0 || mountDisk > 14)) {
+           mountDisk = 0;
+        }
+
         bool isDiskTmage = (aux/256)?false:true;
 
         // If no Folder Image has ever been mounted abort the command as we won't
@@ -703,7 +710,7 @@ void RCl::handleCommand(quint8 command, quint16 aux)
 
         if(isDiskTmage) {
             imageFileName = "*" + toDosFileName(imageFileName);
-             emit mountFile(0,imageFileName);
+             emit mountFile(mountDisk,imageFileName);
         }
         else
         {
@@ -714,6 +721,17 @@ void RCl::handleCommand(quint8 command, quint16 aux)
 
     }
         break;
+
+    case 0x9B :   // toggle printer
+    {
+        if (!sio->port()->writeCommandAck()) {
+            return;
+        }
+        bool enable = (aux/256)?true:false;
+        sio->port()->writeComplete();
+        emit togglePrinterServer(enable);
+    }
+      break;
 
     default :
         // Invalid Command

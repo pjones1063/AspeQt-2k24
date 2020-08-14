@@ -14,20 +14,22 @@
 ;  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 ;
  
-Menu
+.proc  Menu
 	jsr printf
-	.byte 'A List Slots     I List Host Images',155
-	.byte 'B Mount Disk     J Auto Commit On',155
-	.byte 'C Create Disk    K Auto Commit Off',155,0
+	.byte 'A List Slots     J Auto Commit On',155
+	.byte 'B Mount Disk     K Auto Commit Off',155
+	.byte 'C Create Disk    L Set Date',155,0
     jsr printf
-    .byte 'D UnMount Disk   L Set Date',155
-	.byte 'E Save Disk      M TD Line On',155	
-	.byte 'F Swap Slot      N TD Line Off',155,0
+    .byte 'D UnMount Disk   M TD Line On',155
+	.byte 'E Save Disk      N TD Line Off',155	
+	.byte 'F Swap Slot      O Start Printer',155,0
 	jsr printf
-	.byte 'G Boot .ATR      O Exit to Dos',155
-	.byte 'H Boot .XEX/EXE  P Cold Reboot',155,0
+	.byte 'G Boot .ATR      P Stop Printer',155
+	.byte 'H Boot .XEX      Q Exit to Dos',155
+	.byte 'I List Host ATR  R Cold Reboot',155,0
+.endp	
 	
-Main	
+.proc Main	
     jsr printf
 	.byte 155,155,'Enter Command or Return for Menu: ',0
 	jsr Input1
@@ -62,13 +64,19 @@ Main
     jeq GetTDOn
     cmp #'N'			// N TD Line On
     jeq GetTDOff
-	cmp #'O'			// O Exit to Dos
+    cmp #'O'			// O TD Line On
+    jeq SetPrintOn
+    cmp #'P'			// P TD Line On
+    jeq SetPrintOff	
+	cmp #'Q'			// Q Exit to Dos
     jeq Exit
-	cmp #'P'			// P Cold Reboot
+	cmp #'R'			// R Cold Reboot
     jeq Reboot
 
 	jmp Start
 	
+.endp	
+
 	
 .proc init
       rts
@@ -143,15 +151,18 @@ OKa
 //	Mount disk and boot!
 //
 .proc BootATR
-	lda #0
-	sta ArgFlag
+	ldx #0
+	stx ArgFlag
+	inx
+	stx Drive
 	clc
-	jmp MountAndBoot
+	bcc MountAndBoot
 .endp
 
 .proc BootXEX
-	lda #1
-	sta ArgFlag
+	ldx #1
+	stx ArgFlag
+	stx Drive
 	clc
 .endp
 
@@ -166,19 +177,21 @@ OKa
 loopB   
     lda InputBuf,x
 	cmp #155
-    beq doMountAndBoot
+    beq alldoneE
 StoreB        
     jsr ToUpper	
     sta IOBuf,x
     inx
     bne loopB
+alldoneE 
+    lda #0
+	sta IOBuf,x   
 .endp 
-   
-.proc doMountAndBoot
-	lda #0
-	sta IOBuf,x
+      
+.proc DoMountAndBoot
 	lda #DCB.MountAndBoot	
 	jsr SetUpDCB
+	mva Drive   DAUX1
 	mva ArgFlag DAUX2
 	jsr SIOV
 	bpl OKB
@@ -187,11 +200,15 @@ StoreB
 	sec
 	jmp main
 OKB			; image mounted
+	lda Drive  
+	jsr MakeDriveID
+	sta DriveID1
 	jsr Printf
-	.byte 155,155,'Image mounted on slot 1',0	
+	.byte 155,155,'Image mounted on slot %c ',0	
+	.word DriveID1
 	jmp Reboot
 .endp
-
+ 
 
 //------------------------------------------------------
 //
@@ -525,8 +542,8 @@ OK2a
 	beq allDone2
 	cmp #155
 	beq next2
-    jsr ioBufLookup	
-    jcc doMountAndBoot
+    jsr FileLookup	
+    jcc MountList
 next2       
  	ldx IOLp
  	cpx #00
@@ -536,8 +553,8 @@ allDone2
 	jmp Main	
 .endp
 
-
-.proc ioBufLookup
+	    
+.proc FileLookup
     sta SelectB
     sec
 	ldx #0
@@ -580,6 +597,53 @@ alldone
 abort
     rts 
 .endp
+
+.proc MountList	
+    jsr printf
+	.byte 155,'Enter Slot [1-9] [J-O] : ',0	
+    jsr input1
+    bcc ok1
+	lda #$31	
+ok1
+    jsr toUpper   
+    jsr GetDrvWC
+    sta Drive
+    jmp DoMountAndBoot
+.endp    
+
+
+.proc SetPrintOn
+	ldy #01
+	jmp SetPrint
+.endp	
+
+.proc SetPrintOff     
+    ldy #00
+.endp
+
+.proc setPrint    
+    sty ArgFlag
+	lda #DCB.Print
+	jsr SetUpDCB
+	mva ArgFlag DAUX2
+	jsr SIOV
+	bpl OK1
+	jsr Printf
+	.byte 155,'No server response!',155,0
+	sec
+	jmp Main
+OK1
+    lda ArgFlag
+    beq OK2
+   	jsr Printf
+	.byte 155,'Print server on',155,0   
+    jmp Main
+OK2    
+    jsr Printf
+	.byte 155,'Print server off',155,0
+	jmp Main
+.endp
+ 
 
 
 //
@@ -804,6 +868,7 @@ Abort
 .proc Exit
 	jsr Printf
 	.byte 155,'Press a key to quit',155,0
+	jsr Input1
 	jmp (DOSVEC)
 .endp
 
@@ -814,8 +879,8 @@ Abort
 
 .proc Reboot
 	jsr Printf
-	.byte 155,'Press Y to reboot'
-	.byte 155,'You may need to press [Option]: ',0	
+	.byte 155,'Enter Y to reboot'
+	.byte 155,' * You may need to press [Option]: ',0	
 	jsr Input1
 	cmp #'Y'
 	jne main
@@ -852,7 +917,7 @@ Loop
 	rts
 
 DCBIndex
-	.byte 9,19,29,39,49,59,69,79,89,99,109,119
+	.byte 9,19,29,39,49,59,69,79,89,99,109,119,129
 .endp
 
 DCBTable
@@ -940,7 +1005,14 @@ DCBMountAndBoot
 	.byte $06,$00
 	.word $0C
 	.byte $00,$00	
-
+DCBPrint
+	.byte Cmd.Print	
+	.byte $00
+	.word IOBuf
+	.byte $06,$00
+	.word 0
+	.byte $00,$00	
+		
 Symbol
 	.byte 'I_TDON  ',0
 	

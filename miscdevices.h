@@ -51,7 +51,7 @@ signals:
     void mountFile (int no, const QString fileName);
     void toggleAutoCommit (int no, bool st);
     void bootExe (const QString fileName);
-
+    void togglePrinterServer (bool enable);
 };
 
 #endif // MISCDEVICES_H

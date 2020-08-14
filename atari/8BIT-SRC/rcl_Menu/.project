@@ -8,4 +8,11 @@
 	</buildSpec>
 	<natures>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>8bit_bin</name>
+			<type>2</type>
+			<location>/home/paul/eclipse-workspace/8bit_bin</location>
+		</link>
+	</linkedResources>
 </projectDescription>
