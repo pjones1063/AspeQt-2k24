@@ -249,7 +249,7 @@ void RCl::handleCommand(quint8 command, quint16 aux)
             ddata[254] =  0x00;
             ddata[index++] = (char)155;
 
-            for (quint8 i = offset; i < list.size() && i < 255;  ++i) {
+            for (quint8 i = offset; i < list.size() && i < 250;  ++i) {
                 QFileInfo fileInfo = list.at(i);
                 QString dosfilname = fileInfo.fileName();
                 QString atarifilname = toAtariFileName(dosfilname);
@@ -257,16 +257,20 @@ void RCl::handleCommand(quint8 command, quint16 aux)
                 QString atariFileDsc = toAtariFileDesc(dosfilname , atarifilname.length());
                 QByteArray fn  = (" "+atariFilenum+" "+atarifilname+atariFileDsc).toUtf8();
 
-                if(index + fn.length() < 252) {
+                if(index + fn.length() < 250) {
                     for(int n = 0; n < fn.length(); n++)
                         ddata[index++] = fn[n] & 0xff;
 
                     ddata[index++] = (char)155;
+
                 } else  {
                     break;
                 }
-                ddata[253] =  0x41 + (i - offset);
-                ddata[254] =  i;
+
+                if( i > offset)
+                 ddata[253] =  0x41 + (i - offset);
+                 ddata[254] =  i + 1;
+
             }
 
             for(int n = index; n < 253 ; n++) ddata[index++] = 0x00;

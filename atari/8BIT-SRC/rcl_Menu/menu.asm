@@ -24,8 +24,8 @@ Start
 	.byte 125,155,'AspeQT              Version 5.13l ',155
 	.byte         '------               13leader.net  ',155,155,155,0
 		
- 	icl 'menu_2.asm'
-    
+ 	icl 'menu_2.asm'    
+ 	
     icl 'printf.asm'      
 		
 SelectB
@@ -55,8 +55,6 @@ IOLp
 InputBuf
 	.ds 255
 
-	
-    
 	
 	run Start
 	

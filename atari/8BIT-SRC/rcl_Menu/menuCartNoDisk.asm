@@ -27,6 +27,7 @@ Start
 	.byte         '[no-boot]           13leader.net ',155,155,155,0
 	
 	icl 'menu_2.asm'	
+	
 	icl 'printf.asm'
 	
   	org $4500 		
