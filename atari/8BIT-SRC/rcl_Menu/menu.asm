@@ -21,8 +21,8 @@
 	org $4000
 Start
 	jsr printf
-	.byte 125,155,'AspeQT              Version 5.13l ',155
-	.byte         '------               13leader.net  ',155,155,155,0
+	.byte 125,155,'AspeQT [xe]      www.13leader.net ',155
+	.byte         '-----------              Ver 2K21 ',155,155,155,0
 		
  	icl 'menu_2.asm'    
  	

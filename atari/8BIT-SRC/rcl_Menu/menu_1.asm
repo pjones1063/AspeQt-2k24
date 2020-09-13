@@ -37,8 +37,14 @@ icaux1	equ $034A
 icaux2	equ $034B
 
 ciov	equ $e456
-
 portb	equ $d301
+
+dday    equ $077B
+dmth    equ $077C
+dyer    equ $077D
+dhrs    equ $077E
+dmin    equ $077F
+dsec    equ $0780
 
 DOSVEC	equ $0A
 DOSINI	equ $0C
@@ -47,6 +53,7 @@ SIOV	equ $E459
 
 I_SETTD	equ $FFC3
 I_TDON	equ $FFC6
+I_GETTD equ $FFC0
 
 
 	.enum Cmd

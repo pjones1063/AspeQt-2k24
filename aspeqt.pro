@@ -10,7 +10,7 @@
 # know the specific year(s) please let the current maintainer know.
 #
 #CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
-DEFINES += VERSION=\\\"r5.13L\\\"
+DEFINES += VERSION=\\\"r2K21\\\"
 TARGET = AspeQt
 TEMPLATE = app
 CONFIG += qt

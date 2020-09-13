@@ -746,8 +746,12 @@ TDSetFailed
 	rts
 	
 TDSetOK
+	
 	jsr Printf
-	.byte 155,'Time/date set',155,0
+	.byte 155,'Time/date set %b/%b/20%b',155,0
+	.word IOBuf+1
+	.word IOBuf 
+	.word IOBuf+2
 	clc
 	rts
 .endp
