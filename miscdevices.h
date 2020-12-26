@@ -34,7 +34,8 @@ class RCl: public SioDevice
     Q_OBJECT
 
 public:
-    QString g_fileFilter;
+    QString fFilter, fPath;
+
     RCl(SioWorker *worker): SioDevice(worker) {}
     void handleCommand(quint8 command, quint16 aux);
 private:

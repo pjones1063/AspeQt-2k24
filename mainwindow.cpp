@@ -1271,8 +1271,10 @@ void MainWindow::mountFile(int no, const QString &fileName, bool /*prot*/)
     if (type == FileTypes::Dir) {
         disk = new FolderImage(sio);
         isDir = true;
+
     } else if (type == FileTypes::Pro || type == FileTypes::ProGz) {
         disk = new DiskImagePro(sio);
+
     } else {
         disk = new SimpleDiskImage(sio);
     }
@@ -1340,11 +1342,11 @@ void MainWindow::mountDiskImage(int no)
                                                     tr("Open a disk image"),
                                                     dir,
                                                     tr(
-//                                                    "All Atari disk images (*.atr *.xfd *.atx *.pro);;"
-                                                    "All Atari disk images (*.atr *.xfd *.pro);;"
+                                                   "All Atari disk images (*.atr *.xfd *.atx *.pro);;"
+//                                                    "All Atari disk images (*.atr *.xfd *.pro);;"
                                                     "SIO2PC ATR images (*.atr);;"
                                                     "XFormer XFD images (*.xfd);;"
-//                                                    "ATX images (*.atx);;"
+                                                    "ATX images (*.atx);;"
                                                     "Pro images (*.pro);;"
                                                     "All files (*)"));
     if (fileName.isEmpty()) {

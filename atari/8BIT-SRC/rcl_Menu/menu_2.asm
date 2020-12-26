@@ -16,18 +16,18 @@
  
 .proc  Menu
 	jsr printf
-	.byte 'A List Slots     J Auto Commit On',155
-	.byte 'B Mount Disk     K Auto Commit Off',155
-	.byte 'C Create Disk    L Set Date',155,0
+	.byte 'A List Slot       J Auto Commit On',155
+	.byte 'B List Disk Image K Auto Commit Off',155
+	.byte 'C Create Disk     L Set Date',155
+    .byte 'D Mount Disk      M TD Line On',155
+	.byte 'E UnMount Disk    N TD Line Off',155
+	.byte 'F Save Disk       O Start Printer',155
+	.byte 'G Swap Slot       P Stop Printer',155,0
     jsr printf
-    .byte 'D UnMount Disk   M TD Line On',155
-	.byte 'E Save Disk      N TD Line Off',155	
-	.byte 'F Swap Slot      O Start Printer',155,0
-	jsr printf
-	.byte 'G Boot .ATR      P Stop Printer',155
-	.byte 'H Boot .XEX      Q Exit to Dos',155
-	.byte 'I List Host ATR  R Cold Reboot',155,0
+	.byte 'H Boot .ATR       Q Exit to Dos',155
+	.byte 'I Boot .XEX       R Cold Reboot',155,0
 .endp	
+	
 	
 .proc Main	
     jsr printf
@@ -38,22 +38,22 @@
 	
 	cmp #'A'			// A List Slots 
     jeq SlotName    
-    cmp #'B'			// B Mount Disk 
-    jeq Mount
-    cmp #'C'			// C Create Disk 
+    cmp #'B'			// B List Host Images 
+    jeq ListDir
+    cmp #'C'			// C Create Disk
     jeq CreateAndMount	
-	cmp #'D'			// D UnMount Disk 
-    jeq UnMount
-	cmp #'E'			// E Save Disk
-    jeq Save    
-    cmp #'F'			// F Swap Slot
-    jeq Swap
-    cmp #'G'			// G Boot Disk 
+	cmp #'D'			// D Mount Disk 
+    jeq Mount
+	cmp #'E'			// E UnMount Disk
+    jeq UnMount    
+    cmp #'F'			// F Save Disk
+    jeq Save
+    cmp #'G'			// G Swap Slot 
     jeq BootATR
-    cmp #'H'			// H Boot XEX/Exe
-    jeq BootXEX
-    cmp #'I'   			// I List Host Images 
-    jeq ListDir   
+    cmp #'H'			// H Boot Disk
+    jeq BootATR
+    cmp #'I'   			// I Boot XEX/Exe 
+    jeq BootXEX   
     cmp #'J' 			// J Auto Commit On   
     jeq CommitOn
     cmp #'K'  			// K Auto Commit Off  
@@ -76,14 +76,11 @@
 	jmp Start
 	
 .endp	
-
 	
 .proc init
       rts
 .endp  	
 	
-	
-
 //	
 //  get disk in slot
 //    
@@ -95,8 +92,9 @@
     jcs main
     jsr toUpper   
     jsr GetDrvWC
-    jcs main
-    
+    bcc ok1
+    lda #$FA 
+ok1    
     sta drive
 	cmp #$FA
 	bne OneSlot
@@ -146,6 +144,7 @@ OKa
 	clc
 	rts	
 .endp
+
 
 //
 //	Mount disk and boot!
@@ -488,7 +487,6 @@ AllDrives
 .proc ListDir
     ldx #$00
     stx IOLp
- 
     jsr printf
 	.byte 155,'Enter Filter [*]: ',0
     jsr input
@@ -505,9 +503,10 @@ loop2
 FlFin2
 	lda #0
 	sta IOBuf,x   
-    
+	   
     lda #DCB.PutDR
     jsr SetUpDCB
+    mva #$00 DAUX2
     jsr SIOV
     bpl list2
     jsr Printf
@@ -528,7 +527,7 @@ list2
 OK2a
     lda IOLc 
 	cmp #$00
-    beq allDone2;
+    jeq allDone2
     sta SelectB
     jsr Printf
     .byte 155,'%s',155,0
@@ -539,66 +538,29 @@ OK2a
 	jsr getkey
 	jsr ToUpper
 	cmp #'Q'
-	beq allDone2
+	jeq allDone2
 	cmp #155
-	beq next2
-    jsr FileLookup	
-    jcc MountList
-next2       
- 	ldx IOLp
- 	cpx #00
- 	jne list2 
-allDone2
-	clc
-	jmp Main	
-.endp
-
-	    
-.proc FileLookup
-    sta SelectB
+	jeq next2
+	
+// ***
+    sta ArgFlag
+    lda #DCB.GetDR
+    jsr SetUpDCB
+    mva ArgFlag DAUX1
+    mva #02     DAUX2
+    jsr SIOV
+    bpl OK2b
+    jsr Printf
+    .byte 155,'No server response!',155,0
     sec
-	ldx #0
-	ldy #0
-loop
-    lda IOBuf,y
-    cmp #155
-    beq fin1
-	iny
-    bne Loop
-    jmp abort
-fin1      	// check an option -  skip space 1
-    cmp #0
-    beq abort
-	iny
-	lda IOBuf,y  
-    cmp #0
-    beq abort
-    iny
-    lda IOBuf,y
-    cmp SelectB
-    bne loop
-    iny			// skip  skip the space 2
-    iny
-loop2    
-    lda IOBuf,y
-    cmp #155 
-    beq alldone       
-    cmp #32 
-    beq alldone             
-    sta IOBuf,x
-    iny
-    inx
-    bne loop2 
-alldone    
-    lda #0
-    sta IOBuf,x
-	sta ArgFlag
-    clc
-abort
-    rts 
-.endp
-
-.proc MountList	
+    jmp Main
+OK2b
+    lda IOBuf
+    cmp #'$'
+    jeq ListDir   	
+// ***	
+		
+getSlot
     jsr printf
 	.byte 155,'Enter Slot [1-9] [J-O] : ',0	
     jsr input1
@@ -609,7 +571,14 @@ ok1
     jsr GetDrvWC
     sta Drive
     jmp DoMountAndBoot
-.endp    
+next2       
+ 	ldx IOLp
+ 	cpx #00
+ 	jne list2 
+allDone2
+	clc
+	jmp Main	
+.endp
 
 
 .proc SetPrintOn

@@ -20,7 +20,9 @@ extern char g_rclSlotNo;
 
 // 
 bool conversionMsgdisplayedOnce;
-QString imageFileName, fileFilter;
+QString imageFileName;
+QHash <quint8, QString> files;
+
 
 void Printer::handleCommand(quint8 command, quint16 aux)
 {
@@ -208,72 +210,111 @@ void RCl::handleCommand(quint8 command, quint16 aux)
             return;
         }
 
-        quint8 list   = (aux  / 256);
-        quint8 offset = (aux  % 256);
+        quint8 cmdAux   = (aux  / 256);
+        quint8 cmdpPrm = (aux  % 256);
 
-        if(!list) {
+        if(cmdAux == 0)
+        {
+        //    fPath = "";
             QByteArray ddata = sio->port()->readDataFrame(32);
             if (ddata.isEmpty()) {
                 qCritical() << "!e" << tr("[%1] Read data frame failed")
                                .arg(deviceName());
                 sio->port()->writeDataNak();
                 sio->port()->writeError();
-                g_fileFilter = "*";
+                fFilter = "*";
                 return;
             }
             sio->port()->writeDataAck();
             sio->port()->writeComplete();
-            g_fileFilter = ddata;
+            fFilter = ddata;
             qCritical() << "!i" << tr("[%1] List filter set: [%2]")
                            .arg(deviceName())
-                           .arg(g_fileFilter);
+                           .arg(fFilter);
             return;
         }
-        else
-        {
-            QByteArray  ddata(255, 0);
-            quint8 index  = 0;
-            QString pth = respeqtSettings->lastRclDir();
-            QDir dir(pth);
-            QStringList filters;
-            QString fileFilter = g_fileFilter.trimmed();
 
-            (fileFilter == "*" || fileFilter == "") ?
-                        filters <<"*.atr"<<"*.xfd"<<"*.atx"<<"*.pro"<<"*.xex"<<"*.exe"<<"*.com"  :
-                                  filters <<(fileFilter+".atr")<<(fileFilter+".xfd")<<(fileFilter+".atx")<<(fileFilter+"+.pro")
-                                           <<(fileFilter+".xex")<<(fileFilter+"+.exe")<<(fileFilter+"+.com");
+        else if (cmdAux == 1)
+        {
+
+            QByteArray  ddata(255, 0);
+            QString pth = respeqtSettings->lastRclDir() + fPath;
+            QDir dir(pth);      
+            QStringList filters;
+            (fFilter == "*" || fFilter == "") ? filters <<"*" : filters <<(fFilter+"*");
+
             dir.setNameFilters(filters);
             QFileInfoList list = dir.entryInfoList();
-
+            quint8 index  = 0;
             ddata[253] =  0x00;
             ddata[254] =  0x00;
             ddata[index++] = (char)155;
+            files.clear();
 
-            for (quint8 i = offset; i < list.size() && i < 250;  ++i) {
+            for (quint8 i = cmdpPrm; i < list.size() && i < 250;  ++i) {
                 QFileInfo fileInfo = list.at(i);
-                QString dosfilname = fileInfo.fileName();
-                QString atarifilname = toAtariFileName(dosfilname);
-                QString atariFilenum = QString(QChar::fromLatin1(i-offset+0x41));
-                QString atariFileDsc = toAtariFileDesc(dosfilname , atarifilname.length());
-                QByteArray fn  = (" "+atariFilenum+" "+atarifilname+atariFileDsc).toUtf8();
+                QString dosfilname;
 
-                if(index + fn.length() < 250) {
+                  fileInfo.isDir()? dosfilname = "+ " +fileInfo.fileName().trimmed(): dosfilname = fileInfo.fileName().trimmed();
+
+                  quint8 fileNum = i-cmdpPrm+0x41;
+                  files.insert(fileNum, dosfilname);
+
+                  QString atariFilenum = QString(QChar::fromLatin1(fileNum));
+                  QString atariFileDsc = dosfilname.left(33);
+
+                  QByteArray fn  = (" "+atariFilenum+" "+atariFileDsc).toUtf8();
+                  if(index + fn.length() < 250) {
                     for(int n = 0; n < fn.length(); n++)
                         ddata[index++] = fn[n] & 0xff;
 
                     ddata[index++] = (char)155;
 
-                } else  {
+                  } else  {
                     break;
-                }
+                  }
 
-                if( i > offset)
-                 ddata[253] =  0x41 + (i - offset);
-                 ddata[254] =  i + 1;
+                  if( i > cmdpPrm) ddata[253] =  0x41 + (i - cmdpPrm);
+                  ddata[254] =  i + 1;
 
             }
 
             for(int n = index; n < 253 ; n++) ddata[index++] = 0x00;
+            sio->port()->writeComplete();
+            sio->port()->writeDataFrame(ddata);
+            return;
+        }
+        else
+        {
+            QByteArray  ddata(255, 0);
+
+            if(!files.contains(cmdpPrm))
+            {
+                sio->port()->writeDataNak();
+                sio->port()->writeError();
+                return;
+             }
+
+            imageFileName = files.value(cmdpPrm);
+            if(imageFileName.startsWith("+"))
+            {
+                 imageFileName = imageFileName.right(imageFileName.length()-2).trimmed();
+                 if(imageFileName == ".")
+                     fPath = "";
+                  else if(imageFileName == ".." )
+                     fPath = fPath.left(fPath.lastIndexOf("/"));
+                  else
+                    fPath = fPath + "/"+ imageFileName;
+
+                 ddata[0] = '$';
+
+            }
+            else
+            {
+                 ddata[0] = char(cmdpPrm);
+            }
+
+            ddata[1] = (char)155;
             sio->port()->writeComplete();
             sio->port()->writeDataFrame(ddata);
             return;
@@ -300,9 +341,7 @@ void RCl::handleCommand(quint8 command, quint16 aux)
                 i = img->originalFileName().lastIndexOf("/");
                 if ((i != -1) || (img->originalFileName().mid(0, 14) == "Untitled image")) {
                     QString dosfilname =  img->originalFileName().right(img->originalFileName().size() - ++i);
-                    QString atarifilname = toAtariFileName(dosfilname);
-                    QString atariFileDsc = toAtariFileDesc(dosfilname , atarifilname.length());
-                    filename = atarifilname+atariFileDsc;
+                    filename = dosfilname.left(35);
                   }
               }
 
@@ -462,6 +501,7 @@ void RCl::handleCommand(quint8 command, quint16 aux)
             }
 
             imageFileName = data;
+
             if (command == 0x97) {     // Create new image file first
                 int i, type;
                 bool ok;
@@ -574,9 +614,11 @@ void RCl::handleCommand(quint8 command, quint16 aux)
                 return;
             }
 
+
+
             sio->port()->writeDataAck();
             sio->port()->writeComplete();
-            imageFileName = "*" + toDosFileName(imageFileName);
+            imageFileName = "*" + imageFileName;
             emit mountFile(mountDisk,imageFileName);
 
 
@@ -707,22 +749,26 @@ void RCl::handleCommand(quint8 command, quint16 aux)
         sio->port()->writeDataAck();
         sio->port()->writeComplete();
 
-        imageFileName = data;
-        imageFileName = imageFileName.trimmed();
-        isDiskTmage = (imageFileName.endsWith("XEX") || imageFileName.endsWith("EXE")
-                       || imageFileName.endsWith("COM")) ?false: true;
-
-        if(isDiskTmage) {
-            imageFileName = "*" + toDosFileName(imageFileName);
-             emit mountFile(mountDisk,imageFileName);
-        }
+        quint8 fileNum;
+        fileNum = (aux / 256);
+        if(fileNum > 40 && files.contains(fileNum))
+            imageFileName = files.value(fileNum);
         else
-        {
-            imageFileName = toDosFileName(imageFileName);
-            emit bootExe(imageFileName);
-        }
+            imageFileName = data;
 
+        imageFileName = imageFileName.trimmed();
 
+        isDiskTmage = (imageFileName.endsWith("XEX") || imageFileName.endsWith("EXE")
+                                    || imageFileName.endsWith("COM")) ?false: true;
+
+            if(isDiskTmage) {
+                imageFileName = "*" + imageFileName;
+                 emit mountFile(mountDisk,imageFileName);
+            }
+            else
+            {
+               emit bootExe(imageFileName);
+          }
     }
         break;
 
@@ -747,6 +793,7 @@ void RCl::handleCommand(quint8 command, quint16 aux)
     }
 }
 
+
 // Get the next slot number available for mounting a disk image
 void RCl::gotNewSlot(int slot)
 {
@@ -768,66 +815,3 @@ void RCl::fileMounted(bool mounted)
     }
 }
 
-
-
-QString RCl::toAtariFileDesc(QString dosFileName , int len) {
-    QString name = dosFileName;
-    QString fil  = " ";
-    int t = name.lastIndexOf(".");
-
-    if(t > 0){
-        name = dosFileName.left(t);
-    }
-    for(int x = 12-len; x > 0; x--) {
-        fil = " " + fil;
-    }
-    name = fil+name.left(20);
-    return name;
-}
-
-
-QString RCl::toAtariFileName(QString dosFileName) {
-    QString name = "";
-    QString ext  = "";
-    QString filename = dosFileName.toUpper();
-    int t = filename.lastIndexOf(".");
-    qint16 hsh = 0;
-    for(QChar c : dosFileName) {
-        hsh += c.unicode();
-    }
-    if(t > 0){
-        name = filename.left(t);
-        ext = filename.right(filename.length() - t -1);
-    }
-    else
-    {
-        name = filename;
-        ext = "";
-    }
-    QChar c = (hsh % 9)+0x30;
-    name.remove(QRegExp("[^A-Z0-9_]"));
-    name = (name.length() > 8)?name.left(6)+"_"+c: name;
-    ext.remove(QRegExp("[^A-Z0-9_]"));
-    if(t > 0)
-        return name + "." +ext;
-    else
-        return name;
-}
-
-
-QString RCl::toDosFileName(QString atariFileName)
-{
-    QString pth = respeqtSettings->lastRclDir();
-    QDir dir(pth);
-    QStringList filters;
-    filters <<"*.atr"<<"*.xfd" <<"*.atx"<<"*.pro"<<"*.xex"<<"*.exe"<<"*.com";
-    dir.setNameFilters(filters);
-    QFileInfoList list = dir.entryInfoList();
-    for (quint64 i = 0; i < list.size(); ++i) {
-        QFileInfo fileInfo = list.at(i);
-        QString dosFilename = fileInfo.fileName();
-        if(toAtariFileName(dosFilename) == atariFileName)
-            return dosFilename;
-    }
-    return "";
-}
