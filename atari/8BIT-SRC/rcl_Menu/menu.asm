@@ -15,14 +15,13 @@
 ;  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 ;
 
-
 	icl "menu_1.asm"
 	
 	org $4000
 Start
 	jsr printf
-	.byte 125,155,'AspeQT [xe]      www.13leader.net ',155
-	.byte         '-----------              Ver 2K21 ',155,155,155,0
+	.byte 125,155,'AspeQT             www.13leader.net',155
+	.byte         '------                         2K21',155,155,155,0
 		
  	icl 'menu_2.asm'    
  	
