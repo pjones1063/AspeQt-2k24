@@ -257,6 +257,11 @@ void RCl::handleCommand(quint8 command, quint16 aux)
 
                   fileInfo.isDir()? dosfilname = "+ " +fileInfo.fileName().trimmed(): dosfilname = fileInfo.fileName().trimmed();
 
+                  if(fileInfo.fileName().trimmed() == "." )  dosfilname = "+[home]";
+                  else if(fileInfo.fileName().trimmed() == ".." )  dosfilname = "+[up]";
+                  else if(fileInfo.isDir())   dosfilname = "+[" +fileInfo.fileName().trimmed()+"]";
+                  else dosfilname = fileInfo.fileName().trimmed();
+
                   quint8 fileNum = i-cmdpPrm+0x41;
                   files.insert(fileNum, dosfilname);
 
@@ -298,10 +303,10 @@ void RCl::handleCommand(quint8 command, quint16 aux)
             imageFileName = files.value(cmdpPrm);
             if(imageFileName.startsWith("+"))
             {
-                 imageFileName = imageFileName.right(imageFileName.length()-2).trimmed();
-                 if(imageFileName == ".")
+                 imageFileName = imageFileName.mid(2, imageFileName.length()-3).trimmed();
+                 if(imageFileName == "home")
                      fPath = "";
-                  else if(imageFileName == ".." )
+                  else if(imageFileName == "up" )
                      fPath = fPath.left(fPath.lastIndexOf("/"));
                   else
                     fPath = fPath + "/"+ imageFileName;
