@@ -19,6 +19,7 @@ CONFIG += mobility
 MOBILITY = bearer
 INCLUDEPATH += $$[QT_INSTALL_HEADERS]/QtZlib
 SOURCES += main.cpp \
+    diskimageatx.cpp \
     mainwindow.cpp \
     sioworker.cpp \
     optionsdialog.cpp \
@@ -48,6 +49,7 @@ unix:LIBS += -lz
 win32:SOURCES += serialport-win32.cpp
 unix:SOURCES += serialport-unix.cpp
 HEADERS += mainwindow.h \
+    diskimageatx.h \
     serialport.h \
     sioworker.h \
     optionsdialog.h \

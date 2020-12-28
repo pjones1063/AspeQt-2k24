@@ -1276,7 +1276,7 @@ void MainWindow::mountFile(int no, const QString &fileName, bool /*prot*/)
     } else if (type == FileTypes::Pro || type == FileTypes::ProGz) {
         disk = new DiskImagePro(sio);
 
-    } else if (type == FileTypes::Atx) {
+    } else if (type == FileTypes::Atx || type == FileTypes::AtxGz) {
         disk = new DiskImageAtx(sio);
 
     } else {

@@ -17,10 +17,10 @@
 #include <QUrl>
 
 extern char g_rclSlotNo;
-
-// 
 bool conversionMsgdisplayedOnce;
+
 QString imageFileName;
+
 QHash <quint8, QString> files;
 
 
@@ -215,7 +215,6 @@ void RCl::handleCommand(quint8 command, quint16 aux)
 
         if(cmdAux == 0)
         {
-        //    fPath = "";
             QByteArray ddata = sio->port()->readDataFrame(32);
             if (ddata.isEmpty()) {
                 qCritical() << "!e" << tr("[%1] Read data frame failed")
@@ -312,6 +311,9 @@ void RCl::handleCommand(quint8 command, quint16 aux)
                     fPath = fPath + "/"+ imageFileName;
 
                  ddata[0] = '$';
+                 qCritical() << "!i" << tr("[%1] Set Path: [%2]")
+                                .arg(deviceName())
+                                .arg(fPath);
 
             }
             else
@@ -619,8 +621,6 @@ void RCl::handleCommand(quint8 command, quint16 aux)
                 return;
             }
 
-
-
             sio->port()->writeDataAck();
             sio->port()->writeComplete();
             imageFileName = "*" + imageFileName;
@@ -725,7 +725,7 @@ void RCl::handleCommand(quint8 command, quint16 aux)
            mountDisk = 0;
         }
 
-        bool isDiskTmage = (aux/256)?false:true;
+        bool isDskTmage = (aux/256)?false:true;
 
         // If no Folder Image has ever been mounted abort the command as we won't
         // know which folder to use to remotely create/mount an image file.
@@ -757,18 +757,19 @@ void RCl::handleCommand(quint8 command, quint16 aux)
         quint8 fileNum;
         fileNum = (aux / 256);
         if(fileNum > 40 && files.contains(fileNum))
-            imageFileName = files.value(fileNum);
+            imageFileName = fPath +"/"+ files.value(fileNum);
         else
             imageFileName = data;
 
         imageFileName = imageFileName.trimmed();
 
-        isDiskTmage = (imageFileName.endsWith("XEX") || imageFileName.endsWith("EXE")
-                                    || imageFileName.endsWith("COM")) ?false: true;
+        isDskTmage = (imageFileName.toLower().endsWith("xex")
+                       || imageFileName.toLower().endsWith("exe")
+                       || imageFileName.toLower().endsWith("com")) ? false: true;
 
-            if(isDiskTmage) {
-                imageFileName = "*" + imageFileName;
-                 emit mountFile(mountDisk,imageFileName);
+        if(isDskTmage) {
+               imageFileName = "*" + imageFileName;
+               emit mountFile(mountDisk,imageFileName);
             }
             else
             {
