@@ -1,7 +1,7 @@
-##  Atari AspeQt-2020 (13L)  /w MENU.COM
+##  Atari AspeQt-2K21  /w MENU.COM
 
 
-### Atari Serial Peripheral Emulator for Qt (Version 5- 2020 13L)
+### Atari Serial Peripheral Emulator for Qt (Version 2K21 13L)
 
 ### Summary
 
