@@ -158,46 +158,6 @@ bool DiskImageAtx::seekToSector(quint16 sector)
 
     qint64 pos = (atx.tracks[track].pos + atx.tracks[track].sectors[trackindex].start);
     wd1772status = atx.tracks[track].sectors[trackindex].status;
-
-    if (lastsector > 0)
-    {
-        quint8 lasttrack, lasttracksector;
-        struct timeval tv;
-        struct timezone tz;
-        struct tm *tm;
-        gettimeofday(&tv, &tz);
-        tm=localtime(&tv.tv_sec);
-        quint64 curtime = tm->tm_sec*1000000+tv.tv_usec;
-        quint64 delay = 0;
-
-        lasttrack = (lastsector-1)/18; //m_geometry.sectorsPerTrack();
-        lasttracksector = (lastsector-1)%18; //m_geometry.sectorsPerTrack();
-        if (lasttrack < track) {
-            // when seeking forward, the 1050 does
-            // an additional half-track forward seek plus
-            // a half-track backward seek. So we have
-            // to add the time of one (full track) seek.
-            delay += (track-lasttrack+1) * 20316 //eTrackSeekForwardTime
-              + 20154 //eHeadSettlingTime
-              ;
-        } else { // from_track > to_track
-            delay += (lasttrack-track) * 20292 //eTrackSeekBackwardTime
-              + 20154 //eHeadSettlingTime
-              ;
-        }
-        unsigned int currentPos = (curtime + delay) % 208333;
-
-        delay +=
-          (int)(atx.tracks[track].sectors[trackindex].position * 8.5 + 208333 - currentPos) % 208333;
-
-
-        delay += 11072; //sector->GetTimeLength();
-
-      if (atx.tracks[track].sectors[trackindex].status != 0xff)
-        delay += 3125000;//Atari1050Model::eSectorRetryTime;
-//      usleep(delay+10000);  // Ray A.
-        SioWorker::usleep(delay/*+10000*/);  // Ray A.
-    }
     lastsector = sector;
 
     if (!sourceFile->seek(pos)) {
