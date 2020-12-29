@@ -153,9 +153,8 @@ bool DiskImageAtx::seekToSector(quint16 sector)
       break;
       }
     }
+
     phantomflip = !phantomflip;
-
-
     qint64 pos = (atx.tracks[track].pos + atx.tracks[track].sectors[trackindex].start);
     wd1772status = atx.tracks[track].sectors[trackindex].status;
     lastsector = sector;
@@ -176,13 +175,11 @@ bool DiskImageAtx::readSector(quint16 sector, QByteArray &data)
         return false;
     }
 
-
     if (wd1772status != 0xff)
     {
         qDebug() << "!e" << tr("Bad sector");
 
     data = sourceFile->read(m_geometry.bytesPerSector(sector));
-
     // return random data on error like in Atari800 - boots Zorro. :) KP
     int i;
     if (wd1772status == 0xB7) {
@@ -193,7 +190,6 @@ bool DiskImageAtx::readSector(quint16 sector, QByteArray &data)
         }
         return true;
     }
-
     return false;
     }
 

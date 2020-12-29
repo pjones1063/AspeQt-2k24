@@ -93,7 +93,8 @@ FORMS += mainwindow.ui \
 RESOURCES += icons.qrc \
     i18n.qrc \
     documentation.qrc \
-    atarifiles.qrc
+    atarifiles.qrc \
+    icons.qrc
 OTHER_FILES += \
     license.txt \
     history.txt \
@@ -117,11 +118,12 @@ TRANSLATIONS = \
     i18n/respeqt_sk.ts \
     i18n/respeqt_tr.ts
 
-# RC_FILE = RespeQt.rc \
+ICON = icons.icns
+
 
 DISTFILES += \
-    atari/autoboot/autoboot.bin
-
+    atari/autoboot/autoboot.bin \
+    icons.icns
 
 
 
