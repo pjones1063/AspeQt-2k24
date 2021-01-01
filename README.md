@@ -41,6 +41,10 @@ See readme.txt for more info
 * 5- Install Qt and gcc
 
   $ sudo apt install make gcc qt5-default
+  
+  $ sudo apt-get install libqt5serialport5 
+  
+  $ sudo apt-get install libqt5serialport5-dev
  
  
  * 6- Compile and install AspeQt
@@ -49,9 +53,39 @@ See readme.txt for more info
    
    $ qmake
    
-   $ make
+   $ make clean
+   
+   $ make 
+   
    
   * 7- Plug in the cable and run the AspeQt server.
   
     $ ./AspeQt
+    
+    
+    
+    
+ 
+* NOTE: If you installed Raspbian Lite onto your Micro-SD card you will probably get an error saying
+"unable to open x display", you will likely need to run the following commands to load ldxe, x11 & lightdm:
+
+
+  $ sudo apt-get install lxde lxde-core lxterminal lxappearance
+	(answer Y for y/n question... this takes a loooong time to install)
+     
+  $ sudo apt-get install lightdm
+ 	(this also takes a long time to load - be patient)
+ 
+  $ sudo apt-get install xserver-xorg 
+  
+  $ sudo apt-get install xinit
+  
+  $ sudo apt-get install x11-xserver-utils
+ 	(answer Y for y/n question)
+ 
+  $ sudo apt-get install xterm
+ 
+  $ startx
+ 	(Opens X window) 
+ 
    
