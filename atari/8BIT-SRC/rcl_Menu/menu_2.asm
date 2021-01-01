@@ -49,7 +49,7 @@
     cmp #'F'			// F Save Disk
     jeq Save
     cmp #'G'			// G Swap Slot 
-    jeq BootATR
+    jeq Swap
     cmp #'H'			// H Boot Disk
     jeq BootATR
     cmp #'I'   			// I Boot XEX/Exe 
