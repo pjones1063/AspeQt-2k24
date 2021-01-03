@@ -45,7 +45,7 @@ See readme.txt for more info
 
  $ sudo apt update
 
- $ sudo apt install .AspeQt-2K21-RasPI3B_Raspbian.deb
+ $ sudo apt install ./AspeQt-2K21-RasPI3B_Raspbian.deb
  
  $ AspeQt 
 
