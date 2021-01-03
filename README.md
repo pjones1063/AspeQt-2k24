@@ -22,6 +22,17 @@ See readme.txt for more info
 #### Support and other inquiries can be made on our BBS at:   $ telnet 13leader.net 8023 or http://13leader.net
 
 
+#### AspeQt 2K21 Cartridge
+
+The AspeQt 8bit Cartridge can be run from most Atari cart emulators (UnoCart, Ultimate Cart, etc.)  
+All AspeQt disk and most printer functions can be done using the cartridge. 
+
+Two versions of the cart are available:
+
+#####  MenuCart_BOOT_2K21.car - Boot D1: on power up 
+
+#####  MenuCart_NoneBOOT_2K21.car - No Disk boot on power up
+
 
 
 ####  Ubuntu/Debian installation instructions:
