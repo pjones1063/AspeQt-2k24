@@ -22,7 +22,7 @@ See readme.txt for more info
 #### Support and other inquiries can be made on our BBS at:   $ telnet 13leader.net 8023 or http://13leader.net
 
 
-#### AspeQt 2K21 Cartridge
+### AspeQt 2K21 Cartridge
 
 The AspeQt 8bit Cartridge can be run from most Atari cart emulators (UnoCart, Ultimate Cart, etc.)  
 All AspeQt disk and most printer functions can be done using the cartridge. 
@@ -35,7 +35,7 @@ Two versions of the cart are available:
 
 
 
-####  Ubuntu/Debian installation instructions:
+###  Ubuntu/Debian installation instructions:
 
 * 1- Build a SIO2PC cable outlined in SIO2PC_Build_Instructions.pdf
 
@@ -51,7 +51,7 @@ Two versions of the cart are available:
 
 
 
-####  Raspberry Pi installation instructions:
+###  Raspberry Pi installation instructions:
 
 * 1- Build a SIO2PC cable outlined in SIO2PC_Build_Instructions.pdf
 
@@ -66,7 +66,7 @@ Two versions of the cart are available:
 
 
 
-####  Raspberry Pi or other Debian based Linux build instructions: 
+###  Raspberry Pi or other Debian based Linux build instructions: 
 
 
 * 1- Build a SIO2PC cable outlined in SIO2PC_Build_Instructions.pdf
