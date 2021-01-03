@@ -1,7 +1,7 @@
 ##  Atari AspeQt-2K21
 
 
-### Atari Serial Peripheral Emulator for Qt (Version 2K21 13L)
+### Atari Serial Peripheral Emulator for Qt With 2k21 Cartridge Support
 
 ### Summary
 
