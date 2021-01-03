@@ -23,7 +23,18 @@ See readme.txt for more info
 
 
 
-####  Raspberry Pi or other Debian based Linux installation 
+####  Ubuntu/Debian installtion instructions:
+
+ $ sudo apt update
+
+ $ sudo apt install ./AspeQt-2K21-Ubuntu.deb
+ 
+ $ AspeQt 
+
+
+
+####  Raspberry Pi or other Debian based Linux build instructions: 
+
 
 * 1- Build a SIO2PC cable outlined in SIO2PC_Build_Instructions.pdf
 
