@@ -1,7 +1,7 @@
 ##  Atari AspeQt-2K21
 
 
-### Atari Serial Peripheral Emulator for Qt With 2k21 Cartridge Support
+### Atari Serial Peripheral Emulator for Qt With 2K21 Cartridge Support
 
 ### Summary
 
@@ -32,6 +32,17 @@ Two versions of the cart are available:
 #####  MenuCart_BOOT_2K21.car - Boot D1: on power up 
 
 #####  MenuCart_NoneBOOT_2K21.car - No Disk boot on power up
+
+
+### Windows and MacOS installation instructions:
+
+1- Build a SIO2PC cable outlined in SIO2PC_Build_Instructions.pdf
+
+Very simple - Download Windows or MacOS.
+
+Unzip and run the AspeQt 32 or 64 bit exe application on Windows.
+
+Unzip and mount the AspeQT image on MacOS
 
 
 
