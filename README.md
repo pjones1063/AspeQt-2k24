@@ -1,4 +1,4 @@
-##  Atari AspeQt-2K21  /w MENU.COM
+##  Atari AspeQt-2K21
 
 
 ### Atari Serial Peripheral Emulator for Qt (Version 2K21 13L)
