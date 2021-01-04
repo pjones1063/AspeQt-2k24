@@ -14,8 +14,7 @@ p    { font-size: medium; text-align: justify; }
   </head>
   <body>
     <!-- Head Section --> <a name="home">
-      <h1 class="Title" align="center">AspeQt-2K21 with 8Bit Cartridge
-        Support<br>
+      <h1 class="Title" align="center">AspeQt-2K21 with 8Bit Cartridge<br>
       </h1>
       <h1 class="Title" align="center">&nbsp;User Manual<br>
         <br>
@@ -43,6 +42,8 @@ p    { font-size: medium; text-align: justify; }
       useful, the highlights being:</p>
     <ul type="square">
       <li>Cross-platform GUI with drag and drop support</li>
+      <li>Atari Cartridge images to control disk and printer functions<br>
+      </li>
       <li>15 emulated disk drives with support for 512 bytes per sector
         disk images</li>
       <li>High speed operation up to 6 times faster than the normal
@@ -50,7 +51,7 @@ p    { font-size: medium; text-align: justify; }
       <li>Ability to use PC folders as emulated disks</li>
       <li>Disk image explorer for viewing and modifying disk image
         contents</li>
-      <li>Ability to run Atari executables directly without using disc
+      <li>Ability to run Atari executable directly without using disc
         images and Doses</li>
       <li>Printer emulation with preview and ATASCII support</li>
       <li>Cassette image playback with custom baud rate</li>
@@ -82,28 +83,15 @@ p    { font-size: medium; text-align: justify; }
         intended)</em> or a SIO2PC USB interface <em>(instead of
         serial)</em>, If you opt for the latter however, please note
       that the “AtariMax SIO2PC Universal Interface USB Edition” is not
-      officially supported as it uses proprietary USB device drivers.</p>
+      officially supported as it uses proprietary USB device drivers.<br>
+    </p>
+    <ul>
+      <li><b>"Do It Yourself" SIO2PC build instructions - See:
+          SIO2PC_Build_Instructions.pdf</b></li>
+    </ul>
     <p>You don’t need any real Atari disk drives or printers to use
       AspeQt.</p>
-    <div align="right"><a href="#home">Up</a></div>
-    <hr>
-    <!-- Installation Section --> <a name="install">
-      <h2>Installation</h2>
-    </a>
-    <p><strong>On Windows</strong>, AspeQt comes with all the required
-      DLLs in a ZIP file. Just unzip the archive to a folder and run
-      AspeQt.exe. You may manually create shortcuts on your desktop,
-      start menu and quick launch bar if you want. Future releases may
-      include an installer but it doesn’t exist yet.</p>
-    <p><strong>On Linux</strong>, AspeQt comes as a zipped source. You
-      will need Qt 5 libraries and build tools to compile. After
-      installing them, please follow the instructions in compile.txt
-      that comes in the zip file.</p>
-    <p>If you want to use the AtariSlO backend, which is highly
-      recommended if you have a real RS-232 serial port, you will need
-      the AtariSlO package. Please follow the documentation that comes
-      with that package to compile and install it.</p>
-    <div align="right"><a href="#home">Up</a></div>
+    <div align="right"><a href="#home">Up</a> </div>
     <hr>
     <!-- Configuration Section --> <a name="config">
       <h2>Configuration</h2>
@@ -216,7 +204,15 @@ p    { font-size: medium; text-align: justify; }
     </b><b>MenuCart_NoneBOOT_2K21.car &nbsp;&nbsp;&nbsp; - Nodisk boot
       on power up</b><b><br>
     </b><font size="-1"><br>
-    </font><br>
+    </font>Cartridge directory path set in:<br>
+    <br>
+    Tools -&gt; Options -&gt; Emulation -&gt; "RCL Client local path"<br>
+    <ul>
+      <li>used to list atr/atx/pro/exe files from the cartridge - Option
+        "B - List Host Images"</li>
+    </ul>
+    <p><br>
+    </p>
     <h5>Disk images<br>
     </h5>
     <font size="-1"> <br>
@@ -243,6 +239,7 @@ p    { font-size: medium; text-align: justify; }
       first drive slot,<br>
       <br>
       &nbsp;+ To toggle shade mode in mini mode use menu item Window<em>/</em>Toggle
+
       shade mode <em>(CTRL+S)</em>, in shade mode AspeQt shows a
       semi-transparent window which does not completely block the view
       of underlying UI objects,<br>
@@ -405,7 +402,8 @@ p    { font-size: medium; text-align: justify; }
       <li>The restrictions and limitations may be lifted in the upcoming
         versions of AspeQt.</li>
     </ul>
-    <h5>Running Atari executables</h5>
+    <h5>Running Atari executable<br>
+    </h5>
     <p>Most Atari programs floating around on the internet come as Atari
       DOS executables. These files may have .exe, .com, .xex or any
       other extension. Instead of messing with disk image software and
