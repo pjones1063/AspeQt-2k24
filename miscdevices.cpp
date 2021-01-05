@@ -250,7 +250,7 @@ void RCl::handleCommand(quint8 command, quint16 aux)
             ddata[index++] = (char)155;
             files.clear();
 
-            for (quint8 i = cmdpPrm; i < list.size() && i < 250;  ++i) {
+            for (quint8 i = cmdpPrm; i < list.size() && i < 250 && i-cmdpPrm < 16;  ++i) {
                 QFileInfo fileInfo = list.at(i);
                 QString dosfilname;
 
