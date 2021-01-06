@@ -14,7 +14,7 @@ EQ            = =
 
 CC            = gcc
 CXX           = g++
-DEFINES       = -DVERSION=\"r5.13L\" -DQT_NO_DEBUG -DQT_PRINTSUPPORT_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_SERIALPORT_LIB -DQT_CORE_LIB
+DEFINES       = -DVERSION=\"r2K21\" -DQT_NO_DEBUG -DQT_PRINTSUPPORT_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_SERIALPORT_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -O2 -D_REENTRANT -Wall -W -fPIC $(DEFINES)
 CXXFLAGS      = -pipe -O2 -D_REENTRANT -Wall -W -fPIC $(DEFINES)
 INCPATH       = -I. -isystem /usr/include/x86_64-linux-gnu/qt5/QtZlib -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtNetwork -isystem /usr/include/x86_64-linux-gnu/qt5/QtSerialPort -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++
@@ -37,7 +37,7 @@ MOVE          = mv -f
 TAR           = tar -cf
 COMPRESS      = gzip -9f
 DISTNAME      = AspeQt1.0.0
-DISTDIR = /home/paul/qtProjects/AspeQt-2020/.tmp/AspeQt1.0.0
+DISTDIR = /home/paul/qtProjects/AspeQt-2K21/.tmp/AspeQt1.0.0
 LINK          = g++
 LFLAGS        = -Wl,-O1
 LIBS          = $(SUBLIBS) -lz /usr/lib/x86_64-linux-gnu/libQt5PrintSupport.so /usr/lib/x86_64-linux-gnu/libQt5Widgets.so /usr/lib/x86_64-linux-gnu/libQt5Gui.so /usr/lib/x86_64-linux-gnu/libQt5Network.so /usr/lib/x86_64-linux-gnu/libQt5SerialPort.so /usr/lib/x86_64-linux-gnu/libQt5Core.so /usr/lib/x86_64-linux-gnu/libGL.so -lpthread   
@@ -53,6 +53,7 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = main.cpp \
+		diskimageatx.cpp \
 		mainwindow.cpp \
 		sioworker.cpp \
 		optionsdialog.cpp \
@@ -82,6 +83,7 @@ SOURCES       = main.cpp \
 		qrc_documentation.cpp \
 		qrc_atarifiles.cpp \
 		moc_mainwindow.cpp \
+		moc_diskimageatx.cpp \
 		moc_serialport.cpp \
 		moc_sioworker.cpp \
 		moc_optionsdialog.cpp \
@@ -107,6 +109,7 @@ SOURCES       = main.cpp \
 		moc_infowidget.cpp \
 		moc_serialport-unix.cpp
 OBJECTS       = main.o \
+		diskimageatx.o \
 		mainwindow.o \
 		sioworker.o \
 		optionsdialog.o \
@@ -137,6 +140,7 @@ OBJECTS       = main.o \
 		qrc_documentation.o \
 		qrc_atarifiles.o \
 		moc_mainwindow.o \
+		moc_diskimageatx.o \
 		moc_serialport.o \
 		moc_sioworker.o \
 		moc_optionsdialog.o \
@@ -162,6 +166,7 @@ OBJECTS       = main.o \
 		moc_infowidget.o \
 		moc_serialport-unix.o
 DIST          = atari/autoboot/autoboot.bin \
+		icons.icns \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -219,7 +224,6 @@ DIST          = atari/autoboot/autoboot.bin \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt_config.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_post.prf \
-		.qmake.stash \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/toolchain.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf \
@@ -239,6 +243,7 @@ DIST          = atari/autoboot/autoboot.bin \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
 		aspeqt.pro mainwindow.h \
+		diskimageatx.h \
 		serialport.h \
 		sioworker.h \
 		optionsdialog.h \
@@ -264,6 +269,7 @@ DIST          = atari/autoboot/autoboot.bin \
 		infowidget.h \
 		aspeqtsettings.h \
 		serialport-unix.h main.cpp \
+		diskimageatx.cpp \
 		mainwindow.cpp \
 		sioworker.cpp \
 		optionsdialog.cpp \
@@ -357,7 +363,6 @@ Makefile: aspeqt.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf 
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt_config.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_post.prf \
-		.qmake.stash \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/toolchain.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf \
@@ -439,7 +444,6 @@ Makefile: aspeqt.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf 
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt_config.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_post.prf:
-.qmake.stash:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/toolchain.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf:
@@ -477,10 +481,10 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents icons.qrc i18n.qrc documentation.qrc atarifiles.qrc $(DISTDIR)/
+	$(COPY_FILE) --parents icons.qrc i18n.qrc documentation.qrc atarifiles.qrc icons.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents mainwindow.h serialport.h sioworker.h optionsdialog.h aboutdialog.h diskimage.h diskimagepro.h folderimage.h miscdevices.h createimagedialog.h diskeditdialog.h autoboot.h autobootdialog.h atarifilesystem.h miscutils.h textprinterwindow.h cassettedialog.h docdisplaywindow.h bootoptionsdialog.h network.h logdisplaydialog.h drivewidget.h pclink.h infowidget.h aspeqtsettings.h serialport-unix.h $(DISTDIR)/
-	$(COPY_FILE) --parents main.cpp mainwindow.cpp sioworker.cpp optionsdialog.cpp aboutdialog.cpp diskimage.cpp diskimagepro.cpp folderimage.cpp miscdevices.cpp createimagedialog.cpp diskeditdialog.cpp autoboot.cpp autobootdialog.cpp atarifilesystem.cpp miscutils.cpp textprinterwindow.cpp cassettedialog.cpp docdisplaywindow.cpp bootoptionsdialog.cpp network.cpp logdisplaydialog.cpp drivewidget.cpp pclink.cpp infowidget.cpp aspeqtsettings.cpp serialport-unix.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents mainwindow.h diskimageatx.h serialport.h sioworker.h optionsdialog.h aboutdialog.h diskimage.h diskimagepro.h folderimage.h miscdevices.h createimagedialog.h diskeditdialog.h autoboot.h autobootdialog.h atarifilesystem.h miscutils.h textprinterwindow.h cassettedialog.h docdisplaywindow.h bootoptionsdialog.h network.h logdisplaydialog.h drivewidget.h pclink.h infowidget.h aspeqtsettings.h serialport-unix.h $(DISTDIR)/
+	$(COPY_FILE) --parents main.cpp diskimageatx.cpp mainwindow.cpp sioworker.cpp optionsdialog.cpp aboutdialog.cpp diskimage.cpp diskimagepro.cpp folderimage.cpp miscdevices.cpp createimagedialog.cpp diskeditdialog.cpp autoboot.cpp autobootdialog.cpp atarifilesystem.cpp miscutils.cpp textprinterwindow.cpp cassettedialog.cpp docdisplaywindow.cpp bootoptionsdialog.cpp network.cpp logdisplaydialog.cpp drivewidget.cpp pclink.cpp infowidget.cpp aspeqtsettings.cpp serialport-unix.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents mainwindow.ui optionsdialog.ui aboutdialog.ui createimagedialog.ui diskeditdialog.ui autobootdialog.ui textprinterwindow.ui cassettedialog.ui docdisplaywindow.ui bootoptionsdialog.ui logdisplaydialog.ui drivewidget.ui infowidget.ui $(DISTDIR)/
 
 
@@ -505,9 +509,9 @@ check: first
 
 benchmark: first
 
-compiler_rcc_make_all: qrc_icons.cpp qrc_i18n.cpp qrc_documentation.cpp qrc_atarifiles.cpp
+compiler_rcc_make_all: qrc_icons.cpp qrc_i18n.cpp qrc_documentation.cpp qrc_atarifiles.cpp qrc_icons.cpp
 compiler_rcc_clean:
-	-$(DEL_FILE) qrc_icons.cpp qrc_i18n.cpp qrc_documentation.cpp qrc_atarifiles.cpp
+	-$(DEL_FILE) qrc_icons.cpp qrc_i18n.cpp qrc_documentation.cpp qrc_atarifiles.cpp qrc_icons.cpp
 qrc_icons.cpp: icons.qrc \
 		/usr/lib/qt5/bin/rcc \
 		Atari.ico \
@@ -602,15 +606,78 @@ qrc_atarifiles.cpp: atarifiles.qrc \
 		atari/autoboot/autoboot-hispeed.bin
 	/usr/lib/qt5/bin/rcc -name atarifiles atarifiles.qrc -o qrc_atarifiles.cpp
 
+qrc_icons.cpp: icons.qrc \
+		/usr/lib/qt5/bin/rcc \
+		Atari.ico \
+		silk-icons/icons/drive_disk.png \
+		silk-icons/icons/folder.png \
+		silk-icons/icons/font.png \
+		silk-icons/icons/drive.png \
+		silk-icons/icons/shape_square.png \
+		silk-icons/icons/disconnect.png \
+		silk-icons/icons/arrow_up.png \
+		silk-icons/icons/delete.png \
+		silk-icons/icons/drive_go.png \
+		silk-icons/icons/drive_add.png \
+		silk-icons/icons/page_white.png \
+		silk-icons/icons/monitor.png \
+		silk-icons/icons/printer.png \
+		silk-icons/icons/lock.png \
+		silk-icons/icons/add.png \
+		silk-icons/icons/font_go.png \
+		silk-icons/icons/page_white_text.png \
+		silk-icons/icons/disk.png \
+		silk-icons/icons/text_align_left.png \
+		silk-icons/icons/lock_open.png \
+		silk-icons/icons/page_white_go.png \
+		silk-icons/icons/application.png \
+		silk-icons/icons/drive_delete.png \
+		silk-icons/icons/arrow_right.png \
+		silk-icons/icons/connect.png \
+		silk-icons/icons/drive_rename.png \
+		silk-icons/icons/cut_red.png \
+		silk-icons/icons/monitor_go.png \
+		silk-icons/icons/page_white_c.png \
+		silk-icons/icons/control_eject.png \
+		silk-icons/icons/arrow_undo.png \
+		silk-icons/icons/folder_edit.png \
+		silk-icons/icons/printer_delete.png \
+		other-icons/MiniCooper\ 22.ico \
+		other-icons/fuji.png \
+		other-icons/move.png \
+		other-icons/run.ico \
+		other-icons/fade.png \
+		oxygen-icons/16x16/actions/document_save_all.png \
+		oxygen-icons/16x16/actions/network_connect.png \
+		oxygen-icons/16x16/actions/network.png \
+		oxygen-icons/16x16/actions/flag_red.png \
+		oxygen-icons/16x16/actions/flag_green.png \
+		oxygen-icons/16x16/actions/view_right_close.png \
+		oxygen-icons/16x16/actions/format_font_size_more.png \
+		oxygen-icons/16x16/actions/view_left_close.png \
+		oxygen-icons/16x16/actions/exit.png \
+		oxygen-icons/16x16/actions/help_about.png \
+		oxygen-icons/16x16/actions/network_disconnect.png \
+		oxygen-icons/16x16/actions/help_contents.png \
+		oxygen-icons/16x16/devices/3floppy_mount.png \
+		oxygen-icons/16x16/devices/media_tape.png \
+		oxygen-icons/16x16/devices/printer1.png \
+		oxygen-icons/16x16/devices/media_floppy.png \
+		oxygen-icons/16x16/devices/3floppy_unmount.png \
+		main-icon/icon.jpeg \
+		main-icon/AspeQt.ico \
+		main-icon/main16.png
+	/usr/lib/qt5/bin/rcc -name icons icons.qrc -o qrc_icons.cpp
+
 compiler_moc_predefs_make_all: moc_predefs.h
 compiler_moc_predefs_clean:
 	-$(DEL_FILE) moc_predefs.h
 moc_predefs.h: /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 	g++ -pipe -O2 -dM -E -o moc_predefs.h /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_mainwindow.cpp moc_serialport.cpp moc_sioworker.cpp moc_optionsdialog.cpp moc_aboutdialog.cpp moc_diskimage.cpp moc_diskimagepro.cpp moc_folderimage.cpp moc_miscdevices.cpp moc_createimagedialog.cpp moc_diskeditdialog.cpp moc_autoboot.cpp moc_autobootdialog.cpp moc_atarifilesystem.cpp moc_miscutils.cpp moc_textprinterwindow.cpp moc_cassettedialog.cpp moc_docdisplaywindow.cpp moc_bootoptionsdialog.cpp moc_network.cpp moc_logdisplaydialog.cpp moc_drivewidget.cpp moc_pclink.cpp moc_infowidget.cpp moc_serialport-unix.cpp
+compiler_moc_header_make_all: moc_mainwindow.cpp moc_diskimageatx.cpp moc_serialport.cpp moc_sioworker.cpp moc_optionsdialog.cpp moc_aboutdialog.cpp moc_diskimage.cpp moc_diskimagepro.cpp moc_folderimage.cpp moc_miscdevices.cpp moc_createimagedialog.cpp moc_diskeditdialog.cpp moc_autoboot.cpp moc_autobootdialog.cpp moc_atarifilesystem.cpp moc_miscutils.cpp moc_textprinterwindow.cpp moc_cassettedialog.cpp moc_docdisplaywindow.cpp moc_bootoptionsdialog.cpp moc_network.cpp moc_logdisplaydialog.cpp moc_drivewidget.cpp moc_pclink.cpp moc_infowidget.cpp moc_serialport-unix.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindow.cpp moc_serialport.cpp moc_sioworker.cpp moc_optionsdialog.cpp moc_aboutdialog.cpp moc_diskimage.cpp moc_diskimagepro.cpp moc_folderimage.cpp moc_miscdevices.cpp moc_createimagedialog.cpp moc_diskeditdialog.cpp moc_autoboot.cpp moc_autobootdialog.cpp moc_atarifilesystem.cpp moc_miscutils.cpp moc_textprinterwindow.cpp moc_cassettedialog.cpp moc_docdisplaywindow.cpp moc_bootoptionsdialog.cpp moc_network.cpp moc_logdisplaydialog.cpp moc_drivewidget.cpp moc_pclink.cpp moc_infowidget.cpp moc_serialport-unix.cpp
+	-$(DEL_FILE) moc_mainwindow.cpp moc_diskimageatx.cpp moc_serialport.cpp moc_sioworker.cpp moc_optionsdialog.cpp moc_aboutdialog.cpp moc_diskimage.cpp moc_diskimagepro.cpp moc_folderimage.cpp moc_miscdevices.cpp moc_createimagedialog.cpp moc_diskeditdialog.cpp moc_autoboot.cpp moc_autobootdialog.cpp moc_atarifilesystem.cpp moc_miscutils.cpp moc_textprinterwindow.cpp moc_cassettedialog.cpp moc_docdisplaywindow.cpp moc_bootoptionsdialog.cpp moc_network.cpp moc_logdisplaydialog.cpp moc_drivewidget.cpp moc_pclink.cpp moc_infowidget.cpp moc_serialport-unix.cpp
 moc_mainwindow.cpp: mainwindow.h \
 		optionsdialog.h \
 		serialport.h \
@@ -630,7 +697,18 @@ moc_mainwindow.cpp: mainwindow.h \
 		infowidget.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2020/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2020 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include mainwindow.h -o moc_mainwindow.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2K21/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2K21 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include mainwindow.h -o moc_mainwindow.cpp
+
+moc_diskimageatx.cpp: diskimageatx.h \
+		diskimage.h \
+		sioworker.h \
+		serialport.h \
+		serialport-win32.h \
+		serialport-unix.h \
+		miscutils.h \
+		moc_predefs.h \
+		/usr/lib/qt5/bin/moc
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2K21/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2K21 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include diskimageatx.h -o moc_diskimageatx.cpp
 
 moc_serialport.cpp: serialport.h \
 		serialport-win32.h \
@@ -638,7 +716,7 @@ moc_serialport.cpp: serialport.h \
 		serialport-unix.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2020/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2020 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include serialport.h -o moc_serialport.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2K21/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2K21 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include serialport.h -o moc_serialport.cpp
 
 moc_sioworker.cpp: sioworker.h \
 		serialport.h \
@@ -646,7 +724,7 @@ moc_sioworker.cpp: sioworker.h \
 		serialport-unix.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2020/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2020 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include sioworker.h -o moc_sioworker.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2K21/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2K21 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include sioworker.h -o moc_sioworker.cpp
 
 moc_optionsdialog.cpp: optionsdialog.h \
 		serialport.h \
@@ -654,12 +732,12 @@ moc_optionsdialog.cpp: optionsdialog.h \
 		serialport-unix.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2020/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2020 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include optionsdialog.h -o moc_optionsdialog.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2K21/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2K21 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include optionsdialog.h -o moc_optionsdialog.cpp
 
 moc_aboutdialog.cpp: aboutdialog.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2020/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2020 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include aboutdialog.h -o moc_aboutdialog.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2K21/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2K21 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include aboutdialog.h -o moc_aboutdialog.cpp
 
 moc_diskimage.cpp: diskimage.h \
 		sioworker.h \
@@ -669,7 +747,7 @@ moc_diskimage.cpp: diskimage.h \
 		miscutils.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2020/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2020 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include diskimage.h -o moc_diskimage.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2K21/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2K21 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include diskimage.h -o moc_diskimage.cpp
 
 moc_diskimagepro.cpp: diskimagepro.h \
 		diskimage.h \
@@ -680,7 +758,7 @@ moc_diskimagepro.cpp: diskimagepro.h \
 		miscutils.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2020/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2020 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include diskimagepro.h -o moc_diskimagepro.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2K21/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2K21 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include diskimagepro.h -o moc_diskimagepro.cpp
 
 moc_folderimage.cpp: folderimage.h \
 		diskimage.h \
@@ -691,7 +769,7 @@ moc_folderimage.cpp: folderimage.h \
 		miscutils.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2020/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2020 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include folderimage.h -o moc_folderimage.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2K21/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2K21 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include folderimage.h -o moc_folderimage.cpp
 
 moc_miscdevices.cpp: miscdevices.h \
 		sioworker.h \
@@ -700,12 +778,12 @@ moc_miscdevices.cpp: miscdevices.h \
 		serialport-unix.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2020/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2020 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include miscdevices.h -o moc_miscdevices.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2K21/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2K21 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include miscdevices.h -o moc_miscdevices.cpp
 
 moc_createimagedialog.cpp: createimagedialog.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2020/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2020 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include createimagedialog.h -o moc_createimagedialog.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2K21/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2K21 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include createimagedialog.h -o moc_createimagedialog.cpp
 
 moc_diskeditdialog.cpp: diskeditdialog.h \
 		atarifilesystem.h \
@@ -717,7 +795,7 @@ moc_diskeditdialog.cpp: diskeditdialog.h \
 		miscutils.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2020/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2020 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include diskeditdialog.h -o moc_diskeditdialog.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2K21/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2K21 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include diskeditdialog.h -o moc_diskeditdialog.cpp
 
 moc_autoboot.cpp: autoboot.h \
 		sioworker.h \
@@ -726,12 +804,12 @@ moc_autoboot.cpp: autoboot.h \
 		serialport-unix.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2020/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2020 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include autoboot.h -o moc_autoboot.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2K21/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2K21 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include autoboot.h -o moc_autoboot.cpp
 
 moc_autobootdialog.cpp: autobootdialog.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2020/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2020 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include autobootdialog.h -o moc_autobootdialog.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2K21/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2K21 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include autobootdialog.h -o moc_autobootdialog.cpp
 
 moc_atarifilesystem.cpp: atarifilesystem.h \
 		diskimage.h \
@@ -742,17 +820,17 @@ moc_atarifilesystem.cpp: atarifilesystem.h \
 		miscutils.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2020/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2020 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include atarifilesystem.h -o moc_atarifilesystem.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2K21/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2K21 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include atarifilesystem.h -o moc_atarifilesystem.cpp
 
 moc_miscutils.cpp: miscutils.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2020/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2020 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include miscutils.h -o moc_miscutils.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2K21/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2K21 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include miscutils.h -o moc_miscutils.cpp
 
 moc_textprinterwindow.cpp: textprinterwindow.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2020/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2020 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include textprinterwindow.h -o moc_textprinterwindow.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2K21/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2K21 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include textprinterwindow.h -o moc_textprinterwindow.cpp
 
 moc_cassettedialog.cpp: cassettedialog.h \
 		sioworker.h \
@@ -761,32 +839,32 @@ moc_cassettedialog.cpp: cassettedialog.h \
 		serialport-unix.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2020/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2020 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include cassettedialog.h -o moc_cassettedialog.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2K21/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2K21 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include cassettedialog.h -o moc_cassettedialog.cpp
 
 moc_docdisplaywindow.cpp: docdisplaywindow.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2020/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2020 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include docdisplaywindow.h -o moc_docdisplaywindow.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2K21/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2K21 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include docdisplaywindow.h -o moc_docdisplaywindow.cpp
 
 moc_bootoptionsdialog.cpp: bootoptionsdialog.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2020/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2020 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include bootoptionsdialog.h -o moc_bootoptionsdialog.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2K21/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2K21 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include bootoptionsdialog.h -o moc_bootoptionsdialog.cpp
 
 moc_network.cpp: network.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2020/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2020 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include network.h -o moc_network.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2K21/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2K21 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include network.h -o moc_network.cpp
 
 moc_logdisplaydialog.cpp: logdisplaydialog.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2020/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2020 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include logdisplaydialog.h -o moc_logdisplaydialog.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2K21/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2K21 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include logdisplaydialog.h -o moc_logdisplaydialog.cpp
 
 moc_drivewidget.cpp: drivewidget.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2020/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2020 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include drivewidget.h -o moc_drivewidget.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2K21/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2K21 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include drivewidget.h -o moc_drivewidget.cpp
 
 moc_pclink.cpp: pclink.h \
 		sioworker.h \
@@ -795,12 +873,12 @@ moc_pclink.cpp: pclink.h \
 		serialport-unix.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2020/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2020 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include pclink.h -o moc_pclink.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2K21/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2K21 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include pclink.h -o moc_pclink.cpp
 
 moc_infowidget.cpp: infowidget.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2020/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2020 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include infowidget.h -o moc_infowidget.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2K21/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2K21 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include infowidget.h -o moc_infowidget.cpp
 
 moc_serialport-unix.cpp: serialport-unix.h \
 		serialport.h \
@@ -808,7 +886,7 @@ moc_serialport-unix.cpp: serialport-unix.h \
 		serialport-unix.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2020/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2020 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include serialport-unix.h -o moc_serialport-unix.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/paul/qtProjects/AspeQt-2K21/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/paul/qtProjects/AspeQt-2K21 -I/usr/include/x86_64-linux-gnu/qt5/QtZlib -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include serialport-unix.h -o moc_serialport-unix.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -898,6 +976,15 @@ main.o: main.cpp mainwindow.h \
 		infowidget.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
 
+diskimageatx.o: diskimageatx.cpp diskimageatx.h \
+		diskimage.h \
+		sioworker.h \
+		serialport.h \
+		serialport-win32.h \
+		serialport-unix.h \
+		miscutils.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o diskimageatx.o diskimageatx.cpp
+
 mainwindow.o: mainwindow.cpp mainwindow.h \
 		optionsdialog.h \
 		serialport.h \
@@ -917,6 +1004,7 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		infowidget.h \
 		ui_mainwindow.h \
 		diskimagepro.h \
+		diskimageatx.h \
 		folderimage.h \
 		pclink.h \
 		miscdevices.h \
@@ -1183,6 +1271,9 @@ qrc_atarifiles.o: qrc_atarifiles.cpp
 
 moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp
+
+moc_diskimageatx.o: moc_diskimageatx.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_diskimageatx.o moc_diskimageatx.cpp
 
 moc_serialport.o: moc_serialport.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_serialport.o moc_serialport.cpp

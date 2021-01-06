@@ -9,8 +9,6 @@
 #include "miscdevices.h"
 #include "aspeqtsettings.h"
 #include "mainwindow.h"
-
-
 #include <QDateTime>
 #include <QtDebug>
 #include <QDesktopServices>
@@ -204,130 +202,153 @@ void RCl::handleCommand(quint8 command, quint16 aux)
 
     switch (command) {
 
-    case 0x91 : // list rcl folder(up to 250 files)
+    case 0x89 : // set list filter
     {
         if (!sio->port()->writeCommandAck()) {
             return;
         }
 
-        quint8 cmdAux   = (aux  / 256);
-        quint8 cmdpPrm = (aux  % 256);
+        QByteArray ddata = sio->port()->readDataFrame(32);
+        if (ddata.isEmpty()) {
+            qCritical() << "!e" << tr("[%1] Read data frame failed")
+                           .arg(deviceName());
+            sio->port()->writeDataNak();
+            sio->port()->writeError();
+            fFilter = "*";
+            return;
+        }
+        sio->port()->writeDataAck();
+        sio->port()->writeComplete();
+        fFilter = ddata;
+        qCritical() << "!i" << tr("[%1] List filter set: [%2]")
+                       .arg(deviceName())
+                       .arg(fFilter);
+        return;
 
-        if(cmdAux == 0)
-        {
-            QByteArray ddata = sio->port()->readDataFrame(32);
-            if (ddata.isEmpty()) {
-                qCritical() << "!e" << tr("[%1] Read data frame failed")
-                               .arg(deviceName());
-                sio->port()->writeDataNak();
-                sio->port()->writeError();
-                fFilter = "*";
-                return;
-            }
-            sio->port()->writeDataAck();
-            sio->port()->writeComplete();
-            fFilter = ddata;
-            qCritical() << "!i" << tr("[%1] List filter set: [%2]")
-                           .arg(deviceName())
-                           .arg(fFilter);
+    }
+        break;
+
+    case 0x90 : // get list option
+    {
+        if (!sio->port()->writeCommandAck()) {
             return;
         }
 
-        else if (cmdAux == 1)
+        quint8 cmdpPrm  = (aux  % 256);
+        QByteArray  ddata(255, 0);
+
+        if(!files.contains(cmdpPrm))
         {
-
-            QByteArray  ddata(255, 0);
-            QString pth = respeqtSettings->lastRclDir() + fPath;
-            QDir dir(pth);      
-            QStringList filters;
-            (fFilter == "*" || fFilter == "") ? filters <<"*" : filters <<(fFilter+"*");
-
-            dir.setNameFilters(filters);
-            QFileInfoList list = dir.entryInfoList();
-            quint8 index  = 0;
-            ddata[253] =  0x00;
-            ddata[254] =  0x00;
-            ddata[index++] = (char)155;
-            files.clear();
-
-            for (quint8 i = cmdpPrm; i < list.size() && i < 250 && i-cmdpPrm < 16;  ++i) {
-                QFileInfo fileInfo = list.at(i);
-                QString dosfilname;
-
-                  fileInfo.isDir()? dosfilname = "+ " +fileInfo.fileName().trimmed(): dosfilname = fileInfo.fileName().trimmed();
-
-                  if(fileInfo.fileName().trimmed() == "." )  dosfilname = "+[home]";
-                  else if(fileInfo.fileName().trimmed() == ".." )  dosfilname = "+[up]";
-                  else if(fileInfo.isDir())   dosfilname = "+[" +fileInfo.fileName().trimmed()+"]";
-                  else dosfilname = fileInfo.fileName().trimmed();
-
-                  quint8 fileNum = i-cmdpPrm+0x41;
-                  files.insert(fileNum, dosfilname);
-
-                  QString atariFilenum = QString(QChar::fromLatin1(fileNum));
-                  QString atariFileDsc = dosfilname.left(33);
-
-                  QByteArray fn  = (" "+atariFilenum+" "+atariFileDsc).toUtf8();
-                  if(index + fn.length() < 250) {
-                    for(int n = 0; n < fn.length(); n++)
-                        ddata[index++] = fn[n] & 0xff;
-
-                    ddata[index++] = (char)155;
-
-                  } else  {
-                    break;
-                  }
-
-                  if( i > cmdpPrm) ddata[253] =  0x41 + (i - cmdpPrm);
-                  ddata[254] =  i + 1;
-
-            }
-
-            for(int n = index; n < 253 ; n++) ddata[index++] = 0x00;
-            sio->port()->writeComplete();
-            sio->port()->writeDataFrame(ddata);
+            sio->port()->writeDataNak();
+            sio->port()->writeError();
             return;
+        }
+
+        imageFileName = files.value(cmdpPrm);
+        if(imageFileName.startsWith("+"))
+        {
+            imageFileName = imageFileName.mid(2, imageFileName.length()-3).trimmed();
+            if(imageFileName == "home")
+                fPath = "";
+            else if(imageFileName == "up" )
+                fPath = fPath.left(fPath.lastIndexOf("/"));
+            else
+                fPath = fPath + "/"+ imageFileName;
+
+            ddata[0] = '$';
+            qCritical() << "!i" << tr("[%1] Set Path: [%2]")
+                           .arg(deviceName())
+                           .arg(fPath);
+
         }
         else
         {
-            QByteArray  ddata(255, 0);
+            ddata[0] = char(cmdpPrm);
+        }
 
-            if(!files.contains(cmdpPrm))
-            {
-                sio->port()->writeDataNak();
-                sio->port()->writeError();
-                return;
-             }
+        ddata[1] = (char)155;
+        sio->port()->writeComplete();
+        sio->port()->writeDataFrame(ddata);
+        return;
+    }
 
-            imageFileName = files.value(cmdpPrm);
-            if(imageFileName.startsWith("+"))
-            {
-                 imageFileName = imageFileName.mid(2, imageFileName.length()-3).trimmed();
-                 if(imageFileName == "home")
-                     fPath = "";
-                  else if(imageFileName == "up" )
-                     fPath = fPath.left(fPath.lastIndexOf("/"));
-                  else
-                    fPath = fPath + "/"+ imageFileName;
+        break;
 
-                 ddata[0] = '$';
-                 qCritical() << "!i" << tr("[%1] Set Path: [%2]")
-                                .arg(deviceName())
-                                .arg(fPath);
 
-            }
-            else
-            {
-                 ddata[0] = char(cmdpPrm);
-            }
 
-            ddata[1] = (char)155;
-            sio->port()->writeComplete();
-            sio->port()->writeDataFrame(ddata);
+    case 0x91 : // list rcl folder(up to 65000 files)
+    {
+        if (!sio->port()->writeCommandAck()) {
             return;
         }
+
+        QByteArray  ddata(255, 0);
+        QString pth = respeqtSettings->lastRclDir() + fPath;
+        QDir dir(pth);
+        QStringList filters;
+        if(fFilter == "*" || fFilter == "")
+        {
+            filters << "*.*";
+            filters << "*";
+        }
+        else
+        {
+            filters <<fFilter+"*.*";
+            filters <<fFilter+"*";
+        }
+
+        dir.setNameFilters(filters);
+        QFileInfoList list = dir.entryInfoList();
+        quint8 index  = 0;
+        ddata[index++] = (char)155;
+        ddata[252] =  0;
+        ddata[253] =  0;
+        ddata[254] =  0;
+        files.clear();
+
+        for (quint16 i = aux; i < list.size() && i < 0xFFFA && i-aux < 0x10;  ++i) {
+            QFileInfo fileInfo = list.at(i);
+            QString dosfilname;
+
+            fileInfo.isDir()? dosfilname = "+ " +fileInfo.fileName().trimmed(): dosfilname = fileInfo.fileName().trimmed();
+
+            if(fileInfo.fileName().trimmed() == "." )  dosfilname = "+[home]";
+            else if(fileInfo.fileName().trimmed() == ".." )  dosfilname = "+[up]";
+            else if(fileInfo.isDir())   dosfilname = "+[" +fileInfo.fileName().trimmed()+"]";
+            else dosfilname = fileInfo.fileName().trimmed();
+
+            quint8 fileNum = i-aux+0x41;
+            files.insert(fileNum, dosfilname);
+
+            QString atariFilenum = QString(QChar::fromLatin1(fileNum));
+            QString atariFileDsc = dosfilname.left(33);
+
+            QByteArray fn  = (" "+atariFilenum+" "+atariFileDsc).toUtf8();
+            if(index + fn.length() < 250) {
+                for(int n = 0; n < fn.length(); n++)
+                    ddata[index++] = fn[n] & 0xff;
+
+                ddata[index++] = (char)155;
+
+            } else  {
+                break;
+            }
+
+            if(index > 0 ) ddata[252] =  0x41 + (i - aux);
+
+            ddata[253] =  (i + 1) / 256;
+            ddata[254] =  (i + 1) % 256;
+
+        }
+
+        for(int n = index; n < 252 ; n++) ddata[index++] = 0x00;
+        sio->port()->writeComplete();
+        sio->port()->writeDataFrame(ddata);
+        return;
+
+
     }
-        break;
+      break;
 
     case 0x92 :   // get slots filename
     {
