@@ -54,9 +54,9 @@ Filename
 	.ds 16		
 IOBuf
 	.ds 253
-IOLc   
+IOFileOption   
     .ds   1	
-IOLp
+IOLastFile
     .ds   1    			
 InputBuf
 	.ds 255

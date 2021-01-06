@@ -36,8 +36,8 @@ icblen	equ $0348
 icaux1	equ $034A
 icaux2	equ $034B
 
-ciov	equ $e456
-portb	equ $d301
+ciov	equ $E456
+portb	equ $D301
 
 dday    equ $077B
 dmth    equ $077C
@@ -57,6 +57,8 @@ I_GETTD equ $FFC0
 
 
 	.enum Cmd
+SetDR           = $89 
+PutDR           = $90
 GetDR           = $91	
 GetSL           = $92
 GetTD	        = $93
@@ -71,6 +73,7 @@ Print           = $9B
 	.ende
 
 	.enum DCB
+SetDR
 PutDR	
 GetDR	
 GetSL
@@ -100,9 +103,14 @@ ArgIndex	.ds 1
 FieldWidth	.ds 1
 StringIndex	.ds 1
 
-.macro ldxy
-	ldx #< :1
-	ldy #> :1
+.macro ldyx
+	ldy #< :1
+	ldx #> :1
+.endm
+
+.macro styx
+	sty :1
+	stx :1+1
 .endm
 
 .macro ldax
@@ -111,7 +119,7 @@ StringIndex	.ds 1
 .endm
 
 .macro stax
-	sta :1
-	stx :1+1
+ 	sta :1
+ 	stx :1+1
 .endm
 

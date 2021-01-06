@@ -26,8 +26,7 @@ Start
 	.byte 125,155,'AspeQT             www.13leader.net',155
 	.byte         '------             cart        2K21',155,155,155,0
 	
-	icl 'menu_2.asm'	
-	
+	icl 'menu_2.asm'		
 	icl 'printf.asm'
 	
   	org $4500 		
@@ -52,9 +51,9 @@ Filename
 	.ds 16		
 IOBuf
 	.ds 253
-IOLc   
+IOFileOption   
     .ds   1	
-IOLp
+IOLastFile
     .ds   1    			
 InputBuf
 	.ds 255

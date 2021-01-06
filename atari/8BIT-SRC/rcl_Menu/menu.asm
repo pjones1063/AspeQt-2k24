@@ -46,14 +46,13 @@ Path
 Filename
 	.ds 16		
 IOBuf
-	.ds 253
-IOLc   
+	.ds 252
+IOFileOption   
     .ds   1	
-IOLp
-    .ds   1    			
+IOLastFile
+    .ds   2			
 InputBuf
 	.ds 255
 
-	
 	run Start
 	

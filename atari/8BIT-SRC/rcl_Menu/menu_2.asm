@@ -100,24 +100,24 @@ ok1
 	bne OneSlot
 MultiSlot
     ldx #$01
-    stx IOLp
+    stx IOLastFile
 LOOPa
     txa  
     sta drive
     jsr getSlotFileName
-    adb IOLp #01
-    ldx IOLp
+    adb IOLastFile #01
+    ldx IOLastFile
     cpx #$0A
     bne LOOPa
 
     ldx #$1A
-    stx IOLp
+    stx IOLastFile
 LOOPb
     txa  
     sta drive
     jsr getSlotFileName
-    adb IOLp #01
-    ldx IOLp
+    adb IOLastFile #01
+    ldx IOLastFile
     cpx #$20
     bne LOOPb
     jmp Main       
@@ -485,8 +485,9 @@ AllDrives
 //
 // 
 .proc ListDir
-    ldx #$00
-    stx IOLp
+    lda #$00
+    sta IOLastFile + 1
+    sta IOLastFile
     jsr printf
 	.byte 155,'Enter Filter [*]: ',0
     jsr input
@@ -502,10 +503,10 @@ loop2
     bne Loop2
 FlFin2
 	lda #0
-	sta IOBuf,x   
-	   
-    lda #DCB.PutDR
+	sta IOBuf,x   	   
+    lda #DCB.SetDR
     jsr SetUpDCB
+    mva #$00 DAUX1    
     mva #$00 DAUX2
     jsr SIOV
     bpl list2
@@ -516,8 +517,8 @@ FlFin2
 list2    
     lda #DCB.GetDR
     jsr SetUpDCB
-    mva IOLp DAUX1
-    mva #$01 DAUX2
+    mva IOLastFile+1   DAUX1
+    mva IOLastFile     DAUX2
     jsr SIOV
     bpl OK2a
     jsr Printf
@@ -525,7 +526,7 @@ list2
     sec
     jmp Main
 OK2a
-    lda IOLc 
+    lda IOFileOption 
 	cmp #$00
     jeq allDone2
     sta SelectB
@@ -544,10 +545,10 @@ OK2a
 	
 // ***
     sta ArgFlag
-    lda #DCB.GetDR
+    lda #DCB.PutDR
     jsr SetUpDCB
     mva ArgFlag DAUX1
-    mva #02     DAUX2
+	mva #0      DAUX2
     jsr SIOV
     bpl OK2b
     jsr Printf
@@ -558,8 +559,7 @@ OK2b
     lda IOBuf
     cmp #'$'
     jeq ListDir   	
-// ***	
-		
+
 getSlot
     jsr printf
 	.byte 155,'Enter Slot [1-9] [J-O] : ',0	
@@ -571,15 +571,18 @@ ok1
     jsr GetDrvWC
     sta Drive
     jmp DoMountAndBoot
+
 next2       
- 	ldx IOLp
+ 	ldx IOLastFile + 1
  	cpx #00
- 	jne list2 
+ 	jne list2
+ 	ldx IOLastFile
+ 	cpx #00 
+ 	jne list2 	 
 allDone2
 	clc
 	jmp Main	
 .endp
-
 
 .proc SetPrintOn
 	ldy #01
@@ -890,16 +893,23 @@ Loop
 	rts
 
 DCBIndex
-	.byte 9,19,29,39,49,59,69,79,89,99,109,119,129
+	.byte 9,19,29,39,49,59,69,79,89,99,109,119,129,139
 .endp
 
 DCBTable
-DCBPutDR
-	.byte Cmd.GetDR
+DCBSetDR 
+	.byte Cmd.SetDR
 	.byte $80
 	.word IOBuf
 	.byte $06,$00
 	.word $20	
+	.byte $00,$00
+DCBPutDR
+	.byte Cmd.PutDR
+	.byte $40
+	.word IOBuf
+	.byte $08,$00
+	.word $FF	
 	.byte $00,$00
 DCBGetDR
 	.byte Cmd.GetDR	  
@@ -907,7 +917,7 @@ DCBGetDR
 	.word IOBuf        
 	.byte $08,$00	   
 	.word $FF	  
-	.byte $00,$00	  
+	.byte $00,$00		  
 DCBGetSL
 	.byte Cmd.GetSL	  
 	.byte $40		  
