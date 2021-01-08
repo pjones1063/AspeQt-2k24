@@ -89,20 +89,37 @@ MountAndBoot
 Print
 	.ende
 
-
 comfnam	equ $21
 comtab	equ $0A
 
 	org $80
-Temp1		.ds 2
-Temp2		.ds 2
-Temp3		.ds 2
-Temp4		.ds 2
+Temp1			.ds 2
+Temp2			.ds 2
+Temp3			.ds 2
+Temp4			.ds 2
 LeadingZeroFlag	.ds 1
-ArgIndex	.ds 1
-FieldWidth	.ds 1
-StringIndex	.ds 1
+ArgIndex		.ds 1
+FieldWidth		.ds 1
+StringIndex		.ds 1
+	
+SelectB			.ds 1 	
+ArgFlag			.ds 1
+CreateFlag		.ds 1
+Slot			.ds 1
+Drive			.ds 1
+DriveID1		.ds 1
+DriveID2		.ds 1
 
+
+	org  $3600
+Path 			.ds 22
+Filename		.ds 16		
+
+IOBuf			.ds 252
+IOFileOption 	.ds   1	
+IOLastFile		.ds   2			
+InputBuf 		.ds 255
+	
 .macro ldyx
 	ldy #< :1
 	ldx #> :1
@@ -122,4 +139,3 @@ StringIndex	.ds 1
  	sta :1
  	stx :1+1
 .endm
-

@@ -1,4 +1,3 @@
-;@com.wudsn.ide.asm.hardware=ATARI8BIT
 
 ;  This program is free software; you can redistribute it and/or modify
 ;  it under the terms of the GNU General Public License as published by
@@ -14,45 +13,19 @@
 ;  along with this program; if not, write to the Free Software
 ;  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 ;
+;	OPT h-t+
 
-	icl "menu_1.asm"
-	
-	org $4000
+	icl 'menu_sym.asm'
+	org $BFFA
+ 	.word Start
+ 	.word $0500
+ 	.word Init
+	org $A000
 Start
 	jsr printf
 	.byte 125,155,'AspeQT             www.13leader.net',155
-	.byte         '------                         2K21',155,155,155,0
+	.byte         '------             boot        2K21',155,155,155,0
 		
- 	icl 'menu_2.asm'    
- 	
-    icl 'printf.asm'      
-		
-SelectB
-	.byte 0 	
-ArgFlag
-	.byte 0
-CreateFlag
-	.byte 0
-Slot
-	.byte 0
-Drive
-	.byte 0
-DriveID1
-	.byte 0
-DriveID2
-	.byte 0
-Path 
-	.ds 22
-Filename
-	.ds 16		
-IOBuf
-	.ds 252
-IOFileOption   
-    .ds   1	
-IOLastFile
-    .ds   2			
-InputBuf
-	.ds 255
-
-	run Start
-	
+	icl 'menu.asm'	
+	icl 'printf.asm'	 
+ 		

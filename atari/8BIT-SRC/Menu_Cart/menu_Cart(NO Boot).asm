@@ -1,4 +1,3 @@
-
 ;  This program is free software; you can redistribute it and/or modify
 ;  it under the terms of the GNU General Public License as published by
 ;  the Free Software Foundation; either version 2 of the License, or
@@ -15,51 +14,19 @@
 ;
 ;	OPT h-t+
 
-	icl 'menu_1.asm'
-	
-	org $BFFA
+	 icl 'menu_sym.asm'
+	 org $BFFA
  	.word Start
- 	.word $0500
+ 	.word $0400
  	.word Init
 	    
-	org $A000
+	org $A000	
 Start
 	jsr printf
 	.byte 125,155,'AspeQT             www.13leader.net',155
-	.byte         '------             boot        2K21',155,155,155,0
-		
-	icl 'menu_2.asm'	
+	.byte         '------             cart        2K21',155,155,155,0
 	
-	icl 'printf.asm'
- 		
-  	org $4500 		
-		
-SelectB
-	.byte 0 	
-ArgFlag
-	.byte 0
-CreateFlag
-	.byte 0
-Slot
-	.byte 0
-Drive
-	.byte 0
-DriveID1
-	.byte 0
-DriveID2
-	.byte 0
-Path 
-	.ds 22
-Filename
-	.ds 16		
-IOBuf
-	.ds 253
-IOFileOption   
-    .ds   1	
-IOLastFile
-    .ds   1    			
-InputBuf
-	.ds 255
-
+	icl 'menu.asm'		
+	icl 'printf.asm'	
 	
-	
+ 
