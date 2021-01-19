@@ -543,7 +543,6 @@ OK2a
 	cmp #155
 	jeq next2
 	
-// ***
     sta ArgFlag
     lda #DCB.PutDR
     jsr SetUpDCB
@@ -559,7 +558,8 @@ OK2b
     lda IOBuf
     cmp #'$'
     jeq ListDir   	
-
+    cmp #'@'
+    jeq allDone2   	
 getSlot
     jsr printf
 	.byte 155,'Enter Slot [1-9] [J-O] : ',0	

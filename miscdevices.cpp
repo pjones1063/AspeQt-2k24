@@ -239,33 +239,32 @@ void RCl::handleCommand(quint8 command, quint16 aux)
 
         if(!files.contains(cmdpPrm))
         {
-            sio->port()->writeDataNak();
-            sio->port()->writeError();
-            return;
-        }
-
-        imageFileName = files.value(cmdpPrm);
-        if(imageFileName.startsWith("+"))
-        {
-            imageFileName = imageFileName.mid(2, imageFileName.length()-3).trimmed();
-            if(imageFileName == "home")
-                fPath = "";
-            else if(imageFileName == "up" )
-                fPath = fPath.left(fPath.lastIndexOf("/"));
-            else
-                fPath = fPath + "/"+ imageFileName;
-
-            ddata[0] = '$';
-            qCritical() << "!i" << tr("[%1] Set Path: [%2]")
-                           .arg(deviceName())
-                           .arg(fPath);
-
+            ddata[0] = '@';
         }
         else
         {
-            ddata[0] = char(cmdpPrm);
-        }
+            imageFileName = files.value(cmdpPrm);
+            if(imageFileName.startsWith("+"))
+            {
+                imageFileName = imageFileName.mid(2, imageFileName.length()-3).trimmed();
+                if(imageFileName == "home")
+                    fPath = "";
+                else if(imageFileName == "up" )
+                    fPath = fPath.left(fPath.lastIndexOf("/"));
+                else
+                    fPath = fPath + "/"+ imageFileName;
 
+                ddata[0] = '$';
+                qCritical() << "!i" << tr("[%1] Set Path: [%2]")
+                               .arg(deviceName())
+                               .arg(fPath);
+
+            }
+            else
+            {
+                ddata[0] = char(cmdpPrm);
+            }
+        }
         ddata[1] = (char)155;
         sio->port()->writeComplete();
         sio->port()->writeDataFrame(ddata);
