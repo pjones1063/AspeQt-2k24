@@ -46,36 +46,6 @@ Unzip and mount the AspeQT image on MacOS
 
 
 
-###  Ubuntu/Debian installation instructions:
-
-* 1- Build a SIO2PC cable outlined in SIO2PC_Build_Instructions.pdf
-
-
- $ sudo apt update
- 
- $ sudo apt upgrade
-
- $ sudo apt install ./AspeQt-2K21-Ubuntu.deb
- 
- $ AspeQt 
-
-
-
-
-###  Raspberry Pi installation instructions:
-
-* 1- Build a SIO2PC cable outlined in SIO2PC_Build_Instructions.pdf
-
-
- $ sudo apt update
-
- $ sudo apt upgrade
-
- $ sudo apt install ./AspeQt-2K21-RasPI3B_Raspbian.deb
- 
- $ AspeQt 
-
-
 
 ###  Raspberry Pi or other Debian based Linux build instructions: 
 
