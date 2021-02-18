@@ -1,11 +1,8 @@
 #  Atari AspeQt-2K21
 
-##  Atari 8-bit in 2021 - 42 years after the 400/800 first release!
-
-
+###  Atari 8-bit in 2021 - 42 years after the 400/800 first release!
 
 ### Atari Serial Peripheral Emulator for Qt With 8bit Cartridge
-
 
 ### Summary
 
