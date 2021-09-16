@@ -2,6 +2,11 @@
 
 ###  Atari 8-bit in 2021 - 42 years after the 400/800 first release!
 
+![1](https://user-images.githubusercontent.com/3331718/133703260-5afaa720-ac44-45a2-921d-97ee0f0c18fb.png)
+
+
+
+
 ### Atari Serial Peripheral Emulator for Qt With 8bit Cartridge
 
 ### Summary
