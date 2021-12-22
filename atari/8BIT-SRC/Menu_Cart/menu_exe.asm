@@ -21,7 +21,7 @@
 Start
 	jsr printf
 	.byte 125,155,'AspeQT             www.13leader.net',155
-	.byte         '------                         2K21',155,155,155,0
+	.byte         '------                         2k22',155,155,155,0
 		
  	icl 'menu.asm'    
     icl 'printf.asm'      

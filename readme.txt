@@ -1,6 +1,6 @@
 
 
-AspeQt 2K21, Atari Serial Peripheral Emulator for Qt
+AspeQt 2k22, Atari Serial Peripheral Emulator for Qt
 
 www.13leader.net
 

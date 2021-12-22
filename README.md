@@ -1,6 +1,6 @@
-#  Atari AspeQt-2K21
+#  Atari AspeQt-2k22
 
-###  Atari 8-bit in 2021 - 42 years after the 400/800 first release!
+###  Atari 8-bit in 2022 - 42 years after the 400/800 first release!
 
 ![1](https://user-images.githubusercontent.com/3331718/133703260-5afaa720-ac44-45a2-921d-97ee0f0c18fb.png)
 
@@ -28,16 +28,16 @@ See readme.txt for more info
 #### Support and other inquiries can be made on our BBS at:   $ telnet 13leader.net 8023 or http://13leader.net
 
 
-### AspeQt 2K21 Cartridge
+### AspeQt 2k22 Cartridge
 
 The AspeQt 8bit Cartridge can be run from most Atari cart emulators (UnoCart, Ultimate Cart, etc.)  
 All AspeQt disk and most printer functions can be done using the cartridge. 
 
 Two versions of the cart are available:
 
-#####  MenuCart_BOOT_2K21.car - Boot D1: on power up 
+#####  MenuCart_BOOT_2k22.car - Boot D1: on power up 
 
-#####  MenuCart_NoneBOOT_2K21.car - No Disk boot on power up
+#####  MenuCart_NoneBOOT_2k22.car - No Disk boot on power up
 
 
 ### Windows and MacOS installation instructions:

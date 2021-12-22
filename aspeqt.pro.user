@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.13.3, 2021-01-11T20:15:20. -->
+<!-- Written by QtCreator 4.13.3, 2022-01-11T20:15:20. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -324,8 +324,8 @@
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">aspeqt2</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:/home/paul/qtProjects/AspeQt-2K21/aspeqt.pro</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/paul/qtProjects/AspeQt-2K21/aspeqt.pro</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:/home/paul/qtProjects/AspeQt-2k22/aspeqt.pro</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/paul/qtProjects/AspeQt-2k22/aspeqt.pro</value>
     <value type="QString" key="RunConfiguration.Arguments"></value>
     <value type="bool" key="RunConfiguration.Arguments.multi">false</value>
     <value type="QString" key="RunConfiguration.OverrideDebuggerStartup"></value>
