@@ -275,6 +275,7 @@ void OptionsDialog::on_useEmulationCustomCasBaudBox_toggled(bool checked)
     m_ui->emulationCustomCasBaudSpin->setEnabled(checked);
 }
 
+
 void OptionsDialog::on_buttonRclFolder_clicked()
 {
     QString dir;
