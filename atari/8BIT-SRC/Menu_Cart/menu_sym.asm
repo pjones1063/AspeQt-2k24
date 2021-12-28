@@ -70,6 +70,7 @@ AutoToggle	    = $98
 Save            = $99
 MountAndBoot    = $9A   
 Print           = $9B
+GetHostPath     = $9C
 	.ende
 
 	.enum DCB
@@ -87,6 +88,7 @@ GetDrvNum
 Save
 MountAndBoot
 Print
+GetHostPath
 	.ende
 
 comfnam	equ $21
@@ -138,4 +140,14 @@ InputBuf 		.ds 255
 .macro stax
  	sta :1
  	stx :1+1
+.endm
+
+.macro lday
+	lda #< :1
+	ldy #> :1
+.endm
+
+.macro stay
+ 	sta :1
+ 	sty :1+1
 .endm

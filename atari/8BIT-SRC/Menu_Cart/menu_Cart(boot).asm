@@ -20,6 +20,7 @@
  	.word Start
  	.word $0500
  	.word Init
+ 	
 	org $A000
 Start
 	jsr printf

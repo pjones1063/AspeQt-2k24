@@ -18,14 +18,17 @@
 	jsr printf
 	.byte 'A List Slot       J Auto Commit On',155
 	.byte 'B List Disk Image K Auto Commit Off',155
-	.byte 'C Create Disk     L Set Date',155
+	.byte 'C Create Disk     L Set Date',155,0
+    jsr printf	
     .byte 'D Mount Disk      M TD Line On',155
 	.byte 'E UnMount Disk    N TD Line Off',155
-	.byte 'F Save Disk       O Start Printer',155
-	.byte 'G Swap Slot       P Stop Printer',155,0
-    jsr printf
-	.byte 'H Boot .ATR       Q Exit to Dos',155
-	.byte 'I Boot .XEX       R Cold Reboot',155,0
+	.byte 'F Save Disk       O Start Printer',155,0
+	jsr printf
+	.byte 'G Swap Slot       P Stop Printer',155
+	.byte 'H Boot .ATR       Q AspeQT Path',155
+	.byte 'I Boot .XEX       R Exit to DOS',155,0
+	jsr printf
+	.byte '                  S Reboot',155,0
 .endp	
 	
 	
@@ -68,9 +71,11 @@
     jeq SetPrintOn
     cmp #'P'			// P TD Line On
     jeq SetPrintOff	
-	cmp #'Q'			// Q Exit to Dos
+    cmp #'Q'			// Q Display host path
+    jeq GetHostPath	
+	cmp #'R'			// R Exit to Dos
     jeq Exit
-	cmp #'R'			// R Cold Reboot
+	cmp #'S'			// S Cold Reboot
     jeq Reboot
 
 	jmp Start
@@ -143,6 +148,26 @@ OKa
 	.word Drive, Path
 	clc
 	rts	
+.endp
+
+//
+//
+//
+.proc GetHostPath
+   lda #DCB.GetHostPath
+   jsr SetUpDCB
+   jsr SIOV
+   bpl OKp
+   jsr Printf
+   .byte 155,'No server response!',0
+   sec
+   jmp main
+OKp
+   jsr Printf
+   .byte 155,'Remote Folder Path:',155,'%s',0
+   .word IOBuf
+   clc
+   jmp main	
 .endp
 
 
@@ -893,7 +918,7 @@ Loop
 	rts
 
 DCBIndex
-	.byte 9,19,29,39,49,59,69,79,89,99,109,119,129,139
+	.byte 9,19,29,39,49,59,69,79,89,99,109,119,129,139,149
 .endp
 
 DCBTable
@@ -995,6 +1020,14 @@ DCBPrint
 	.byte $06,$00
 	.word 0
 	.byte $00,$00	
+DCBGetPath
+	.byte Cmd.GetHostPath	
+	.byte $40
+	.word IOBuf
+	.byte $08,$00
+	.word $FF
+	.byte $00,$00	
+		
 		
 Symbol
 	.byte 'I_TDON  ',0
