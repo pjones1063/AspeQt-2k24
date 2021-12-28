@@ -24,7 +24,7 @@ QHash <quint8, QString> files;
 
 void Printer::handleCommand(quint8 command, quint16 aux)
 {
-    if(respeqtSettings->printerEmulation()) {  // Ignore printer commands  if Emulation turned OFF)    // 
+    if(respeqtSettings->printerEmulation()) {  // Ignore printer commands  if Emulation turned OFF)    //
         switch(command) {
         case 0x53:
             {
@@ -69,7 +69,7 @@ void Printer::handleCommand(quint8 command, quint16 aux)
                                    .arg(aux, 4, 16, QChar('0'));
                     return;
                 }
-                // Display Info message once  // 
+                // Display Info message once  //
                 if (!conversionMsgdisplayedOnce) {
                     qDebug() << "!n" << tr("[%1] Converting Inverse Video Characters for ASCII viewing").arg(deviceName()).arg(len);
                     conversionMsgdisplayedOnce = true;
@@ -275,7 +275,7 @@ void RCl::handleCommand(quint8 command, quint16 aux)
 
 
 
-    case 0x91 : // list rcl folder(up to 65000 files)
+    case 0x91 : // list  folder(up to 65000 files)
     {
         if (!sio->port()->writeCommandAck()) {
             return;
@@ -283,6 +283,21 @@ void RCl::handleCommand(quint8 command, quint16 aux)
 
         QByteArray  ddata(255, 0);
         QString pth = respeqtSettings->lastRclDir() + fPath;
+        if(pth.trimmed().isEmpty())
+        {
+            QByteArray fn = QString("Home not set in Options>Emulation").toUtf8();
+            for(int i=0; i < 253; i++)
+                ddata[i] = (fn.length() > i) ? (fn[i] & 0xff) : 0x00;
+            ddata[252] =  0x41;
+            ddata[253] =  (1) / 256;
+            ddata[254] =  (1) % 256;
+            qCritical() << "!e" << tr("** AspeQT home folder not set - Goto Tools>Options>Emulation");
+            sio->port()->writeComplete();
+            sio->port()->writeDataFrame(ddata);
+            return;
+        }
+
+
         QDir dir(pth);
         QStringList filters;
         if(fFilter == "*" || fFilter == "")
@@ -304,6 +319,7 @@ void RCl::handleCommand(quint8 command, quint16 aux)
         ddata[253] =  0;
         ddata[254] =  0;
         files.clear();
+
 
         for (quint16 i = aux; i < list.size() && i < 0xFFFA && i-aux < 0x10;  ++i) {
             QFileInfo fileInfo = list.at(i);
@@ -332,6 +348,7 @@ void RCl::handleCommand(quint8 command, quint16 aux)
             } else  {
                 break;
             }
+
 
             if(index > 0 ) ddata[252] =  0x41 + (i - aux);
 
@@ -808,6 +825,36 @@ void RCl::handleCommand(quint8 command, quint16 aux)
         emit togglePrinterServer(enable);
     }
       break;
+
+
+
+    case 0x9C : // get RCL path
+    {
+        if (!sio->port()->writeCommandAck()) {
+            return;
+        }
+
+        QByteArray  fdata(255, 0);
+        QString pth = respeqtSettings->lastRclDir() + fPath;
+        QByteArray fn = pth.toUtf8();
+
+        if(fn.length() < 5)
+        {
+            qCritical() << "!e" << tr("** AspeQT home folder not set - Goto Tools>Options>Emulation");
+            fn = QString("Home not set in Options >Emulation").toUtf8();
+        }
+
+        for(int i=0; i < 253; i++)
+            fdata[i] = (fn.length() > i) ? (fn[i] & 0xff) : 0x00;
+
+        qCritical() << "!i" << tr(" Get Path: [%1]") .arg(pth);
+
+        sio->port()->writeComplete();
+        sio->port()->writeDataFrame(fdata);
+        return;
+    }
+
+     break;
 
     default :
         // Invalid Command

@@ -615,7 +615,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>RCL client local path</string>
+           <string>AspeQt Home Folder</string>
           </property>
          </widget>
         </item>
