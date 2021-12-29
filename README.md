@@ -59,7 +59,7 @@ Unzip aspeqt_20.22-1_amd64.deb
 
 $ sudo apt install  ./aspeqt_20.22-1_amd64.deb
 
-$ sudo usermod -a -G dailout <username>
+$ sudo usermod -a -G dailout username
 
 $ Aspeqt
 
