@@ -103,8 +103,12 @@ $ Aspeqt
    
    $ make 
    
+   $ sudo usermod -a -G dailout username
    
-  * 7- Plug in the cable and run the AspeQt server.
+   
+  * 7- Reboot for usermod
+  
+  * 8 Plug in the cable and run the AspeQt server.
   
     $ ./AspeQt
     
