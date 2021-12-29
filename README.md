@@ -50,7 +50,18 @@ Unzip and run the AspeQt 32 or 64 bit exe application on Windows.
 
 Unzip and mount the AspeQT image on MacOS
 
+Allow AspeQT to run in MacOS Settings > Security and Privacy > Allow Apps Downloaded From
 
+
+### Ubuntu installation instructions:
+
+Unzip aspeqt_20.22-1_amd64.deb
+
+$ sudo apt -i ./aspeqt_20.22-1_amd64.deb
+
+$ sudo usermod -a -G dailout <username>
+
+$ Aspeqt
 
 
 ###  Raspberry Pi or other Debian based Linux build instructions: 
