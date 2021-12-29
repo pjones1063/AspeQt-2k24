@@ -57,7 +57,7 @@ Allow AspeQT to run in MacOS Settings > Security and Privacy > Allow Apps Downlo
 
 Unzip aspeqt_20.22-1_amd64.deb
 
-$ sudo apt isntall ./aspeqt_20.22-1_amd64.deb
+$ sudo apt install  ./aspeqt_20.22-1_amd64.deb
 
 $ sudo usermod -a -G dailout <username>
 
