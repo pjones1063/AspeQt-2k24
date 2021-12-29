@@ -55,13 +55,15 @@ Allow AspeQT to run in MacOS Settings > Security and Privacy > Allow Apps Downlo
 
 ### Ubuntu installation instructions:
 
-Unzip aspeqt_20.22-1_amd64.deb
+1- Build a SIO2PC cable outlined in SIO2PC_Build_Instructions.pdf
+
+2- Unzip aspeqt_20.22-1_amd64.deb
 
 $ sudo apt install  ./aspeqt_20.22-1_amd64.deb
 
 $ sudo usermod -a -G dailout username
 
-reboot for usermod
+3- reboot (for usermod)
 
 $ Aspeqt
 
