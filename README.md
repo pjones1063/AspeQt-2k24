@@ -61,6 +61,8 @@ $ sudo apt install  ./aspeqt_20.22-1_amd64.deb
 
 $ sudo usermod -a -G dailout username
 
+reboot for usermod
+
 $ Aspeqt
 
 
