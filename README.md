@@ -2,12 +2,13 @@
 
 ###  Atari 8-bit in 2022 - 43 years after the 400/800 first release!
 
-![1](https://user-images.githubusercontent.com/3331718/133703260-5afaa720-ac44-45a2-921d-97ee0f0c18fb.png)
 
-
+![image](https://user-images.githubusercontent.com/3331718/148091306-6e37ebd1-ba3b-4e63-b7d0-0e6a86ea3b6d.png)
 
 
 ### Atari Serial Peripheral Emulator for Qt With 8bit Cartridge
+![image](https://user-images.githubusercontent.com/3331718/148091507-c4aa6ec5-a155-463d-9abe-f371806fda31.png)
+
 
 ### Summary
 
