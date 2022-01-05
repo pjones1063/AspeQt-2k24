@@ -16,6 +16,9 @@ AspeQt emulates Atari SIO peripherals when connected to an Atari 8-bit computer 
 In that respect it's similar to programs like APE and Atari810. The main difference is that it's free
 (unlike APE) and it's cross-platform (unlike Atari810 and APE).
 
+![image](https://user-images.githubusercontent.com/3331718/148149370-520fe21f-ea5b-4697-9a6c-97bc180dfc35.png)
+
+
 See readme.txt for more info
 
 
