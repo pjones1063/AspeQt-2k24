@@ -37,6 +37,9 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
 
     m_ui->serialPortComboBox->clear();
     const QList<QSerialPortInfo>& infos = QSerialPortInfo::availablePorts();
+
+    m_ui->serialPortComboBox->addItem("ttyAspeQT","ttyAspeQT");
+
     for (QList<QSerialPortInfo>::const_iterator it = infos.begin() ; it!=infos.end() ; it++)
     {
         m_ui->serialPortComboBox->addItem(it->portName(),it->systemLocation());
@@ -73,6 +76,7 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
     m_ui->useLargerFont->setChecked(respeqtSettings->useLargeFont());
     m_ui->enableShade->setChecked(respeqtSettings->enableShade());
     m_ui->RclNameEdit->setText(respeqtSettings->lastRclDir());
+    m_ui->RclCommand->setText(respeqtSettings->lastRclCommand());
 
     switch (respeqtSettings->backend()) {
         case SERIAL_BACKEND_STANDARD:
@@ -258,6 +262,7 @@ void OptionsDialog::OptionsDialog_accepted()
     respeqtSettings->setUseLargeFont(m_ui->useLargerFont->isChecked());
     respeqtSettings->setEnableShade(m_ui->enableShade->isChecked());
     respeqtSettings->setRclDir(m_ui->RclNameEdit->text());
+    respeqtSettings->setRclCommand(m_ui->RclCommand->text());
 
     int backend = SERIAL_BACKEND_STANDARD;
     if (itemAtariSio->checkState(0) == Qt::Checked)

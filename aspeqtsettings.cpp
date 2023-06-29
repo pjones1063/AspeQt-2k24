@@ -83,6 +83,7 @@ AspeQtSettings::AspeQtSettings()
     mLastDiskImageDir = mSettings->value("LastDiskImageDir", "").toString();
     mLastFolderImageDir = mSettings->value("LastFolderImageDir", "").toString();
     mRclDir = mSettings->value("LastRclDir", "").toString();
+    mRclCommand = mSettings->value("LastRclCmd","").toString();
     mLastSessionDir = mSettings->value("LastSessionDir", "").toString();
     mLastExeDir = mSettings->value("LastExeDir", "").toString();
     mLastExtractDir = mSettings->value("LastExtractDir", "").toString();
@@ -103,8 +104,6 @@ AspeQtSettings::AspeQtSettings()
     mUseLargeFont = mSettings->value("UseLargeFont", false).toBool();
     mExplorerOnTop = mSettings->value("ExplorerOnTop", false).toBool();
     mEnableShade = mSettings->value("EnableShadeByDefault", true).toBool();
-    mRclDir = mSettings->value("LastRclDir","").toString();
-
 }
 
 AspeQtSettings::~AspeQtSettings()
@@ -164,8 +163,9 @@ void AspeQtSettings::saveSessionToFile(const QString &fileName)
         s.setValue("ExplorerOnTop", mExplorerOnTop);
         s.setValue("EnableShadeByDefault", mEnableShade);
         s.setValue("LastRclDir",mRclDir);
+        s.setValue("LastRclCmd",mRclCommand);
 
-    s.endGroup();
+       s.endGroup();
 //
     s.beginWriteArray("MountedImageSettings");
     for (int i = 0; i < 15; i++) {                      //
@@ -219,8 +219,8 @@ void AspeQtSettings::saveSessionToFile(const QString &fileName)
         mExplorerOnTop = s.value("ExplorerOnTop", false).toBool();
         mEnableShade = s.value("EnableShadeByDefault", true).toBool();
         mRclDir = mSettings->value("LastRclDir","").toString();
-
-    s.endGroup();
+        mRclCommand = mSettings->value("LastRclCmd","").toString();
+        s.endGroup();
  //
     s.beginReadArray("MountedImageSettings");
     for (int i = 0; i < 15; i++) {              //
@@ -707,6 +707,20 @@ void AspeQtSettings::setRclDir(const QString &dir)
     mRclDir = dir;
     mSettings->setValue("LastRclDir", mRclDir);
 }
+
+
+QString AspeQtSettings::lastRclCommand()
+{
+    return mRclCommand;
+}
+
+void AspeQtSettings::setRclCommand(const QString &cmd)
+{
+    mRclCommand = cmd;
+    mSettings->setValue("LastRclCmd", mRclCommand);
+}
+
+
 
 QString AspeQtSettings::lastSessionDir()
 {

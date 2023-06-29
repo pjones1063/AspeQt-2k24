@@ -68,6 +68,7 @@ public slots:
     void autoCommit(int no, bool st);
     void openRecent();
     void bootExeTriggered(const QString &fileName);
+    void bootCasTriggered(const QString &fileName);
     void printServer(bool on);
 
 private:

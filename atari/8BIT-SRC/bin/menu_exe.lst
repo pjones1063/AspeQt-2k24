@@ -1,0 +1,1750 @@
+mads 2.1.5
+Source: /home/paul/eclipse-workspace/AspeQt-2K22/atari/8BIT-SRC/Menu_Cart/menu_exe.asm
+     1
+     2
+     3 				;  This program is free software; you can redistribute it and/or modify
+     4 				;  it under the terms of the GNU General Public License as published by
+     5 				;  the Free Software Foundation; either version 2 of the License, or
+     6 				;  (at your option) any later version.
+     7 				;
+     8 				;  This program is distributed in the hope that it will be useful,
+     9 				;  but WITHOUT ANY WARRANTY; without even the implied warranty of
+    10 				;  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    11 				;  GNU General Public License for more details.
+    12 				;
+    13 				;  You should have received a copy of the GNU General Public License
+    14 				;  along with this program; if not, write to the Free Software
+    15 				;  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+    16 				;
+    17
+    18 					icl "menu_sym.asm"
+Source: /home/paul/eclipse-workspace/AspeQt-2K22/atari/8BIT-SRC/Menu_Cart/menu_sym.asm
+     1 				;
+     2 				;  This program is free software; you can redistribute it and/or modify
+     3 				;  it under the terms of the GNU General Public License as published by
+     4 				;  the Free Software Foundation; either version 2 of the License, or
+     5 				;  (at your option) any later version.
+     6 				;
+     7 				;  This program is distributed in the hope that it will be useful,
+     8 				;  but WITHOUT ANY WARRANTY; without even the implied warranty of
+     9 				;  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    10 				;  GNU General Public License for more details.
+    11 				;
+    12 				;  You should have received a copy of the GNU General Public License
+    13 				;  along with this program; if not, write to the Free Software
+    14 				;  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+    15 				;
+    16
+    17 = 0300			DDEVIC	equ $0300
+    18 = 0301			DUNIT	equ $0301
+    19 = 0302			DCOMND	equ $0302
+    20 = 0303			DSTATS	equ $0303
+    21 = 0304			DBUFLO	equ $0304
+    22 = 0305			DBUFHI	equ $0305
+    23 = 0306			DTIMLO	equ $0306
+    24 = 0307			DUNUSE	equ $0307
+    25 = 0308			DBYTLO	equ $0308
+    26 = 0309			DBYTHI	equ $0309
+    27 = 030A			DAUX1	equ $030A
+    28 = 030B			DAUX2	equ $030B
+    29 = 003C			NOCKSM	equ $003C
+    30
+    31 = 0342			iccom	equ $0342
+    32 = 0344			icbadr	equ $0344
+    33 = 0346			icptl	equ $0346
+    34 = 0347			icpth	equ $0347
+    35 = 0348			icblen	equ $0348
+    36 = 034A			icaux1	equ $034A
+    37 = 034B			icaux2	equ $034B
+    38
+    39 = E456			ciov	equ $E456
+    40 = D301			portb	equ $D301
+    41 = 077B			dday    equ $077B
+    42 = 077C			dmth    equ $077C
+    43 = 077D			dyer    equ $077D
+    44 = 077E			dhrs    equ $077E
+    45 = 077F			dmin    equ $077F
+    46 = 0780			dsec    equ $0780
+    47 = E459			SIOV	equ $E459
+    48 = FFC3			I_SETTD	equ $FFC3
+    49 = FFC6			I_TDON	equ $FFC6
+    50 = FFC0			I_GETTD equ $FFC0
+    51
+    52 = 000A			DOSVEC	equ $0A
+    53 = 000C			DOSINI	equ $0C
+    54 = 0021			comfnam	equ $21
+    55 = 000A			comtab	equ $0A
+    56
+    57
+    58 					.enum Cmd
+    59 = 0086			GetCmd	        = $86	
+    60 = 0087			RunCmd	        = $87
+    61 = 0088			GetTxt	        = $88
+    62 = 0089			SetDR           = $89 
+    63 = 0090			PutDR           = $90
+    64 = 0091			GetDR           = $91	
+    65 = 0092			GetSL           = $92
+    66 = 0093			GetTD	        = $93
+    67 = 0094			Swap	     	= $94
+    68 = 0095			Unmount		    = $95
+    69 = 0096			Mount		    = $96
+    70 = 0097			CreateAndMount	= $97
+    71 = 0098			AutoToggle	    = $98
+    72 = 0099			Save            = $99
+    73 = 009A			MountAndBoot    = $9A   
+    74 = 009B			Print           = $9B
+    75 = 009C			GetHostPath     = $9C
+    76 					.ende
+    77
+    78 					.enum DCB
+    79 = 0000			GetCmd
+    80 = 0001			RunCmd
+    81 = 0002			GetTxt
+    82 = 0003			SetDR
+    83 = 0004			PutDR	
+    84 = 0005			GetDR	
+    85 = 0006			GetSL
+    86 = 0007			GetTD
+    87 = 0008			Swap
+    88 = 0009			Unmount
+    89 = 000A			Mount
+    90 = 000B			CreateAndMount
+    91 = 000C			AutoToggle
+    92 = 000D			GetDrvNum
+    93 = 000E			Save
+    94 = 000F			MountAndBoot
+    95 = 0010			Print
+    96 = 0011			GetHostPath
+    97 					.ende
+    98
+    99
+   100 					org $80
+   101 = 0080			Temp1			.ds 2
+   102 = 0082			Temp2			.ds 2
+   103 = 0084			Temp3			.ds 2
+   104 = 0086			Temp4			.ds 2
+   105 = 0088			LeadingZeroFlag	.ds 1
+   106 = 0089			ArgIndex		.ds 1
+   107 = 008A			FieldWidth		.ds 1
+   108 = 008B			StringIndex		.ds 1
+   109 = 008C			SelectB			.ds 1 	
+   110 = 008D			ArgFlag			.ds 1
+   111 = 008E			CreateFlag		.ds 1
+   112 = 008F			Slot			.ds 1
+   113 = 0090			Drive			.ds 1
+   114 = 0091			DriveID1		.ds 1
+   115 = 0092			DriveID2		.ds 1
+   116
+   117 					org  $3600
+   118 = 3600			Path 			.ds 22
+   119 = 3616			Command         .ds 33
+   120 = 3637			Filename		.ds 16		
+   121 = 3647			IOBuf			.ds 252
+   122 = 3743			IOFileOption 	.ds 1	
+   123 = 3744			IOLastFile		.ds 2			
+   124 = 3746			InputBuf 		.ds 255
+   125 					
+   126 				.macro ldyx
+   127 					ldy #< :1
+   128 					ldx #> :1
+   129 				.endm
+   130
+   131 				.macro styx
+   132 					sty :1
+   133 					stx :1+1
+   134 				.endm
+   135
+   136 				.macro ldax
+   137 					lda #< :1
+   138 					ldx #> :1
+   139 				.endm
+   140
+   141 				.macro stax
+   142 				 	sta :1
+   143 				 	stx :1+1
+   144 				.endm
+   145
+   146 				.macro lday
+   147 					lda #< :1
+   148 					ldy #> :1
+   149 				.endm
+   150
+   151 				.macro stay
+   152 				 	sta :1
+   153 				 	sty :1+1
+   154 				.endm
+    19 					
+    20 					org $4000
+    21 				Start
+    22 FFFF> 4000-504B> 20 87 + 	jsr printf
+    23 4003 7D 9B 41 73 70 65 + 	.byte 125,155,'AspeQT             www.13leader.net',155
+    24 4029 2D 2D 2D 2D 2D 2D + 	.byte         '------             com         2k24',155,155,155,0
+    25 						
+    26 4050			 	icl 'menu.asm'    
+Source: /home/paul/eclipse-workspace/AspeQt-2K22/atari/8BIT-SRC/Menu_Cart/menu.asm
+     1
+     2 				;  This program is free software; you can redistribute it and/or modify
+     3 				;  it under the terms of the GNU General Public License as published by
+     4 				;  the Free Software Foundation; either version 2 of the License, or
+     5 				;  (at your option) any later version.
+     6 				;
+     7 				;  This program is distributed in the hope that it will be useful,
+     8 				;  but WITHOUT ANY WARRANTY; without even the implied warranty of
+     9 				;  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    10 				;  GNU General Public License for more details.
+    11 				;
+    12 				;  You should have received a copy of the GNU General Public License
+    13 				;  along with this program; if not, write to the Free Software
+    14 				;  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+    15 				; ** 
+    16 				 
+    17 4050			.proc  Menu
+    18 4050 20 87 4E			jsr printf
+    19 4053 41 20 4C 69 73 74 + 	.byte 'A List Slot       J Auto Commit On',155
+    20 4076 42 20 4C 69 73 74 + 	.byte 'B List Disk Image K Auto Commit Off',155
+    21 409A 43 20 43 72 65 61 + 	.byte 'C Create Disk     L Set Date',155,0
+    22 40B8 20 87 4E		    jsr printf	
+    23 40BB 44 20 4D 6F 75 6E +     .byte 'D Mount Disk      M TD Line On',155
+    24 40DA 45 20 55 6E 4D 6F + 	.byte 'E UnMount Disk    N TD Line Off',155
+    25 40FA 46 20 53 61 76 65 + 	.byte 'F Save Disk       O Start Printer',155,0
+    26 411D 20 87 4E			jsr printf
+    27 4120 47 20 53 77 61 70 + 	.byte 'G Swap Slot       P Stop Printer',155
+    28 4141 48 20 42 6F 6F 74 + 	.byte 'H Boot .ATR       Q AspeQT Path',155
+    29 4161 49 20 42 6F 6F 74 + 	.byte 'I Boot .XEX       R Host Command',155,0
+    30 4183 20 87 4E			jsr printf
+    31 4186 20 20 20 20 20 20 + 	.byte '                  S Exit to DOS',155
+    32 41A6 20 20 20 20 20 20 + 	.byte '                  T Reboot',155,0
+    33 				.endp	
+    34 					
+    35 					
+    36 41C2			.proc Main	
+    37 41C2 20 87 4E		    jsr printf
+    38 41C5 9B 9B 45 6E 74 65 + 	.byte 155,155,'Enter Command or Return for Menu: ',0
+    39 41EA 20 FF 4F			jsr Input1
+    40 41ED B0 D3			bcs Main	
+    41 41EF 20 F4 4F			jsr ToUpper
+    42 					
+    43 41F2 C9 41			cmp #'A'			// A List Slots 
+    44 41F4 D0 03 4C 82 42	    jeq SlotName    
+    45 41F9 C9 42		    cmp #'B'			// B List Host Images 
+    46 41FB D0 03 4C 74 48	    jeq ListDir
+    47 4200 C9 43		    cmp #'C'			// C Create Disk
+    48 4202 D0 03 4C 3C 44	    jeq CreateAndMount	
+    49 4207 C9 44			cmp #'D'			// D Mount Disk 
+    50 4209 D0 03 4C 34 44	    jeq Mount
+    51 420E C9 45			cmp #'E'			// E UnMount Disk
+    52 4210 D0 03 4C A6 45	    jeq UnMount    
+    53 4215 C9 46		    cmp #'F'			// F Save Disk
+    54 4217 D0 03 4C 54 46	    jeq Save
+    55 421C C9 47		    cmp #'G'			// G Swap Slot 
+    56 421E D0 03 4C CF 46	    jeq Swap
+    57 4223 C9 48		    cmp #'H'			// H Boot Disk
+    58 4225 D0 03 4C 83 43	    jeq BootATR
+    59 422A C9 49		    cmp #'I'   			// I Boot XEX/Exe 
+    60 422C D0 03 4C 8D 43	    jeq BootXEX   
+    61 4231 C9 4A		    cmp #'J' 			// J Auto Commit On   
+    62 4233 D0 03 4C 9B 47	    jeq CommitOn
+    63 4238 C9 4B		    cmp #'K'  			// K Auto Commit Off  
+    64 423A D0 03 4C A0 47	    jeq CommitOff  
+    65 423F C9 4C		    cmp #'L'			// L Set Date
+    66 4241 D0 03 4C 5E 4B	    jeq GetTD
+    67 4246 C9 4D		    cmp #'M'			// M TD Line On
+    68 4248 D0 03 4C 6C 4B	    jeq GetTDOn
+    69 424D C9 4E		    cmp #'N'			// N TD Line On
+    70 424F D0 03 4C 81 4B	    jeq GetTDOff
+    71 4254 C9 4F		    cmp #'O'			// O TD Line On
+    72 4256 D0 03 4C 30 4A	    jeq SetPrintOn
+    73 425B C9 50		    cmp #'P'			// P TD Line On
+    74 425D D0 03 4C 35 4A	    jeq SetPrintOff	
+    75 4262 C9 51		    cmp #'Q'			// Q Display host path
+    76 4264 D0 03 4C 3C 43	    jeq GetHostPath	
+    77 4269 C9 52			cmp #'R'			// R Host Command
+    78 426B D0 03 4C 9A 4A	    jeq RunHostCommand
+    79 4270 C9 53			cmp #'S'			// S Exit to Dos
+    80 4272 D0 03 4C 0F 4D	    jeq Exit
+    81 4277 C9 54			cmp #'T'			// T Cold Reboot
+    82 4279 D0 03 4C 2E 4D	    jeq Reboot
+    83
+    84 427E 4C 00 40			jmp Start
+    85 					
+    86 				.endp	
+    87 					
+    88 4281			.proc init
+    89 4281 60			      rts
+    90 				.endp  	
+    91 					
+    92 				//	
+    93 				//  get disk in slot
+    94 				//    
+    95 4282			.proc SlotName
+    96 4282 20 87 4E		    jsr printf
+    97 4285 9B 45 6E 74 65 72 + 	.byte 155,'Enter Slot [1-9] [J-O] [*] : ',0
+    98 					
+    99 42A4 20 FF 4F		    jsr input1
+   100 42A7 90 03 4C C2 41	    jcs main
+   101 42AC 20 F4 4F		    jsr toUpper   
+   102 42AF 20 DA 4C		    jsr GetDrvWC
+   103 42B2 90 02		    bcc ok1
+   104 42B4 A9 FA		    lda #$FA 
+   105 42B6			ok1    
+   106 42B6 85 90		    sta drive
+   107 42B8 C9 FA			cmp #$FA
+   108 42BA D0 39			bne OneSlot
+   109 42BC			MultiSlot
+   110 42BC A2 01		    ldx #$01
+   111 42BE 8E 44 37		    stx IOLastFile
+   112 42C1			LOOPa
+   113 42C1 8A			    txa  
+   114 42C2 85 90		    sta drive
+   115 42C4 20 FB 42		    jsr getSlotFileName
+   116 42C7 AD 44 37 18 69 01 +     adb IOLastFile #01
+   117 42D0 AE 44 37		    ldx IOLastFile
+   118 42D3 E0 0A		    cpx #$0A
+   119 42D5 D0 EA		    bne LOOPa
+   120
+   121 42D7 A2 1A		    ldx #$1A
+   122 42D9 8E 44 37		    stx IOLastFile
+   123 42DC			LOOPb
+   124 42DC 8A			    txa  
+   125 42DD 85 90		    sta drive
+   126 42DF 20 FB 42		    jsr getSlotFileName
+   127 42E2 AD 44 37 18 69 01 +     adb IOLastFile #01
+   128 42EB AE 44 37		    ldx IOLastFile
+   129 42EE E0 20		    cpx #$20
+   130 42F0 D0 EA		    bne LOOPb
+   131 42F2 4C C2 41		    jmp Main       
+   132 42F5			OneSlot
+   133 42F5 20 FB 42		    jsr getSlotFileName
+   134 42F8 4C C2 41		    jmp Main
+   135 				.endp
+   136
+   137 42FB			.proc getSlotFileName
+   138 42FB A9 06		   lda #DCB.GetSL
+   139 42FD 20 82 4D		   jsr SetUpDCB
+   140 4300 A5 90 8D 0A 03	   mva drive DAUX1
+   141 4305 20 59 E4		   jsr SIOV
+   142 4308 10 1A		   bpl OKa
+   143 430A 20 87 4E		   jsr Printf
+   144 430D 9B 4E 6F 20 73 65 +    .byte 155,'No server response!',0
+   145 4322 38			   sec
+   146 4323 60			   rts
+   147 4324			OKa
+   148 4324 A5 90 18 69 30 85 +     adb drive #$30
+   149 432B 20 87 4E		    jsr Printf
+   150 432E 9B 20 25 63 20 25 + 	.byte 155,' %c %s',0
+   151 4336 90 00 00 36			.word Drive, Path
+   152 433A 18				clc
+   153 433B 60				rts	
+   154 				.endp
+   155
+   156 				//
+   157 				//
+   158 				//
+   159 433C			.proc GetHostPath
+   160 433C A9 11		   lda #DCB.GetHostPath
+   161 433E 20 82 4D		   jsr SetUpDCB
+   162 4341 20 59 E4		   jsr SIOV
+   163 4344 10 1C		   bpl OKp
+   164 4346 20 87 4E		   jsr Printf
+   165 4349 9B 4E 6F 20 73 65 +    .byte 155,'No server response!',0
+   166 435E 38			   sec
+   167 435F 4C C2 41		   jmp main
+   168 4362			OKp
+   169 4362 20 87 4E		   jsr Printf
+   170 4365 9B 52 65 6D 6F 74 +    .byte 155,'Remote Folder Path:',155,'%s',0
+   171 437D 47 36		   .word IOBuf
+   172 437F 18			   clc
+   173 4380 4C C2 41		   jmp main	
+   174 				.endp
+   175
+   176
+   177 				//
+   178 				//	Mount disk and boot!
+   179 				//
+   180 4383			.proc BootATR
+   181 4383 A2 00			ldx #0
+   182 4385 86 8D			stx ArgFlag
+   183 4387 E8				inx
+   184 4388 86 90			stx Drive
+   185 438A 18				clc
+   186 438B 90 07			bcc MountAndBoot
+   187 				.endp
+   188
+   189 438D			.proc BootXEX
+   190 438D A2 01			ldx #1
+   191 438F 86 8D			stx ArgFlag
+   192 4391 86 90			stx Drive
+   193 4393 18				clc
+   194 				.endp
+   195
+   196 4394			.proc  MountAndBoot
+   197 4394 20 87 4E		    jsr printf
+   198 4397 9B 45 6E 74 65 72 + 	.byte 155,'Enter [FILENAME.xxx] : ',0
+   199 43B0 20 25 50		    jsr input
+   200 43B3 90 03 4C C2 41	    jcs main
+   201 43B8 C0 03		    cpy #03
+   202 43BA 10 03 4C C2 41	    jmi main    
+   203 43BF A2 00		    ldx #0
+   204 43C1			loopB   
+   205 43C1 BD 46 37		    lda InputBuf,x
+   206 43C4 C9 9B			cmp #155
+   207 43C6 F0 09		    beq alldoneE
+   208 43C8			StoreB        
+   209 43C8 20 F4 4F		    jsr ToUpper	
+   210 43CB 9D 47 36		    sta IOBuf,x
+   211 43CE E8			    inx
+   212 43CF D0 F0		    bne loopB
+   213 43D1			alldoneE 
+   214 43D1 A9 00		    lda #0
+   215 43D3 9D 47 36			sta IOBuf,x   
+   216 				.endp 
+   217 				      
+   218 43D6			.proc DoMountAndBoot
+   219 43D6 A9 0F			lda #DCB.MountAndBoot	
+   220 43D8 20 82 4D			jsr SetUpDCB
+   221 43DB A5 90 8D 0A 03		mva Drive   DAUX1
+   222 43E0 A5 8D 8D 0B 03		mva ArgFlag DAUX2
+   223 43E5 20 59 E4			jsr SIOV
+   224 43E8 10 1F			bpl OKB
+   225 43EA 20 87 4E			jsr Printf
+   226 43ED 9B 45 72 72 6F 72 + 	.byte 155,'Error mounting image!',155,0
+   227 4405 38				sec
+   228 4406 4C C2 41			jmp main
+   229 4409			OKB			; image mounted
+   230 4409 A5 90			lda Drive  
+   231 440B 20 7E 4D			jsr MakeDriveID
+   232 440E 85 91			sta DriveID1
+   233 4410 20 87 4E			jsr Printf
+   234 4413 9B 9B 49 6D 61 67 + 	.byte 155,155,'Image mounted on slot %c ',0	
+   235 442F 91 00			.word DriveID1
+   236 4431 4C 2E 4D			jmp Reboot
+   237 				.endp
+   238 				 
+   239
+   240 				//------------------------------------------------------
+   241 				//
+   242 				//	Mount disk
+   243 				//
+   244 4434			.proc Mount
+   245 4434 A9 00			lda #0
+   246 4436 85 8E			sta CreateFlag
+   247 4438 18				clc
+   248 4439 4C B0 44			jmp doMount
+   249 				.endp
+   250 				//
+   251 				//	Create and mount
+   252 				//
+   253 443C			.proc CreateAndMount
+   254 443C 20 87 4E		    jsr printf
+   255 443F 9B 20 20 5B 31 5D +     .byte 155,'  [1] SSSD  [2] SSED  [3] SSDD'
+   256 445E 9B 20 20 5B 34 5D + 	.byte 155,'  [4] DSDD  [5] DDHD  [6] QDHD'
+   257 447D 9B 9B 45 6E 74 65 + 	.byte 155,155,'Enter Disk Type : ',0
+   258 4492 20 FF 4F			jsr input1
+   259 4495 90 03 4C C2 41	    jcs main
+   260 449A A8			    tay
+   261 449B C9 37		    cmp #'6'+1
+   262 449D 90 03 4C C2 41		jcs main
+   263 44A2 E9 2F		    sbc #'0'-1
+   264 44A4 B0 03 4C C2 41		jcc main
+   265 44A9 D0 03 4C C2 41		jeq main	
+   266 44AE 84 8E		    sty CreateFlag 	
+   267 				.endp
+   268
+   269
+   270 44B0			.proc DoMount
+   271 44B0 A0 00		    ldy #0
+   272 44B2 84 8D		    sty  ArgFlag
+   273 44B4			noDot1
+   274 44B4 20 87 4E		    jsr printf
+   275 44B7 9B 45 6E 74 65 72 + 	.byte 155,'Enter [FILENAME.ATR]: ',0
+   276 44CF 20 25 50		    jsr input
+   277 44D2 90 03 4C C2 41	    jcs main
+   278 44D7 C0 03		    cpy #03
+   279 44D9 10 03 4C C2 41	    jmi main    
+   280 44DE A2 00		    ldx #0
+   281 44E0			loop1    
+   282 44E0 E0 0D		    cpx #13
+   283 44E2 F0 D0		    beq noDot1
+   284 44E4 BD 46 37		    lda InputBuf,x
+   285 44E7 C9 9B			cmp #155
+   286 44E9 F0 11		    beq FlFin1
+   287 44EB C9 2E		    cmp #'.'
+   288 44ED D0 04		    bne Store1
+   289 44EF A0 01		    ldy #01
+   290 44F1 84 8D		    sty ArgFlag
+   291 44F3			Store1        
+   292 44F3 20 F4 4F		    jsr ToUpper	
+   293 44F6 9D 47 36		    sta IOBuf,x
+   294 44F9 E8			    inx
+   295 44FA D0 E4		    bne Loop1
+   296 44FC			FlFin1
+   297 44FC A4 8D		    ldy ArgFlag
+   298 44FE C0 00		    cpy #0
+   299 4500 F0 B2		    beq noDot1
+   300 4502 A4 8E		    ldy CreateFlag
+   301 4504 C0 00		    cpy #0
+   302 4506 F0 0B		    beq AllDone1
+   303 4508 A9 2E		    lda #'.' 
+   304 450A 9D 47 36		    sta IOBuf,x
+   305 450D E8			    inx
+   306 450E 98			    tya
+   307 450F 9D 47 36		    sta IOBuf,x
+   308 4512 E8			    inx
+   309 4513			AllDone1
+   310 4513 A9 00			lda #0
+   311 4515 9D 47 36			sta IOBuf,x       	
+   312
+   313 4518 20 87 4E		    jsr printf
+   314 451B 9B 45 6E 74 65 72 + 	.byte 155,'Enter Slot [1-9] [J-O] : ',0	
+   315 4536 20 FF 4F		    jsr input1
+   316 4539 90 03 4C C2 41	    jcs main
+   317 453E 20 F4 4F		    jsr toUpper   
+   318 4541 20 DA 4C		    jsr GetDrvWC
+   319 4544 90 03 4C C2 41	    jcs main
+   320 4549 85 90		    sta Drive
+   321
+   322 454B A9 0A		    lda #DCB.Mount
+   323 454D A4 8E			ldy CreateFlag
+   324 454F C0 00			cpy #0
+   325 4551 F0 02			beq goMount
+   326 4553 A9 0B			lda #DCB.CreateAndMount
+   327 4555			goMount
+   328 4555 20 82 4D			jsr SetUpDCB  
+   329 4558 A5 90 8D 0A 03	    mva Drive   DAUX1
+   330 455D 20 59 E4			jsr SIOV
+   331 4560 10 1F			bpl OK3
+   332 4562 20 87 4E			jsr Printf
+   333 4565 9B 45 72 72 6F 72 + 	.byte 155,'Error mounting image!',155,0
+   334 457D 38				sec
+   335 457E 4C C2 41			jmp main
+   336 4581			OK3		
+   337 4581 A5 90			lda Drive	
+   338 4583 20 7E 4D			jsr MakeDriveID
+   339 4586 85 91			sta DriveID1
+   340 4588 20 87 4E			jsr Printf
+   341 458B 4D 6F 75 6E 74 65 + 	.byte 'Mounted on drive %c',155,0
+   342 45A0 91 00			.word DriveID1
+   343 45A2 18				clc
+   344 45A3 4C C2 41			jmp main
+   345 				.endp
+   346
+   347
+   348 				//
+   349 				//	Unmount disk
+   350 				//
+   351 45A6			.proc UnMount
+   352 45A6 20 87 4E		    jsr printf
+   353 45A9 9B 45 6E 74 65 72 + 	.byte 155,'Enter Slot [1-9] [J-O] [*]: ',0
+   354 45C7 20 FF 4F		    jsr input1
+   355 45CA 90 03 4C C2 41	    jcs main
+   356 45CF 20 F4 4F		    jsr toUpper
+   357 45D2 20 DA 4C			jsr GetDrvWC
+   358 45D5 90 03 4C C2 41		jcs main	
+   359 45DA 85 90			sta Drive
+   360 45DC A9 09			lda #DCB.Unmount
+   361 45DE 20 82 4D			jsr SetUpDCB
+   362 45E1 A5 90 8D 0B 03		mva Drive DAUX2
+   363 45E6 20 59 E4			jsr SIOV
+   364 45E9 10 22			bpl OK6	
+   365 45EB 20 87 4E			jsr Printf
+   366 45EE 9B 45 72 72 6F 72 + 	.byte 155,'Error unmounting volume!',155,0
+   367 4609 38				sec
+   368 460A 4C C2 41			jmp main
+   369 460D			OK6
+   370 460D A5 90			lda Drive
+   371 460F C9 FA			cmp #-6		 
+   372 4611 F0 23			beq AllDrives
+   373 4613 20 7E 4D			jsr MakeDriveID
+   374 4616 85 91			sta DriveID1
+   375 4618 20 87 4E			jsr Printf
+   376 461B 9B 44 72 69 76 65 + 	.byte 155,'Drive %c unmounted',155,0
+   377 4630 91 00			.word DriveID1
+   378 4632 18				clc
+   379 4633 4C C2 41			jmp main
+   380 4636			AllDrives
+   381 4636 20 87 4E			jsr Printf
+   382 4639 9B 41 6C 6C 20 64 + 	.byte 155,'All drives unmounted',155,0
+   383 4650 18				clc
+   384 4651 4C C2 41			jmp main
+   385 				.endp
+   386
+   387 					
+   388 				//
+   389 				//	Save disks
+   390 				//
+   391 4654			.proc Save
+   392 4654 20 87 4E		    jsr printf
+   393 4657 9B 45 6E 74 65 72 + 	.byte 155,'Enter Slot [1-9] [J-O] [*]: ',0
+   394 4675 20 FF 4F		    jsr input1
+   395 4678 90 03 4C C2 41	    jcs main
+   396 467D 20 F4 4F		    jsr toUpper
+   397 4680 20 DA 4C			jsr GetDrvWC
+   398 4683 90 03 4C C2 41		jcs main	
+   399 4688 85 90			sta Drive
+   400 468A A9 0E			lda #DCB.Save
+   401 468C 20 82 4D			jsr SetUpDCB
+   402 468F A5 90 8D 0B 03		mva Drive DAUX2
+   403 4694 20 59 E4			jsr SIOV
+   404 4697 10 1F			bpl OK7	
+   405 4699 20 87 4E			jsr Printf
+   406 469C 9B 4E 6F 74 68 69 + 	.byte 155,'Nothing can be saved!',155,0
+   407 46B4 38				sec
+   408 46B5 4C C2 41			jmp main
+   409 46B8			OK7
+   410 46B8 20 87 4E			jsr Printf
+   411 46BB 9B 44 69 73 6B 28 + 	.byte 155,'Disk(s) saved',155,0
+   412 46CB 18				clc	
+   413 46CC 4C C2 41			jmp main
+   414 				.endp
+   415 					
+   416 					
+   417 					
+   418 				//
+   419 				//	Disk Swap
+   420 				//
+   421 46CF			.proc Swap
+   422 46CF 20 87 4E		    jsr printf
+   423 46D2 9B 45 6E 74 65 72 +     .byte 155,'Enter Slot 1  [1-9] [J-O]: ',0
+   424 46EF 20 FF 4F		    jsr input1
+   425 46F2 90 03 4C C2 41	    jcs main
+   426 46F7 20 F4 4F		    jsr toUpper
+   427 46FA 20 DC 4C			jsr GetDrv
+   428 46FD 90 03 4C C2 41		jcs main 
+   429 4702 85 8F			sta Slot
+   430 4704 20 7E 4D			jsr MakeDriveID	; make some drive IDs for later
+   431 4707 85 91			sta DriveID1
+   432
+   433 4709 20 87 4E		    jsr printf
+   434 470C 9B 45 6E 74 65 72 +     .byte 155,'Enter Slot 2  [1-9] [J-O]: ',0
+   435 4729 20 FF 4F		    jsr input1
+   436 472C 90 03 4C C2 41	    jcs main
+   437 4731 20 F4 4F		    jsr toUpper
+   438 4734 20 DC 4C			jsr GetDrv
+   439 4737 90 03 4C C2 41		jcs main
+   440 473C 85 90			sta Drive
+   441 473E 20 7E 4D			jsr MakeDriveID
+   442 4741 85 92			sta DriveID2
+   443
+   444 4743 A9 08			lda #DCB.Swap
+   445 4745 20 82 4D			jsr SetUpDCB
+   446 4748 A5 8F 8D 0A 03		mva Slot DAUX1
+   447 474D A5 90 8D 0B 03		mva Drive DAUX2
+   448 4752 20 59 E4			jsr SIOV
+   449 4755 10 1F			bpl OK1
+   450 4757 20 87 4E			jsr Printf
+   451 475A 9B 45 72 72 6F 72 + 	.byte 155,'Error swapping disks!',155,0
+   452 4772 38				sec
+   453 4773 4C C2 41			jmp Main
+   454 4776			OK1
+   455 4776 20 87 4E			jsr Printf
+   456 4779 9B 53 77 61 70 70 + 	.byte 155,'Swapped disk %c with %c',155,0
+   457 4793 91 00 92 00			.word DriveID1,DriveID2
+   458 4797 18				clc	
+   459 4798 4C C2 41			jmp Main
+   460 				.endp
+   461
+   462 				//
+   463 				//  Toggle Auto Commit
+   464 				//
+   465 479B			.proc CommitOn
+   466 479B A0 01		      LDY #01
+   467 479D 4C A2 47		      jmp ToggleCommit
+   468 				.endp      
+   469 47A0			.proc Commitoff
+   470 47A0 A0 00		      LDY #00
+   471 				.endp      
+   472 47A2			.proc ToggleCommit
+   473 47A2 84 8D		    sty ArgFlag
+   474 47A4 20 87 4E		    jsr printf
+   475 47A7 9B 45 6E 74 65 72 + 	.byte 155,'Enter Slot [1-9] [J-O] [*]: ',0
+   476 47C5 20 FF 4F		    jsr input1
+   477 47C8 90 03 4C C2 41	    jcs main
+   478 47CD 20 F4 4F		    jsr toUpper 
+   479 47D0 20 DA 4C			jsr GetDrvWC
+   480 47D3 90 03 4C C2 41		jcs main
+   481 47D8 85 90			sta Drive
+   482 47DA A9 0C			lda #DCB.AutoToggle
+   483 47DC 20 82 4D			jsr SetUpDCB
+   484 47DF A5 90 8D 0A 03		mva Drive DAUX1 
+   485 47E4 A5 8D 8D 0B 03		mva ArgFlag DAUX2
+   486 47E9 20 59 E4			jsr SIOV
+   487 47EC 10 25			bpl OK2
+   488 47EE 20 87 4E			jsr Printf
+   489 47F1 9B 45 72 72 6F 72 + 	.byte 155,'Error toggling auto-commit!',155,0
+   490 480F 38				sec
+   491 4810 4C C2 41			jmp Main
+   492 4813			OK2
+   493 4813 A5 90			lda Drive
+   494 4815 C9 FA			cmp #-6
+   495 4817 F0 30			beq AllDrives
+   496 4819 20 7E 4D			jsr MakeDriveID
+   497 481C 85 91			sta DriveID1
+   498 481E 20 87 4E			jsr Printf
+   499 4821 9B 41 75 74 6F 2D + 	.byte 155,'Auto-commit toggled on drive %c',155,0
+   500 4843 91 00			.word DriveID1
+   501 4845 18				clc
+   502 4846 4C C2 41			jmp main
+   503 					
+   504 4849			AllDrives
+   505 4849 20 87 4E			jsr Printf
+   506 484C 9B 41 75 74 6F 2D + 	.byte 155,'Auto-commit toggled on all drives',155,0
+   507 4870 18				clc
+   508 4871 4C C2 41			jmp main
+   509 					.endp
+   510
+   511
+   512 				//
+   513 				//  List pth folder 
+   514 				//
+   515 				// 
+   516 4874			.proc ListDir
+   517 4874 A9 11		   lda #DCB.GetHostPath
+   518 4876 20 82 4D		   jsr SetUpDCB
+   519 4879 20 59 E4		   jsr SIOV
+   520 487C 10 1C		   bpl OKp
+   521 487E 20 87 4E		   jsr Printf
+   522 4881 9B 4E 6F 20 73 65 +    .byte 155,'No server response!',0
+   523 4896 38			   sec
+   524 4897 4C C2 41		   jmp main
+   525 489A			OKp
+   526 489A 20 87 4E		   jsr Printf
+   527 489D 9B 52 65 6D 6F 74 +    .byte 155,'Remote Folder Path:',155,'%s',155,0
+   528 48B6 47 36		   .word IOBuf
+   529 48B8 18			    clc
+   530 48B9 A9 00		    lda #$00
+   531 48BB 8D 45 37		    sta IOLastFile + 1
+   532 48BE 8D 44 37		    sta IOLastFile
+   533 48C1 20 87 4E		    jsr printf
+   534 48C4 9B 45 6E 74 65 72 + 	.byte 155,'Enter Filter [*]: ',0
+   535 48D8 20 25 50		    jsr input
+   536 48DB 90 03 4C C2 41	    jcs main
+   537 48E0 A2 00		    ldx #0
+   538 48E2			loop2    
+   539 48E2 BD 46 37		    lda InputBuf,x
+   540 48E5 C9 9B			cmp #155
+   541 48E7 F0 09		    beq FlFin2
+   542 48E9 20 F4 4F		    jsr ToUpper	
+   543 48EC 9D 47 36		    sta IOBuf,x
+   544 48EF E8			    inx
+   545 48F0 D0 F0		    bne Loop2
+   546 48F2			FlFin2
+   547 48F2 A9 00			lda #0
+   548 48F4 9D 47 36			sta IOBuf,x   	   
+   549 48F7 A9 03		    lda #DCB.SetDR
+   550 48F9 20 82 4D		    jsr SetUpDCB
+   551 48FC A9 00 8D 0A 03	    mva #$00 DAUX1    
+   552 4901 A9 00 8D 0B 03	    mva #$00 DAUX2
+   553 4906 20 59 E4		    jsr SIOV
+   554 4909 10 1D		    bpl list2
+   555 490B 20 87 4E		    jsr Printf
+   556 490E 9B 4E 6F 20 73 65 +     .byte 155,'No server response!',155,0
+   557 4924 38			    sec
+   558 4925 4C C2 41		    jmp Main
+   559 4928			list2    
+   560 4928 A9 05		    lda #DCB.GetDR
+   561 492A 20 82 4D		    jsr SetUpDCB
+   562 492D AD 45 37 8D 0A 03	    mva IOLastFile+1   DAUX1
+   563 4933 AD 44 37 8D 0B 03	    mva IOLastFile     DAUX2
+   564 4939 20 59 E4		    jsr SIOV
+   565 493C 10 1D		    bpl OK2a
+   566 493E 20 87 4E		    jsr Printf
+   567 4941 9B 4E 6F 20 73 65 +     .byte 155,'No server response!',155,0
+   568 4957 38			    sec
+   569 4958 4C C2 41		    jmp Main
+   570 495B			OK2a
+   571 495B AD 43 37		    lda IOFileOption 
+   572 495E C9 00			cmp #$00
+   573 4960 D0 03 4C 2C 4A	    jeq allDone2
+   574 4965 85 8C		    sta SelectB
+   575 4967 20 87 4E		    jsr Printf
+   576 496A 9B 25 73 9B 00	    .byte 155,'%s',155,0
+   577 496F 47 36		    .word IOBuf
+   578 4971 20 87 4E			jsr Printf
+   579 4974 53 65 6C 65 63 74 + 	.byte 'Select [A-%c] [Q=quit] [more]: ',0
+   580 4994 8C 00			.word SelectB
+   581 4996 20 75 4D			jsr getkey
+   582 4999 20 F4 4F			jsr ToUpper
+   583 499C C9 51			cmp #'Q'
+   584 499E D0 03 4C 2C 4A		jeq allDone2
+   585 49A3 C9 9B			cmp #155
+   586 49A5 F0 71			jeq next2
+   587 					
+   588 49A7 85 8D		    sta ArgFlag
+   589 49A9 A9 04		    lda #DCB.PutDR
+   590 49AB 20 82 4D		    jsr SetUpDCB
+   591 49AE A5 8D 8D 0A 03	    mva ArgFlag DAUX1
+   592 49B3 A9 00 8D 0B 03		mva #0      DAUX2
+   593 49B8 20 59 E4		    jsr SIOV
+   594 49BB 10 1D		    bpl OK2b
+   595 49BD 20 87 4E		    jsr Printf
+   596 49C0 9B 4E 6F 20 73 65 +     .byte 155,'No server response!',155,0
+   597 49D6 38			    sec
+   598 49D7 4C C2 41		    jmp Main
+   599 49DA			OK2b
+   600 49DA AD 47 36		    lda IOBuf
+   601 49DD C9 24		    cmp #'$'
+   602 49DF D0 03 4C 74 48	    jeq ListDir   	
+   603 49E4 C9 40		    cmp #'@'
+   604 49E6 F0 44		    jeq allDone2   	
+   605 49E8			getSlot
+   606 49E8 20 87 4E		    jsr printf
+   607 49EB 9B 45 6E 74 65 72 + 	.byte 155,'Enter Slot [1-9] [J-O] : ',0	
+   608 4A06 20 FF 4F		    jsr input1
+   609 4A09 90 02		    bcc ok1
+   610 4A0B A9 31			lda #$31	
+   611 4A0D			ok1
+   612 4A0D 20 F4 4F		    jsr toUpper   
+   613 4A10 20 DA 4C		    jsr GetDrvWC
+   614 4A13 85 90		    sta Drive
+   615 4A15 4C D6 43		    jmp DoMountAndBoot
+   616
+   617 4A18			next2       
+   618 4A18 AE 45 37		 	ldx IOLastFile + 1
+   619 4A1B E0 00		 	cpx #00
+   620 4A1D F0 03 4C 28 49	 	jne list2
+   621 4A22 AE 44 37		 	ldx IOLastFile
+   622 4A25 E0 00		 	cpx #00 
+   623 4A27 F0 03 4C 28 49	 	jne list2 	 
+   624 4A2C			allDone2
+   625 4A2C 18				clc
+   626 4A2D 4C C2 41			jmp Main	
+   627 				.endp
+   628
+   629 4A30			.proc SetPrintOn
+   630 4A30 A0 01			ldy #01
+   631 4A32 4C 37 4A			jmp SetPrint
+   632 				.endp	
+   633
+   634 4A35			.proc SetPrintOff     
+   635 4A35 A0 00		    ldy #00
+   636 				.endp
+   637
+   638 4A37			.proc setPrint    
+   639 4A37 84 8D		    sty ArgFlag
+   640 4A39 A9 10			lda #DCB.Print
+   641 4A3B 20 82 4D			jsr SetUpDCB
+   642 4A3E A5 8D 8D 0B 03		mva ArgFlag DAUX2
+   643 4A43 20 59 E4			jsr SIOV
+   644 4A46 10 1D			bpl OK1
+   645 4A48 20 87 4E			jsr Printf
+   646 4A4B 9B 4E 6F 20 73 65 + 	.byte 155,'No server response!',155,0
+   647 4A61 38				sec
+   648 4A62 4C C2 41			jmp Main
+   649 4A65			OK1
+   650 4A65 A5 8D		    lda ArgFlag
+   651 4A67 F0 18		    beq OK2
+   652 4A69 20 87 4E		   	jsr Printf
+   653 4A6C 9B 50 72 69 6E 74 + 	.byte 155,'Print server on',155,0   
+   654 4A7E 4C C2 41		    jmp Main
+   655 4A81			OK2    
+   656 4A81 20 87 4E		    jsr Printf
+   657 4A84 9B 50 72 69 6E 74 + 	.byte 155,'Print server off',155,0
+   658 4A97 4C C2 41			jmp Main
+   659 				.endp
+   660 				 
+   661
+   662 4A9A			.proc RunHostCommand       
+   663 4A9A A9 00		   lda #DCB.GetCmd
+   664 4A9C 20 82 4D		   jsr SetUpDCB
+   665 4A9F 20 59 E4		   jsr SIOV
+   666 4AA2 10 1C		   bpl OKr1
+   667 4AA4 20 87 4E		   jsr Printf
+   668 4AA7 9B 4E 6F 20 73 65 +    .byte 155,'No server response!',0
+   669 4ABC 38			   sec
+   670 4ABD 4C C2 41		   jmp main
+   671 4AC0			OKr1
+   672 4AC0 20 87 4E		   jsr Printf
+   673 4AC3 9B 24 20 5B 25 73 +    .byte 155,'$ [%s]',0
+   674 4ACB 47 36		   .word IOBuf
+   675 4ACD 18			    clc
+   676 4ACE 20 25 50		    jsr input   
+   677 4AD1 A2 00		    ldx #0
+   678 4AD3			loopr1    
+   679 4AD3 BD 46 37		    lda InputBuf,x
+   680 4AD6 C9 9B			cmp #155
+   681 4AD8 F0 06		    beq FlFinr1
+   682 4ADA 9D 47 36		    sta IOBuf,x
+   683 4ADD E8			    inx
+   684 4ADE D0 F3		    bne Loopr1
+   685 4AE0			FlFinr1
+   686 4AE0 A9 00			lda #0
+   687 4AE2 9D 47 36			sta IOBuf,x       	
+   688
+   689 4AE5 A9 01			lda #DCB.RunCmd
+   690 4AE7 20 82 4D			jsr SetUpDCB
+   691 4AEA 20 59 E4			jsr SIOV
+   692 4AED 10 1D			bpl OKr2
+   693 4AEF 20 87 4E			jsr Printf
+   694 4AF2 9B 4E 6F 20 73 65 + 	.byte 155,'No server response!',155,0
+   695 4B08 38				sec
+   696 4B09 4C C2 41			jmp Main
+   697 4B0C			OKr2
+   698 4B0C A9 02		   lda #DCB.GetTxt
+   699 4B0E 20 82 4D		   jsr SetUpDCB
+   700 4B11 20 59 E4		   jsr SIOV
+   701 4B14 10 1C		   bpl OKr3
+   702 4B16 20 87 4E		   jsr Printf
+   703 4B19 9B 4E 6F 20 73 65 +    .byte 155,'No server response!',0
+   704 4B2E 38			   sec
+   705 4B2F 4C C2 41		   jmp main
+   706 4B32			OKr3
+   707 4B32 20 87 4E		   jsr Printf
+   708 4B35 25 73 00		   .byte '%s',0
+   709 4B38 47 36		   .word IOBuf
+   710 4B3A AD 43 37		    lda IOFileOption 
+   711 4B3D C9 00			cmp #$00   
+   712 4B3F F0 03		    beq alldone
+   713 				//   jsr Printf
+   714 				//	.byte 155,'[more]: ',0
+   715 				//	jsr getkey
+   716 4B41 4C 0C 4B		     jmp OKr2
+   717 4B44			alldone    
+   718 4B44 20 87 4E		   	jsr Printf
+   719 4B47 9B 9B 43 6F 6D 6D + 	.byte 155,155,'Command complete',155,0   
+   720 4B5B 4C C2 41		    jmp Main
+   721 				.endp
+   722
+   723
+   724 				//
+   725 				//	Time/Date Set
+   726 				//
+   727 4B5E			.proc GetTD
+   728 4B5E 20 B0 4C		    jsr isSparta
+   729 4B61 90 03 4C C2 41	    jcs main
+   730 4B66 20 96 4B			jsr SetTD	
+   731 4B69 4C C2 41			jmp Main
+   732 				.endp
+   733
+   734 				//
+   735 				//  Time set, enable TD line
+   736 				//
+   737 4B6C			.proc GetTDOn
+   738 4B6C 20 B0 4C		    jsr isSparta
+   739 4B6F 90 03 4C C2 41	    jcs main
+   740 4B74 20 96 4B			jsr SetTD
+   741 4B77 B0 05			bcs Abort1
+   742 4B79 A0 01			ldy #1
+   743 4B7B 20 5F 4C			jsr TDLineOnOff
+   744 4B7E			Abort1
+   745 4B7E 4C C2 41			jmp Main
+   746 				.endp
+   747
+   748
+   749 				//
+   750 				//	Time set, disable TD line
+   751 				//
+   752 4B81			.proc GetTDOff
+   753 4B81 20 B0 4C		    jsr isSparta
+   754 4B84 90 03 4C C2 41	    jcs main
+   755 4B89 20 96 4B			jsr SetTD
+   756 4B8C B0 05			bcs Abort2
+   757 4B8E A0 00			ldy #0
+   758 4B90 20 5F 4C			jsr TDLineOnOff
+   759 4B93			Abort2	
+   760 4B93 4C C2 41		    jmp Main
+   761 				 .endp 
+   762
+   763
+   764 				//
+   765 				//	Read date and time from the server and set the clock
+   766 				//
+   767 4B96			.proc SetTD
+   768 4B96 A9 07			lda #DCB.GetTD
+   769 4B98 20 82 4D			jsr SetUpDCB
+   770 4B9B 20 59 E4			jsr SIOV
+   771 4B9E 10 1B			bpl OK5
+   772 4BA0 20 87 4E			jsr Printf
+   773 4BA3 9B 4E 6F 20 73 65 + 	.byte 155,'No server response!',155,0
+   774 4BB9 38				sec
+   775 4BBA 60				rts
+   776 					
+   777 4BBB			OK5	; got date and time from server, so attempt to set Sparta clock
+   778 4BBB 20 87 4E			jsr Printf
+   779 4BBE 9B 44 61 74 65 20 + 	.byte 155,'Date received from server',155,0
+   780 4BDA AD 01 07			lda $701
+   781 4BDD C9 44			cmp #$44
+   782 4BDF B0 21			bcs IsSDX2
+   783 4BE1 A2 05			ldx #5
+   784 4BE3 A0 12			ldy #$0D+$05
+   785 				@
+   786 4BE5 BD 47 36			lda IOBuf,x
+   787 4BE8 91 0A			sta (comtab),y
+   788 4BEA 88				dey
+   789 4BEB CA				dex
+   790 4BEC 10 F7			bpl @-
+   791 					
+   792 4BEE AD 01 D3			lda portb
+   793 4BF1 48				pha
+   794 4BF2 29 FE			and #$FE
+   795 4BF4 8D 01 D3			sta portb
+   796 4BF7 20 C3 FF			jsr I_SETTD	; this will fail if the vectors aren't there
+   797 4BFA 68				pla
+   798 4BFB 8D 01 D3			sta portb
+   799 4BFE 90 39			bcc TDSetOK
+   800 4C00 B0 17			bcs TDSetFailed
+   801 					
+   802 4C02			IsSDX2			; with SDX, use kernel
+   803 4C02 A2 05			ldx #5
+   804 				@
+   805 4C04 BD 47 36			lda IOBuf,x
+   806 4C07 9D 7B 07			sta $077B,x
+   807 4C0A CA				dex
+   808 4C0B 10 F7			bpl @-
+   809 					
+   810 4C0D A0 65			ldy #$65
+   811 					
+   812 4C0F A9 10			lda #$10
+   813 4C11 8D 61 07			sta $0761
+   814 4C14 20 03 07			jsr $0703
+   815 4C17 F0 20			beq TDSetOK
+   816 					
+   817 4C19			TDSetFailed
+   818 4C19 20 87 4E			jsr Printf
+   819 4C1C 9B 45 72 72 6F 72 + 	.byte 155,'Error setting time/date!',155,0
+   820 4C37 38				sec
+   821 4C38 60				rts
+   822 					
+   823 4C39			TDSetOK
+   824 					
+   825 4C39 20 87 4E			jsr Printf
+   826 4C3C 9B 54 69 6D 65 2F + 	.byte 155,'Time/date set %b/%b/20%b',155,0
+   827 4C57 48 36			.word IOBuf+1
+   828 4C59 47 36			.word IOBuf 
+   829 4C5B 49 36			.word IOBuf+2
+   830 4C5D 18				clc
+   831 4C5E 60				rts
+   832 				.endp
+   833
+   834
+   835
+   836 				//
+   837 				//	Enable or disable the TD Line
+   838 				//	Y = 0: Turn off
+   839 				//	Y = 1: Turn on
+   840 				//
+   841 4C5F			.proc TDLineOnOff
+   842 4C5F AD 01 07			lda $701
+   843 4C62 C9 44			cmp #$44
+   844 4C64 B0 13			bcs IsSDX1
+   845 					
+   846 4C66 AD 01 D3			lda portb
+   847 4C69 48				pha
+   848 4C6A 29 FE			and #$FE
+   849 4C6C 8D 01 D3			sta portb
+   850 4C6F 20 C6 FF			jsr I_TDON
+   851 4C72 68				pla
+   852 4C73 8D 01 D3			sta portb
+   853 4C76 B0 19			bcs TDOnFailed
+   854 4C78 60				rts
+   855 					
+   856 4C79			IsSDX1
+   857 4C79 84 82			sty Temp2
+   858 4C7B				ldax Symbol	; under SDX, enable TD using kernel
+Macro: LDAX [Source: /home/paul/eclipse-workspace/AspeQt-2K22/atari/8BIT-SRC/Menu_Cart/menu_sym.asm]
+     1 4C7B A9 66			lda #< SYMBOL
+     2 4C7D A2 4E			ldx #> SYMBOL
+Source: /home/paul/eclipse-workspace/AspeQt-2K22/atari/8BIT-SRC/Menu_Cart/menu.asm
+   859 4C7F 20 EB 07			jsr $07EB	; get symbol address
+   860 4C82 30 0D			bmi TDOnFailed
+   861
+   862 4C84				stax TDVec+1	; store address
+Macro: STAX [Source: /home/paul/eclipse-workspace/AspeQt-2K22/atari/8BIT-SRC/Menu_Cart/menu_sym.asm]
+     1 4C84 8D 8D 4C		 	sta TDVEC+1
+     2 4C87 8E 8E 4C		 	stx TDVEC+1+1
+Source: /home/paul/eclipse-workspace/AspeQt-2K22/atari/8BIT-SRC/Menu_Cart/menu.asm
+   863 4C8A A4 82			ldy Temp2
+   864 4C8C			TDVec
+   865 4C8C 20 FF FF			jsr $FFFF	; should really check for errors...
+   866 4C8F 18				clc
+   867 4C90 60				rts
+   868 					
+   869 4C91			TDOnFailed
+   870 4C91 20 87 4E			jsr Printf
+   871 4C94 9B 45 72 72 6F 72 + 	.byte 155,'Error enabling TD Line!',155,0
+   872 4CAE 38				sec
+   873 4CAF 60				rts
+   874 				.endp
+   875
+   876
+   877 4CB0			.proc isSparta 
+   878 4CB0 AD 00 07			lda $0700
+   879 4CB3 C9 53			cmp #'S'
+   880 4CB5 F0 21			beq ok
+   881 4CB7 C9 52			cmp #'R'
+   882 4CB9 F0 1D			beq ok
+   883 4CBB 20 87 4E			jsr Printf
+   884 4CBE 4E 6F 74 20 53 70 + 	.byte 'Not Sparta or Real Dos',155,0
+   885 4CD6 38				sec
+   886 4CD7 60				rts
+   887 4CD8			ok 
+   888 4CD8 18			    clc
+   889 4CD9 60			    rts
+   890 				.endp		
+   891 					
+   892 					
+   893 				//
+   894 				//	Get drive spec and allow '*'
+   895 				//
+   896 4CDA			.proc GetDrvWC
+   897 4CDA 38				sec
+   898 4CDB 24				.byte $24
+   899 				.endp
+   900
+   901 				//
+   902 				//	Get drive spec, disallowing '*'
+   903 				//
+   904 4CDC			.proc GetDrv
+   905 4CDC 18				clc
+   906 				.endp
+   907
+   908 4CDD			.proc GetDriveID
+   909 4CDD 66 80			ror Temp1	; wildcard flag
+   910 4CDF 24 80			bit Temp1
+   911 4CE1 10 08			bpl @+
+   912 4CE3 C9 2A			cmp #'*'
+   913 4CE5 D0 04			bne @+
+   914 4CE7 A9 FA			lda #$FA	; '*' - $30
+   915 4CE9 18				clc
+   916 4CEA 60				rts
+   917 				@
+   918 4CEB C9 3A			cmp #'9'+1
+   919 4CED B0 08			bcs NotDigit
+   920 4CEF E9 2F			sbc #'0'-1
+   921 4CF1 90 1A			bcc Bad
+   922 4CF3 F0 18			beq Bad		; disallow 0
+   923 4CF5 18				clc
+   924 4CF6 60				rts
+   925 4CF7			NotDigit
+   926 4CF7 C9 41			cmp #'A'	; handle A-I for 1-9
+   927 4CF9 90 12			bcc Bad
+   928 4CFB C9 4A			cmp #'J'
+   929 4CFD B0 04			bcs @+
+   930 4CFF E9 3F			sbc #'A'-2	; carry is clear
+   931 4D01 18				clc
+   932 4D02 60				rts
+   933 				@
+   934 4D03 C9 50			cmp #'O'+1
+   935 4D05 B0 06			bcs Bad
+   936 4D07 E9 2F			sbc #'0'-1	; carry is clear, so subtract one less
+   937 4D09 90 02			bcc Bad
+   938 4D0B			OK
+   939 4D0B 18				clc
+   940 4D0C 60				rts
+   941 4D0D			Bad
+   942 4D0D 38				sec
+   943 4D0E			Abort
+   944 4D0E 60				rts
+   945 				.endp
+   946
+   947 4D0F			.proc Exit
+   948 4D0F 20 87 4E			jsr Printf
+   949 4D12 9B 50 72 65 73 73 + 	.byte 155,'Press a key to quit',155,0
+   950 4D28 20 FF 4F			jsr Input1
+   951 4D2B 6C 0A 00			jmp (DOSVEC)
+   952 				.endp
+   953
+   954 					
+   955 4D2E			.proc Reboot
+   956 4D2E 20 87 4E			jsr Printf
+   957 4D31 9B 45 6E 74 65 72 + 	.byte 155,'Enter Y to reboot'
+   958 4D43 9B 20 2A 20 59 6F + 	.byte 155,' * You may need to press [Option]: ',0	
+   959 4D68 20 FF 4F			jsr Input1
+   960 4D6B C9 59			cmp #'Y'
+   961 4D6D F0 03 4C C2 41		jne main
+   962 4D72 4C 77 E4			jmp $E477
+   963 				.endp
+   964 					
+   965 4D75			.proc GetKey
+   966 4D75 AD 25 E4			lda $E425
+   967 4D78 48				pha
+   968 4D79 AD 24 E4			lda $E424
+   969 4D7C 48				pha
+   970 4D7D 60				rts
+   971 				.endp
+   972 					
+   973 4D7E			.proc MakeDriveID
+   974 4D7E 18				clc
+   975 4D7F 69 30			adc #'0'	; everything gets $30 added
+   976 4D81 60				rts	
+   977 				.endp
+   978
+   979 4D82			.proc SetUpDCB
+   980 4D82 A8				tay
+   981 4D83 BE A0 4D			ldx DCBIndex,y	; we could multiply by 10 then add nine, but a table is easier
+   982 4D86 A0 09			ldy #9
+   983 4D88			Loop
+   984 4D88 BD B2 4D			lda DCBTable,x
+   985 4D8B 99 02 03			sta DComnd,y
+   986 4D8E CA				dex
+   987 4D8F 88				dey
+   988 4D90 10 F6			bpl Loop
+   989 4D92 A9 46 8D 00 03		mva #$46 DDevic	; ddevic and dunit are common to all
+   990 4D97 A9 01 8D 01 03		mva #$01 DUnit
+   991 4D9C 60				rts
+   992 					
+   993 4D9D			.proc Crunch
+   994 4D9D 4C FF FF			jmp $FFFF
+   995 				.endp
+   996 					
+   997
+   998 4DA0			DCBIndex
+   999 4DA0 09 13 1D 27 31 3B + 	.byte 9,19,29,39,49,59,69,79,89,99,109,119,129,139,149,159,169,179
+  1000 				.endp
+  1001
+  1002 4DB2			DCBTable
+  1003
+  1004 4DB2			DCBGetCmd
+  1005 4DB2 86				.byte Cmd.GetCmd	
+  1006 4DB3 40				.byte $40
+  1007 4DB4 47 36			.word IOBuf
+  1008 4DB6 06 00			.byte $06,$00
+  1009 4DB8 FF 00			.word $FF
+  1010 4DBA 00 00			.byte $00,$00	
+  1011 4DBC			DCBRunCmd
+  1012 4DBC 87				.byte Cmd.RunCmd
+  1013 4DBD 80				.byte $80
+  1014 4DBE 47 36			.word IOBuf
+  1015 4DC0 06 00			.byte $06,$00
+  1016 4DC2 20 00			.word $20
+  1017 4DC4 00 00			.byte $00,$00
+  1018 4DC6			DCBTxtCmd
+  1019 4DC6 88				.byte Cmd.GetTxt 
+  1020 4DC7 40				.byte $40
+  1021 4DC8 47 36			.word IOBuf
+  1022 4DCA 06 00			.byte $06,$00
+  1023 4DCC FF 00			.word $FF
+  1024 4DCE 00 00			.byte $00,$00
+  1025 4DD0			DCBSetDR 
+  1026 4DD0 89				.byte Cmd.SetDR
+  1027 4DD1 80				.byte $80
+  1028 4DD2 47 36			.word IOBuf
+  1029 4DD4 06 00			.byte $06,$00
+  1030 4DD6 20 00			.word $20	
+  1031 4DD8 00 00			.byte $00,$00
+  1032 4DDA			DCBPutDR
+  1033 4DDA 90				.byte Cmd.PutDR
+  1034 4DDB 40				.byte $40
+  1035 4DDC 47 36			.word IOBuf
+  1036 4DDE 08 00			.byte $08,$00
+  1037 4DE0 FF 00			.word $FF	
+  1038 4DE2 00 00			.byte $00,$00
+  1039 4DE4			DCBGetDR
+  1040 4DE4 91				.byte Cmd.GetDR	  
+  1041 4DE5 40				.byte $40		   
+  1042 4DE6 47 36			.word IOBuf        
+  1043 4DE8 08 00			.byte $08,$00	   
+  1044 4DEA FF 00			.word $FF	  
+  1045 4DEC 00 00			.byte $00,$00		  
+  1046 4DEE			DCBGetSL
+  1047 4DEE 92				.byte Cmd.GetSL	  
+  1048 4DEF 40				.byte $40		  
+  1049 4DF0 00 36			.word Path        
+  1050 4DF2 06 00			.byte $06,$00	  
+  1051 4DF4 20 00			.word $20		  
+  1052 4DF6 00 00			.byte $00,$00	  
+  1053 4DF8			DCBGetTD
+  1054 4DF8 93				.byte Cmd.GetTD	
+  1055 4DF9 40				.byte $40		
+  1056 4DFA 47 36			.word IOBuf		
+  1057 4DFC 06 00			.byte $06,$00	
+  1058 4DFE 06 00			.word $06		
+  1059 4E00 00 00			.byte $00,$00	
+  1060 4E02			DCBSwap
+  1061 4E02 94				.byte Cmd.Swap
+  1062 4E03 00				.byte $00
+  1063 4E04 47 36			.word IOBuf
+  1064 4E06 06 00			.byte $06,$00
+  1065 4E08 00 00			.word 0
+  1066 4E0A 00 00			.byte $00,$00
+  1067 4E0C			DCBUnmount
+  1068 4E0C 95				.byte Cmd.Unmount
+  1069 4E0D 00				.byte $00
+  1070 4E0E 47 36			.word IOBuf
+  1071 4E10 06 00			.byte $06,$00
+  1072 4E12 00 00			.word 0
+  1073 4E14 00 00			.byte $00,$00
+  1074 4E16			DCBMount
+  1075 4E16 96				.byte Cmd.Mount
+  1076 4E17 80				.byte $80
+  1077 4E18 47 36			.word IOBuf
+  1078 4E1A 06 00			.byte $06,$00
+  1079 4E1C 0C 00			.word $0C
+  1080 4E1E 00 00			.byte $00,$00
+  1081 4E20			DCBCreateAndMount
+  1082 4E20 97				.byte Cmd.CreateAndMount
+  1083 4E21 80				.byte $80
+  1084 4E22 47 36			.word IOBuf
+  1085 4E24 06 00			.byte $06,$00
+  1086 4E26 0E 00			.word $0E
+  1087 4E28 00 00			.byte $00,$00
+  1088 4E2A			DCBAutoToggle
+  1089 4E2A 98				.byte Cmd.AutoToggle
+  1090 4E2B 00				.byte $00
+  1091 4E2C 47 36			.word IOBuf
+  1092 4E2E 06 00			.byte $06,$00
+  1093 4E30 00 00			.word 0
+  1094 4E32 00 00			.byte $00,$00
+  1095 4E34			DCBGetDrvNum
+  1096 4E34 96				.byte Cmd.Mount
+  1097 4E35 40				.byte $40
+  1098 4E36 47 36			.word IOBuf
+  1099 4E38 06 00			.byte $06,$00
+  1100 4E3A 01 00			.word $01
+  1101 4E3C 01 00			.byte $01,$00
+  1102 4E3E			DCBSave
+  1103 4E3E 99				.byte Cmd.Save
+  1104 4E3F 00				.byte $00
+  1105 4E40 47 36			.word IOBuf
+  1106 4E42 06 00			.byte $06,$00
+  1107 4E44 00 00			.word 0
+  1108 4E46 00 00			.byte $00,$00	
+  1109 4E48			DCBMountAndBoot
+  1110 4E48 9A				.byte Cmd.MountAndBoot
+  1111 4E49 80				.byte $80
+  1112 4E4A 47 36			.word IOBuf
+  1113 4E4C 06 00			.byte $06,$00
+  1114 4E4E 0C 00			.word $0C
+  1115 4E50 00 00			.byte $00,$00	
+  1116 4E52			DCBPrint
+  1117 4E52 9B				.byte Cmd.Print	
+  1118 4E53 00				.byte $00
+  1119 4E54 47 36			.word IOBuf
+  1120 4E56 06 00			.byte $06,$00
+  1121 4E58 00 00			.word 0
+  1122 4E5A 00 00			.byte $00,$00	
+  1123 4E5C			DCBGetPath
+  1124 4E5C 9C				.byte Cmd.GetHostPath	
+  1125 4E5D 40				.byte $40
+  1126 4E5E 47 36			.word IOBuf
+  1127 4E60 08 00			.byte $08,$00
+  1128 4E62 FF 00			.word $FF
+  1129 4E64 00 00			.byte $00,$00	
+  1130 								
+  1131 4E66			Symbol
+  1132 4E66 49 5F 54 44 4F 4E + 	.byte 'I_TDON  ',0
+  1133
+  1134 					
+    27 4E6F			    icl 'printf.asm'      
+Source: /home/paul/eclipse-workspace/AspeQt-2K22/atari/8BIT-SRC/Menu_Cart/printf.asm
+     1 				;  printf.s - AspeQT printf library
+     2 				;
+     3 				;  Copyright (c) 2016 by Jonathan Halliday <fjc@atari8.co.uk>
+     4 				;
+     5 				;  This program is free software; you can redistribute it and/or modify
+     6 				;  it under the terms of the GNU General Public License as published by
+     7 				;  the Free Software Foundation; either version 2 of the License, or
+     8 				;  (at your option) any later version.
+     9 				;
+    10 				;  This program is distributed in the hope that it will be useful,
+    11 				;  but WITHOUT ANY WARRANTY; without even the implied warranty of
+    12 				;  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    13 				;  GNU General Public License for more details.
+    14 				;
+    15 				;  You should have received a copy of the GNU General Public License
+    16 				;  along with this program; if not, write to the Free Software
+    17 				;  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+    18 				;
+    19
+    20 				//
+    21 				//	Tiny Printf
+    22 				//	Temp1: String pointer
+    23 				//	Temp3: Arg pointer
+    24 				//	ArgIndex: index into args (offset from start of string)
+    25 				//	StringIndex: index into string
+    26 				//
+    27
+    28
+    29 				//
+    30 				//	Get pointer to next arg in Temp3
+    31 				//
+    32
+    33 4E6F				.proc GetNextArg
+    34 4E6F A4 89			ldy ArgIndex
+    35 4E71 B1 80			lda (Temp1),y
+    36 4E73 85 84			sta Temp3
+    37 4E75 C8				iny
+    38 4E76 B1 80			lda (Temp1),y
+    39 4E78 85 85			sta Temp3+1
+    40 4E7A C8				iny
+    41 4E7B 84 89			sty ArgIndex
+    42 4E7D A0 00			ldy #0		; leave 0 in Y
+    43 4E7F 60				rts
+    44 					.endp
+    45
+    46
+    47 				//
+    48 				//	Create arg pointer
+    49 				//
+    50
+    51 4E80				.proc GetArgPointer
+    52 4E80 20 A2 4E			jsr StrLen	; step past string argument
+    53 4E83 C8				iny		; skip trailing NUL
+    54 4E84 84 89			sty ArgIndex
+    55 4E86 60				rts
+    56 					.endp
+    57
+    58
+    59
+    60
+    61 				//
+    62 				//	In-line entry point
+    63 				//
+    64
+    65 4E87				.proc Printf
+    66 4E87 68				pla		; get address of in-line string
+    67 4E88 18				clc
+    68 4E89 69 01			adc #1
+    69 4E8B A8				tay		; save LSB	
+    70 4E8C 68				pla		; get MSB
+    71 4E8D 69 00			adc #0
+    72 4E8F AA				tax		; put MSB in X
+    73 4E90 98				tya		; put LSB in A
+    74 4E91 20 AA 4E			jsr PrintfAX	; Main expects string address in A,X
+    75 4E94			Return
+    76 4E94 A5 80			lda Temp1
+    77 4E96 18				clc
+    78 4E97 65 89			adc ArgIndex
+    79 4E99 85 80			sta Temp1
+    80 4E9B 90 02			bcc @+
+    81 4E9D E6 81			inc Temp1+1
+    82 				@
+    83 4E9F 6C 80 00			jmp (Temp1)
+    84 					.endp
+    85
+    86
+    87
+    88 				//
+    89 				//	Get string length
+    90 				//
+    91
+    92 4EA2				.proc StrLen
+    93 4EA2 A0 FF			ldy #$FF
+    94 				@
+    95 4EA4 C8				iny
+    96 4EA5 B1 80			lda (Temp1),y
+    97 4EA7 D0 FB			bne @-
+    98 4EA9 60				rts
+    99 					.endp
+   100 					
+   101
+   102 4EAA				.proc PrintfAX
+   103 4EAA				stax Temp1
+Macro: STAX [Source: /home/paul/eclipse-workspace/AspeQt-2K22/atari/8BIT-SRC/Menu_Cart/menu_sym.asm]
+     1 4EAA 85 80		 	sta TEMP1
+     2 4EAC 86 81		 	stx TEMP1+1
+Source: /home/paul/eclipse-workspace/AspeQt-2K22/atari/8BIT-SRC/Menu_Cart/printf.asm
+   104 4EAE			NoAX
+   105 4EAE A9 00			lda #0
+   106 4EB0 85 8B			sta StringIndex
+   107 4EB2 20 80 4E			jsr GetArgPointer
+   108 4EB5			Loop
+   109 4EB5 A4 8B			ldy StringIndex
+   110 4EB7 B1 80			lda (Temp1),y
+   111 4EB9 F0 4B			beq Done
+   112 4EBB C9 25			cmp #'%'
+   113 4EBD D0 40			bne PrintChar
+   114 4EBF E6 8B			inc StringIndex
+   115 4EC1 C8				iny
+   116 4EC2 B1 80			lda (Temp1),y
+   117 4EC4 F0 40			beq Done
+   118 4EC6 C9 25			cmp #'%'
+   119 4EC8 F0 35			beq PrintChar
+   120 4ECA 20 0B 4F			jsr GetFieldWidth
+   121 4ECD B1 80			lda (Temp1),y
+   122 4ECF AE EF 4E			ldx PFControlTab
+   123 4ED2			FindIt
+   124 4ED2 DD EF 4E			cmp PFControlTab,x
+   125 4ED5 F0 05			beq FoundIt
+   126 4ED7 CA				dex
+   127 4ED8 D0 F8			bne FindIt
+   128 4EDA F0 26			beq NextChar
+   129 					
+   130 4EDC			FoundIt
+   131 4EDC A9 4F			lda #> [NextChar-1]
+   132 4EDE 48				pha
+   133 4EDF A9 01			lda #< [NextChar-1]
+   134 4EE1 48				pha
+   135 4EE2 CA				dex
+   136 4EE3 8A				txa
+   137 4EE4 0A				asl
+   138 4EE5 AA				tax
+   139 4EE6 BD F6 4E			lda PFControlAddr+1,x
+   140 4EE9 48				pha
+   141 4EEA BD F5 4E			lda PFControlAddr,x
+   142 4EED 48				pha
+   143 4EEE 60				rts
+   144 				 
+   145
+   146 4EEF			PFControlTab
+   147 4EEF 05				.byte 5
+   148 4EF0 63 70 73 62 78		.byte 'cpsbx'
+   149 4EF5			PFControlAddr
+   150 4EF5 3B 4F			.word PfChar-1
+   151 4EF7 4C 4F			.word PfPtr-1
+   152 4EF9 5E 4F			.word PfString-1
+   153 4EFB 95 4F			.word PfByte-1
+   154 4EFD 64 4F			.word PfHex-1
+   155
+   156 4EFF			PrintChar
+   157 4EFF 20 D8 4F			jsr PutChar
+   158 4F02			NextChar
+   159 4F02 E6 8B			inc StringIndex
+   160 4F04 D0 AF			bne Loop
+   161 4F06			Done
+   162 4F06 A9 00 85 83			mva #0 Temp2+1
+   163 4F0A 60				rts
+   164 					.endp
+   165
+   166
+   167
+   168 4F0B				.proc GetFieldWidth
+   169 4F0B A9 00			lda #0
+   170 4F0D 85 8A			sta FieldWidth
+   171 4F0F 85 88			sta LeadingZeroFlag
+   172 4F11 AA				tax
+   173 4F12			Loop
+   174 4F12 B1 80			lda (Temp1),y
+   175 4F14 C9 3A			cmp #'9'+1
+   176 4F16 B0 21			bcs Done
+   177 4F18 38				sec
+   178 4F19 E9 30			sbc #'0'
+   179 4F1B 90 1C			bcc Done	
+   180 4F1D D0 06			bne @+
+   181 4F1F E0 00			cpx #0		; if first field width digit is zero, set leading zero flag
+   182 4F21 D0 02			bne @+
+   183 4F23 C6 88			dec LeadingZeroFlag
+   184 				@
+   185 4F25 85 84			sta Temp3
+   186 4F27 A5 8A			lda FieldWidth
+   187 4F29 0A				asl @		; fieldwidth * 2
+   188 4F2A 85 85			sta Temp3+1
+   189 4F2C 0A				asl @
+   190 4F2D 0A				asl @		; fieldwidth * 8
+   191 4F2E 18				clc
+   192 4F2F 65 85			adc Temp3+1	; (fieldwidth*2) + (fieldwidth*8)
+   193 4F31 65 84			adc Temp3	; add in units
+   194 4F33 85 8A			sta FieldWidth
+   195 4F35 E8				inx
+   196 4F36 C8				iny
+   197 4F37 D0 D9			bne Loop
+   198 4F39			Done
+   199 4F39 84 8B			sty StringIndex
+   200 4F3B 60				rts
+   201 					.endp
+   202 					
+   203 					
+   204
+   205 4F3C				.proc PfChar
+   206 4F3C 20 6F 4E			jsr GetNextArg	; leaves 0 in Y
+   207 4F3F B1 84			lda (Temp3),y
+   208 4F41 A6 8A			ldx FieldWidth
+   209 4F43 D0 01			bne Loop
+   210 4F45 E8				inx
+   211 4F46			Loop
+   212 4F46 20 D8 4F			jsr PutChar	; doesn't clobber registers
+   213 4F49 CA				dex
+   214 4F4A D0 FA			bne Loop
+   215 4F4C 60				rts
+   216 					.endp
+   217
+   218
+   219
+   220 4F4D				.proc PfPtr
+   221 4F4D 20 6F 4E			jsr GetNextArg
+   222 4F50 A0 01			ldy #1
+   223 4F52 B1 84			lda (Temp3),y
+   224 4F54 AA				tax
+   225 4F55 88				dey
+   226 4F56 B1 84			lda (Temp3),y
+   227 4F58 85 84			sta Temp3
+   228 4F5A 86 85			stx Temp3+1
+   229 4F5C 4C CB 4F			jmp PFPrintStr
+   230 					.endp
+   231
+   232
+   233
+   234 4F5F				.proc PfString
+   235 4F5F 20 6F 4E			jsr GetNextArg
+   236 4F62 4C CB 4F			jmp PFPrintStr
+   237 					.endp
+   238
+   239
+   240 					
+   241 				//
+   242 				//	Display Hex/BCD
+   243 				//
+   244
+   245 4F65				.proc PfHex
+   246 4F65 20 6F 4E			jsr GetNextArg
+   247 4F68 B1 84			lda (Temp3),y
+   248 4F6A 48				pha
+   249 4F6B 4A				lsr @
+   250 4F6C 4A				lsr @
+   251 4F6D 4A				lsr @
+   252 4F6E 4A				lsr @
+   253 4F6F D0 04			bne NotZero
+   254 4F71 24 88			bit LeadingZeroFlag
+   255 4F73 10 07			bpl @+
+   256 4F75			NotZero
+   257 4F75 A8				tay
+   258 4F76 B9 86 4F			lda HexTable,y
+   259 4F79 20 D8 4F			jsr PutChar
+   260 				@
+   261 4F7C 68				pla
+   262 4F7D 29 0F			and #$0F
+   263 4F7F A8				tay
+   264 4F80 B9 86 4F			lda HexTable,y
+   265 4F83 4C D8 4F			jmp PutChar
+   266 4F86			HexTable
+   267 4F86 30 31 32 33 34 35 + 	.byte '0123456789ABDCEF'
+   268 					.endp
+   269
+   270
+   271
+   272
+   273 				//
+   274 				//	Display decimal byte
+   275 				//
+   276
+   277 4F96				.proc PfByte
+   278 4F96 20 6F 4E			jsr GetNextArg
+   279 4F99 B1 84			lda (Temp3),y
+   280 4F9B A2 00			ldx #0
+   281 4F9D			Loop1
+   282 4F9D C9 64			cmp #100
+   283 4F9F 90 05			bcc HundredsDone
+   284 4FA1 E9 64			sbc #100
+   285 4FA3 E8				inx
+   286 4FA4 D0 F7			bne Loop1
+   287 4FA6			HundredsDone
+   288 4FA6 48				pha	; save remainder
+   289 4FA7 8A				txa
+   290 4FA8 F0 03			seq
+   291 4FAA 20 C1 4F			jsr PutDigit
+   292 4FAD 68				pla
+   293 4FAE A2 00			ldx #0
+   294 4FB0			Loop
+   295 4FB0 C9 0A			cmp #10
+   296 4FB2 90 05			bcc TensDone
+   297 4FB4 E9 0A			sbc #10
+   298 4FB6 E8				inx
+   299 4FB7 D0 F7			bne Loop
+   300 4FB9			TensDone
+   301 4FB9 48				pha
+   302 4FBA 8A				txa
+   303 4FBB F0 03			seq
+   304 4FBD 20 C1 4F			jsr PutDigit
+   305 4FC0 68				pla
+   306 4FC1			PutDigit
+   307 4FC1 18				clc
+   308 4FC2 69 30			adc #'0'
+   309 4FC4 4C D8 4F			jmp PutChar
+   310 					.endp	
+   311 					
+   312 					
+   313 					
+   314 					
+   315
+   316 				//
+   317 				//	Print plain string in A,X
+   318 				//
+   319 					
+   320 4FC7				.proc PutStrAX
+   321 4FC7				stax Temp3	; fall into PFPrintStr
+Macro: STAX [Source: /home/paul/eclipse-workspace/AspeQt-2K22/atari/8BIT-SRC/Menu_Cart/menu_sym.asm]
+     1 4FC7 85 84		 	sta TEMP3
+     2 4FC9 86 85		 	stx TEMP3+1
+Source: /home/paul/eclipse-workspace/AspeQt-2K22/atari/8BIT-SRC/Menu_Cart/printf.asm
+   322 					.endp
+   323
+   324
+   325 4FCB				.proc PFPrintStr
+   326 4FCB A0 00			ldy #0
+   327 				@
+   328 4FCD B1 84			lda (Temp3),y
+   329 4FCF F0 06			beq Done
+   330 4FD1 20 D8 4F			jsr PutChar
+   331 4FD4 C8				iny
+   332 4FD5 D0 F6			bne @-
+   333 4FD7			Done
+   334 4FD7 60				rts
+   335 					.endp
+   336 					
+   337 					
+   338
+   339 					
+   340 				//
+   341 				//	Put character
+   342 				//
+   343
+   344 4FD8				.proc PutChar
+   345 4FD8 84 86			sty Temp4
+   346 4FDA 86 87			stx Temp4+1
+   347 4FDC 48				pha
+   348 4FDD A9 00			lda #0
+   349 4FDF AA				tax
+   350 4FE0 9D 48 03			sta icblen,x
+   351 4FE3 9D 49 03			sta icblen+1,x
+   352 4FE6 A9 0B 9D 42 03		mva #$0B iccom,x
+   353 4FEB 68				pla
+   354 4FEC 20 56 E4			jsr ciov
+   355 4FEF A4 86			ldy Temp4
+   356 4FF1 A6 87			ldx Temp4+1
+   357 4FF3 60				rts
+   358 					.endp
+   359
+   360 					
+   361 4FF4				.proc ToUpper
+   362 4FF4 C9 7B			cmp #'z'+1
+   363 4FF6 B0 06			bcs NLow
+   364 4FF8 C9 61			cmp #'a'
+   365 4FFA 90 02			bcc NLow
+   366 4FFC E9 20			sbc #32
+   367 4FFE			NLow
+   368 4FFE 60				rts
+   369 					.endp
+   370 					
+   371
+   372 				//
+   373 				//	input 1 character
+   374 				//
+   375 4FFF				.proc Input1
+   376 4FFF 20 25 50			jsr Input
+   377 5002 C0 03			cpy #03
+   378 5004 30 1D			bmi ok1
+   379 5006 20 87 4E			jsr Printf
+   380 5009 9B 45 6E 74 65 72 + 	.byte 155,'Enter only 1 character',0
+   381 5021 38				sec
+   382 5022 60				rts
+   383 5023			ok1
+   384 5023 18			    clc
+   385 5024 60				rts
+   386 					.endp
+   387
+   388 						
+   389 				//
+   390 				//	input characters
+   391 				//				
+   392 5025				.proc Input
+   393 5025 A9 00			lda #0
+   394 5027 AA				tax
+   395 5028 A9 FF			lda #$ff
+   396 502A 9D 48 03			sta icblen,x
+   397 502D A9 00			lda #$00
+   398 502F 9D 49 03			sta icblen+1,x
+   399 5032 A9 46			lda #< [InputBuf]
+   400 5034 9D 44 03			sta icbadr,x
+   401 5037 A9 37			lda #> [InputBuf]
+   402 5039 9D 45 03			sta icbadr+1,x
+   403 503C A9 05 9D 42 03		mva #$05 iccom,x
+   404 5041 20 56 E4			jsr ciov
+   405 5044 AD 46 37		    lda InputBuf
+   406 5047 BC 48 03		    ldy icblen,x
+   407 504A 18			    clc
+   408 504B 60				rts
+   409 					.endp
+   410 					
+   411
+   412 					
+    28 02E0-02E1> 00 40			run Start
+    29 					

@@ -12,7 +12,7 @@
 ;  You should have received a copy of the GNU General Public License
 ;  along with this program; if not, write to the Free Software
 ;  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-;
+; ** 
  
 .proc  Menu
 	jsr printf
@@ -26,9 +26,10 @@
 	jsr printf
 	.byte 'G Swap Slot       P Stop Printer',155
 	.byte 'H Boot .ATR       Q AspeQT Path',155
-	.byte 'I Boot .XEX       R Exit to DOS',155,0
+	.byte 'I Boot .XEX       R Host Command',155,0
 	jsr printf
-	.byte '                  S Reboot',155,0
+	.byte '                  S Exit to DOS',155
+	.byte '                  T Reboot',155,0
 .endp	
 	
 	
@@ -73,9 +74,11 @@
     jeq SetPrintOff	
     cmp #'Q'			// Q Display host path
     jeq GetHostPath	
-	cmp #'R'			// R Exit to Dos
+	cmp #'R'			// R Host Command
+    jeq RunHostCommand
+	cmp #'S'			// S Exit to Dos
     jeq Exit
-	cmp #'S'			// S Cold Reboot
+	cmp #'T'			// T Cold Reboot
     jeq Reboot
 
 	jmp Start
@@ -262,6 +265,7 @@ OKB			; image mounted
 	jeq main	
     sty CreateFlag 	
 .endp
+
 
 .proc DoMount
     ldy #0
@@ -510,6 +514,19 @@ AllDrives
 //
 // 
 .proc ListDir
+   lda #DCB.GetHostPath
+   jsr SetUpDCB
+   jsr SIOV
+   bpl OKp
+   jsr Printf
+   .byte 155,'No server response!',0
+   sec
+   jmp main
+OKp
+   jsr Printf
+   .byte 155,'Remote Folder Path:',155,'%s',155,0
+   .word IOBuf
+    clc
     lda #$00
     sta IOLastFile + 1
     sta IOLastFile
@@ -641,6 +658,67 @@ OK2
 	jmp Main
 .endp
  
+
+.proc RunHostCommand       
+   lda #DCB.GetCmd
+   jsr SetUpDCB
+   jsr SIOV
+   bpl OKr1
+   jsr Printf
+   .byte 155,'No server response!',0
+   sec
+   jmp main
+OKr1
+   jsr Printf
+   .byte 155,'$ [%s]',0
+   .word IOBuf
+    clc
+    jsr input   
+    ldx #0
+loopr1    
+    lda InputBuf,x
+	cmp #155
+    beq FlFinr1
+    sta IOBuf,x
+    inx
+    bne Loopr1
+FlFinr1
+	lda #0
+	sta IOBuf,x       	
+
+	lda #DCB.RunCmd
+	jsr SetUpDCB
+	jsr SIOV
+	bpl OKr2
+	jsr Printf
+	.byte 155,'No server response!',155,0
+	sec
+	jmp Main
+OKr2
+   lda #DCB.GetTxt
+   jsr SetUpDCB
+   jsr SIOV
+   bpl OKr3
+   jsr Printf
+   .byte 155,'No server response!',0
+   sec
+   jmp main
+OKr3
+   jsr Printf
+   .byte '%s',0
+   .word IOBuf
+    lda IOFileOption 
+	cmp #$00   
+    beq alldone
+//   jsr Printf
+//	.byte 155,'[more]: ',0
+//	jsr getkey
+     jmp OKr2
+alldone    
+   	jsr Printf
+	.byte 155,155,'Command complete',155,0   
+    jmp Main
+.endp
 
 
 //
@@ -874,10 +952,6 @@ Abort
 .endp
 
 	
-.proc Crunch
-	jmp $FFFF
-.endp
-
 .proc Reboot
 	jsr Printf
 	.byte 155,'Enter Y to reboot'
@@ -887,7 +961,6 @@ Abort
 	jne main
 	jmp $E477
 .endp
-
 	
 .proc GetKey
 	lda $E425
@@ -902,7 +975,7 @@ Abort
 	adc #'0'	; everything gets $30 added
 	rts	
 .endp
-		
+
 .proc SetUpDCB
 	tay
 	ldx DCBIndex,y	; we could multiply by 10 then add nine, but a table is easier
@@ -916,12 +989,39 @@ Loop
 	mva #$46 DDevic	; ddevic and dunit are common to all
 	mva #$01 DUnit
 	rts
+	
+.proc Crunch
+	jmp $FFFF
+.endp
+	
 
 DCBIndex
-	.byte 9,19,29,39,49,59,69,79,89,99,109,119,129,139,149
+	.byte 9,19,29,39,49,59,69,79,89,99,109,119,129,139,149,159,169,179
 .endp
 
 DCBTable
+
+DCBGetCmd
+	.byte Cmd.GetCmd	
+	.byte $40
+	.word IOBuf
+	.byte $06,$00
+	.word $FF
+	.byte $00,$00	
+DCBRunCmd
+	.byte Cmd.RunCmd
+	.byte $80
+	.word IOBuf
+	.byte $06,$00
+	.word $20
+	.byte $00,$00
+DCBTxtCmd
+	.byte Cmd.GetTxt 
+	.byte $40
+	.word IOBuf
+	.byte $06,$00
+	.word $FF
+	.byte $00,$00
 DCBSetDR 
 	.byte Cmd.SetDR
 	.byte $80
@@ -1027,8 +1127,7 @@ DCBGetPath
 	.byte $08,$00
 	.word $FF
 	.byte $00,$00	
-		
-		
+				
 Symbol
 	.byte 'I_TDON  ',0
 

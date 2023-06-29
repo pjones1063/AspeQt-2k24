@@ -101,6 +101,9 @@ public:
     QString lastRclDir();
     void setRclDir(const QString &dir);
 
+    QString lastRclCommand();
+    void setRclCommand(const QString &cmd);
+
     QString lastPrinterTextDir();
     void setLastPrinterTextDir(const QString &dir);
 
@@ -249,6 +252,8 @@ private:
     QString mLastPrinterTextDir;
     QString mLastCasDir;
     QString mRclDir;
+    QString mRclCommand;
+
 
     QString mI18nLanguage;
 

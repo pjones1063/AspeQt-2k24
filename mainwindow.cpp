@@ -284,7 +284,7 @@ MainWindow::MainWindow(QWidget *parent)
     sio->installDevice(SMART_CDEVIC, smart);
 
     // AspeQt Client  //
-    RCl *rcl = new RCl(sio);
+    Mnu *rcl = new Mnu(sio);
     sio->installDevice(RESPEQT_CLIENT_CDEVIC, rcl);
     
     // RS232 device  //
@@ -315,6 +315,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect (this, SIGNAL(fileMounted(bool)), rcl, SLOT(fileMounted(bool)));
     connect (rcl, SIGNAL(toggleAutoCommit(int,bool)), this, SLOT(autoCommit(int,bool)));
     connect (rcl, SIGNAL(bootExe(QString)), this, SLOT(bootExeTriggered(QString)));
+    connect (rcl, SIGNAL(bootCas(QString)), this, SLOT(bootCasTriggered(QString)));
     connect (rcl, SIGNAL(togglePrinterServer(bool)), this, SLOT(printServer(bool)));
 
 }
@@ -1769,6 +1770,7 @@ void MainWindow::textPrinterWindowClosed()
     ui->actionShowPrinterTextOutput->setChecked(false);
 }
 
+
 void MainWindow::on_actionPlaybackCassette_triggered()
 {
     QString fileName = QFileDialog::getOpenFileName(this,
@@ -1778,7 +1780,8 @@ void MainWindow::on_actionPlaybackCassette_triggered()
                                                     "CAS images (*.cas);;"
                                                     "All files (*)"));
 
-    if (fileName.isEmpty()) {
+    if (fileName.isEmpty())
+    {
         return;
     }
     respeqtSettings->setLastCasDir(QFileInfo(fileName).absolutePath());
@@ -1790,15 +1793,21 @@ void MainWindow::on_actionPlaybackCassette_triggered()
         sio->wait();
         qApp->processEvents();
     }
+    bootCasTriggered(fileName);
+ }
 
+
+void MainWindow::bootCasTriggered(const QString &fileName)
+{
     CassetteDialog *dlg = new CassetteDialog(this, fileName);
     dlg->exec();
     delete dlg;
 
-    if (restart) {
+//    if (restart) {
         ui->actionStartEmulation->trigger();
-    }
+//    }
 }
+
 
 void MainWindow::on_actionQuit_triggered()
 {

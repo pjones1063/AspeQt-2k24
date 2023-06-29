@@ -2,6 +2,7 @@
  * miscdevices.cpp
  */
 
+#include "qprocess.h"
 #ifdef Q_WS_WIN
 #include "windows.h"
 #endif
@@ -18,6 +19,8 @@ extern char g_rclSlotNo;
 bool conversionMsgdisplayedOnce;
 
 QString imageFileName;
+QByteArray  commandOutput;
+
 
 QHash <quint8, QString> files;
 
@@ -197,10 +200,105 @@ void SmartDevice::handleCommand(quint8 command, quint16 aux)
 
 // AspeQt Client ()
 
-void RCl::handleCommand(quint8 command, quint16 aux)
+void Mnu::handleCommand(quint8 command, quint16 aux)
 {
 
     switch (command) {
+
+    case 0x86 : // get server command
+    {
+        if (!sio->port()->writeCommandAck()) {
+            return;
+        }
+
+        QByteArray  fdata(255, 0);
+        QString cmd = respeqtSettings->lastRclCommand();
+        QByteArray cm = cmd.toUtf8();
+
+
+        if(cm.length() < 1)
+        {
+            cm = "";
+        }
+
+        for(int i=0; i < 253; i++)
+            fdata[i] = (cm.length() > i) ? (cm[i] & 0xff) : 0x00;
+
+        qCritical() << "!i" << tr(" Get Cmd: [%1]").arg(cmd);
+
+        sio->port()->writeComplete();
+        sio->port()->writeDataFrame(fdata);
+        return;
+    }
+        break;
+
+
+    case 0x87 : // Exec server command
+    {
+        if (!sio->port()->writeCommandAck()) {
+            return;
+        }
+
+        QProcess process;
+        QByteArray  fdata(255, 0);
+        fdata = sio->port()->readDataFrame(32);
+        QString cmd =  fdata;
+
+        if (cmd.isEmpty())
+            cmd = respeqtSettings->lastRclCommand();
+
+#if defined(Q_OS_WIN)
+        process.start( "cmd ",  QStringList() <<"/c" << cmd  );
+#else
+        process.start( "sh", QStringList() <<"-c" << cmd  );
+#endif
+        respeqtSettings->setRclCommand(cmd);
+        qCritical().noquote() << "!i" << tr("[%1]").arg(cmd);
+        qCritical() << "!i" << tr("Command Complete [%1]").arg("--");
+
+        process.waitForFinished(1000);
+
+        QString co = (process.exitStatus() == QProcess::NormalExit && process.exitCode() == 0) ?
+                         (process.readAllStandardOutput()) :
+                         (process.readAllStandardError());
+
+        commandOutput = co.trimmed().toUtf8().replace(10, (char)155);
+
+        sio->port()->writeDataAck();
+        sio->port()->writeComplete();
+        return;
+    }
+        break;
+
+    case 0x88 : // get server command
+    {
+        if (!sio->port()->writeCommandAck()) {
+            return;
+        }
+
+
+        QByteArray  fdata(255, 0);
+
+        if(commandOutput.length() < 1) commandOutput = " ";
+
+        for(int i=0; i < 251; i++)
+            fdata[i] = (commandOutput.length() > i) ? (commandOutput[i] & 0xff) : 0x00;
+
+        if(commandOutput.length() > 250) {
+            commandOutput = commandOutput.remove(0,251);
+            fdata[251] = 0x00;
+            fdata[252] = 0x01;
+        }
+
+        sio->port()->writeComplete();
+        sio->port()->writeDataFrame(fdata);
+
+        return;
+    }
+        break;
+
+
+
 
     case 0x89 : // set list filter
     {
@@ -762,8 +860,6 @@ void RCl::handleCommand(quint8 command, quint16 aux)
            mountDisk = 0;
         }
 
-        bool isDskTmage = (aux/256)?false:true;
-
         // If no Folder Image has ever been mounted abort the command as we won't
         // know which folder to use to remotely create/mount an image file.
         if(respeqtSettings->lastRclDir() == "") {
@@ -800,19 +896,30 @@ void RCl::handleCommand(quint8 command, quint16 aux)
 
         imageFileName = imageFileName.trimmed();
 
-        isDskTmage = (imageFileName.toLower().endsWith("xex")
-                       || imageFileName.toLower().endsWith("exe")
-                       || imageFileName.toLower().endsWith("com")) ? false: true;
+        bool isCasTmage = (imageFileName.toLower().endsWith("cas")) ? true: false;
 
-        if(isDskTmage) {
-               imageFileName = "*" + imageFileName;
-               emit mountFile(mountDisk,imageFileName);
-            }
-            else
-            {
-               emit bootExe(imageFileName);
-          }
+        bool isExeTmage = (imageFileName.toLower().endsWith("xex")
+                       || imageFileName.toLower().endsWith("exe")
+                       || imageFileName.toLower().endsWith("com")) ? true: false;
+
+
+        if (isCasTmage)
+        {
+            emit bootCas(imageFileName);
+        }
+        else if(isExeTmage)
+        {
+            emit bootExe(imageFileName);
+        }
+        else
+        {
+            imageFileName = "*" + imageFileName;
+            emit mountFile(mountDisk,imageFileName);
+
+        }
+
     }
+
         break;
 
     case 0x9B :   // toggle printer
@@ -868,7 +975,7 @@ void RCl::handleCommand(quint8 command, quint16 aux)
 
 
 // Get the next slot number available for mounting a disk image
-void RCl::gotNewSlot(int slot)
+void Mnu::gotNewSlot(int slot)
 {
     g_rclSlotNo = slot;
 
@@ -876,7 +983,7 @@ void RCl::gotNewSlot(int slot)
     emit mountFile(slot, imageFileName);
 }
 
-void RCl::fileMounted(bool mounted)
+void Mnu::fileMounted(bool mounted)
 {
     if (mounted) {
         sio->port()->writeComplete();

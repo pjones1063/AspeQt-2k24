@@ -38,25 +38,27 @@ icaux2	equ $034B
 
 ciov	equ $E456
 portb	equ $D301
-
 dday    equ $077B
 dmth    equ $077C
 dyer    equ $077D
 dhrs    equ $077E
 dmin    equ $077F
 dsec    equ $0780
-
-DOSVEC	equ $0A
-DOSINI	equ $0C
-
 SIOV	equ $E459
-
 I_SETTD	equ $FFC3
 I_TDON	equ $FFC6
 I_GETTD equ $FFC0
 
+DOSVEC	equ $0A
+DOSINI	equ $0C
+comfnam	equ $21
+comtab	equ $0A
+
 
 	.enum Cmd
+GetCmd	        = $86	
+RunCmd	        = $87
+GetTxt	        = $88
 SetDR           = $89 
 PutDR           = $90
 GetDR           = $91	
@@ -74,6 +76,9 @@ GetHostPath     = $9C
 	.ende
 
 	.enum DCB
+GetCmd
+RunCmd
+GetTxt
 SetDR
 PutDR	
 GetDR	
@@ -91,8 +96,6 @@ Print
 GetHostPath
 	.ende
 
-comfnam	equ $21
-comtab	equ $0A
 
 	org $80
 Temp1			.ds 2
@@ -103,7 +106,6 @@ LeadingZeroFlag	.ds 1
 ArgIndex		.ds 1
 FieldWidth		.ds 1
 StringIndex		.ds 1
-	
 SelectB			.ds 1 	
 ArgFlag			.ds 1
 CreateFlag		.ds 1
@@ -112,14 +114,13 @@ Drive			.ds 1
 DriveID1		.ds 1
 DriveID2		.ds 1
 
-
 	org  $3600
 Path 			.ds 22
+Command         .ds 33
 Filename		.ds 16		
-
 IOBuf			.ds 252
-IOFileOption 	.ds   1	
-IOLastFile		.ds   2			
+IOFileOption 	.ds 1	
+IOLastFile		.ds 2			
 InputBuf 		.ds 255
 	
 .macro ldyx
