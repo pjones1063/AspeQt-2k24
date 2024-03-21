@@ -57,13 +57,13 @@ Unzip and mount the AspeQT image on MacOS
 Allow AspeQT to run in MacOS Settings > Security and Privacy > Allow Apps Downloaded From
 
 
-### Ubuntu installation instructions:
+### Debian/Ubuntu Linux installation instructions:
 
 1- Build a SIO2PC cable outlined in SIO2PC_Build_Instructions.pdf
 
-2- Unzip aspeqt_20k24-2_amd64.deb
+2- Unzip aspeqt_xxxxxx_2k24-2_amd64.zip
 
-$ sudo apt install  ./aspeqt_20k24-2_amd64.deb
+$ sudo apt install  ./aspeqt_2k24-2_amd64.deb
 
 $ sudo usermod -a -G dailout username
 
