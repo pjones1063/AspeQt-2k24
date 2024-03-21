@@ -12,6 +12,7 @@
 ;  along with this program; if not, write to the Free Software
 ;  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 ;
+;   write A000 BFFF /home/paul/eclipse-workspace/8-bit-bin/menu_cart_noboot.img 
 ;	OPT h-t+
 
 	 icl 'menu_sym.asm'
