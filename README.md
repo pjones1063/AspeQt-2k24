@@ -1,6 +1,6 @@
-#  Atari AspeQt-2k22
+#  Atari AspeQt-2k24
 
-###  Atari 8-bit in 2022 - 43 years after the 400/800 first release!
+###  Atari 8-bit in 2024 - 45 years after the 400/800 first release!
 
 
 ![image](https://user-images.githubusercontent.com/3331718/148091306-6e37ebd1-ba3b-4e63-b7d0-0e6a86ea3b6d.png)
