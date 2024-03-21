@@ -65,7 +65,7 @@ Allow AspeQT to run in MacOS Settings > Security and Privacy > Allow Apps Downlo
 
 $ sudo apt install  ./aspeqt_2k24-2_amd64.deb
 
-$ sudo usermod -a -G dailout username
+$ sudo usermod -a -G dailout (my username)
 
 3- reboot (for usermod)
 
