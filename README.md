@@ -32,16 +32,16 @@ See readme.txt for more info
 #### Support and other inquiries can be made on our BBS at:   $ telnet 13leader.net 8023 or http://13leader.net
 
 
-### AspeQt 2k22 Cartridge
+### AspeQt 2k24 Cartridge
 
 The AspeQt 8bit Cartridge can be run from most Atari cart emulators (UnoCart, Ultimate Cart, etc.)  
 All AspeQt disk and most printer functions can be done using the cartridge. 
 
 Two versions of the cart are available:
 
-#####  MenuCart_BOOT_2k22.car - Boot D1: on power up 
+#####  MenuCart_BOOT_2k24.car - Boot D1: on power up 
 
-#####  MenuCart_NoneBOOT_2k22.car - No Disk boot on power up
+#####  MenuCart_NoneBOOT_2k24.car - No Disk boot on power up
 
 
 ### Windows and MacOS installation instructions:
@@ -61,9 +61,9 @@ Allow AspeQT to run in MacOS Settings > Security and Privacy > Allow Apps Downlo
 
 1- Build a SIO2PC cable outlined in SIO2PC_Build_Instructions.pdf
 
-2- Unzip aspeqt_20.22-1_amd64.deb
+2- Unzip aspeqt_20k24-2_amd64.deb
 
-$ sudo apt install  ./aspeqt_20.22-1_amd64.deb
+$ sudo apt install  ./aspeqt_20k24-2_amd64.deb
 
 $ sudo usermod -a -G dailout username
 
