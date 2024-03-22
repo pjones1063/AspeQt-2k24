@@ -1,4 +1,4 @@
-#  Atari AspeQt-2k24
+#  Atari AspeQt-2k24 -- 2024 Release
 
 ###  Atari 8-bit in 2024 - 45 years after the 400/800 first release!
 
