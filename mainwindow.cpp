@@ -254,8 +254,7 @@ MainWindow::MainWindow(QWidget *parent)
         netLabel->setPixmap(QIcon(":/icons/oxygen-icons/16x16/actions/network_disconnect.png").pixmap(16, 16, QIcon::Normal));
         netLabel->setToolTip(tr("No network connection"));
         netLabel->setStatusTip(netLabel->toolTip());
-
-        //        QMessageBox::information(this,tr("Network connection cannot be opened"), tr("No network interface was found!"));
+        //  QMessageBox::information(this,tr("Network connection cannot be opened"), tr("No network interface was found!"));
     }
 
 
@@ -284,12 +283,18 @@ MainWindow::MainWindow(QWidget *parent)
     sio->installDevice(SMART_CDEVIC, smart);
 
     // AspeQt Client  //
-    Mnu *rcl = new Mnu(sio);
-    sio->installDevice(RESPEQT_CLIENT_CDEVIC, rcl);
+    Mnu *mnu = new Mnu(sio);
+    sio->installDevice(RESPEQT_CLIENT_CDEVIC, mnu);
     
-    // RS232 device  //
-    //RS232 *rs232 = new RS232(sio);
-    //sio->installDevice(RS232_BASE_CDEVIC, rs232);
+    // RS232 850 devices  //
+    Rs232 *rs232_0 = new Rs232(sio);
+    sio->installDevice(RS232_BASE_CDEVIC+0, rs232_0);
+    Rs232 *rs232_1 = new Rs232(sio);
+    sio->installDevice(RS232_BASE_CDEVIC+1, rs232_1);
+    Rs232 *rs232_2 = new Rs232(sio);
+    sio->installDevice(RS232_BASE_CDEVIC+2, rs232_2);
+    Rs232 *rs232_3 = new Rs232(sio);
+    sio->installDevice(RS232_BASE_CDEVIC+3, rs232_3);
 
     textPrinterWindow = new TextPrinterWindow();
     // Documentation Display
@@ -309,14 +314,14 @@ MainWindow::MainWindow(QWidget *parent)
     trayIcon.setIcon(windowIcon());
 
     // Connections needed for remotely mounting a disk image & Toggle Auto-Commit //
-    connect (rcl, SIGNAL(findNewSlot(int,bool)), this, SLOT(firstEmptyDiskSlot(int,bool)));
-    connect (this, SIGNAL(newSlot(int)), rcl, SLOT(gotNewSlot(int)));
-    connect (rcl, SIGNAL(mountFile(int,QString)), this, SLOT(mountFileWithDefaultProtection(int,QString)));
-    connect (this, SIGNAL(fileMounted(bool)), rcl, SLOT(fileMounted(bool)));
-    connect (rcl, SIGNAL(toggleAutoCommit(int,bool)), this, SLOT(autoCommit(int,bool)));
-    connect (rcl, SIGNAL(bootExe(QString)), this, SLOT(bootExeTriggered(QString)));
-    connect (rcl, SIGNAL(bootCas(QString)), this, SLOT(bootCasTriggered(QString)));
-    connect (rcl, SIGNAL(togglePrinterServer(bool)), this, SLOT(printServer(bool)));
+    connect (mnu, SIGNAL(findNewSlot(int,bool)), this, SLOT(firstEmptyDiskSlot(int,bool)));
+    connect (this, SIGNAL(newSlot(int)), mnu, SLOT(gotNewSlot(int)));
+    connect (mnu, SIGNAL(mountFile(int,QString)), this, SLOT(mountFileWithDefaultProtection(int,QString)));
+    connect (this, SIGNAL(fileMounted(bool)), mnu, SLOT(fileMounted(bool)));
+    connect (mnu, SIGNAL(toggleAutoCommit(int,bool)), this, SLOT(autoCommit(int,bool)));
+    connect (mnu, SIGNAL(bootExe(QString)), this, SLOT(bootExeTriggered(QString)));
+    connect (mnu, SIGNAL(bootCas(QString)), this, SLOT(bootCasTriggered(QString)));
+    connect (mnu, SIGNAL(togglePrinterServer(bool)), this, SLOT(printServer(bool)));
 
 }
 

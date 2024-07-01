@@ -25,6 +25,61 @@ QByteArray  commandOutput;
 QHash <quint8, QString> files;
 
 
+void Rs232::handleCommand(quint8 command, quint16 aux)
+{
+    switch(command)
+    {
+    // Submit URL
+    case 0x99:
+    {
+        if(respeqtSettings->isURLSubmitEnabled() && aux!=0 && aux<=2000)
+        {
+            if (!sio->port()->writeCommandAck())
+            {
+                return;
+            }
+
+            QByteArray data(aux, 0);
+            data = sio->port()->readDataFrame(aux);
+            if (data.isEmpty())
+            {
+                qCritical() << "!e" << tr("[%1] Read data frame failed").arg(deviceName());
+                sio->port()->writeDataNak();
+                sio->port()->writeError();
+                return;
+            }
+            sio->port()->writeDataAck();
+            sio->port()->writeComplete();
+
+            QString urlstr(data);
+            QDesktopServices::openUrl(QUrl(urlstr));
+
+            qDebug() << "!n" << tr("URL [%1] submitted").arg(urlstr);
+        }
+        else
+        {
+            sio->port()->writeCommandNak();
+            qWarning() << "!w" << tr("[%1] command: $%2, aux: $%3 NAKed.")
+                           .arg(deviceName())
+                           .arg(command, 2, 16, QChar('0'))
+                           .arg(aux, 4, 16, QChar('0'));
+            return;
+        }
+        break;
+    }
+
+    default:
+    {
+        qDebug() << "!W" <<  tr("rS232 - command: $%1, aux: $%2 ignored.")
+                       .arg(command, 2, 16, QChar('0'))
+                       .arg(aux, 4, 16, QChar('0'));
+        break;
+    }
+
+    }
+}
+
+
 void Printer::handleCommand(quint8 command, quint16 aux)
 {
     if(respeqtSettings->printerEmulation()) {  // Ignore printer commands  if Emulation turned OFF)    //

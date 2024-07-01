@@ -7,6 +7,15 @@
 
 #include "sioworker.h"
 
+// SmartDevice (ApeTime + URL submit)
+class Rs232: public SioDevice
+{
+    Q_OBJECT
+public:
+    Rs232(SioWorker *worker): SioDevice(worker) {}
+    void handleCommand(quint8 command, quint16 aux);
+};
+
 class Printer: public SioDevice
 {
     Q_OBJECT
