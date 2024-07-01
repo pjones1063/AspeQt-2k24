@@ -247,6 +247,7 @@ OKB			; image mounted
 	clc
 	jmp doMount
 .endp
+
 //
 //	Create and mount
 //
@@ -412,9 +413,7 @@ OK7
 	clc	
 	jmp main
 .endp
-	
-	
-	
+		
 //
 //	Disk Swap
 //
