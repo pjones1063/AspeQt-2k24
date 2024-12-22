@@ -1,6 +1,6 @@
 
 
-AspeQt 2k24, Atari Serial Peripheral Emulator for Qt
+AspeQt 2K24, Atari Serial Peripheral Emulator for Qt
 
 www.13leader.net
 

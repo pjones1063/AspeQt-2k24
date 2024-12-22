@@ -28,7 +28,7 @@
       <locale language="English" country="UnitedStates"/>
      </property>
      <property name="text">
-      <string>AspeQt 2K24: Atari Serial Peripheral Emulator for Qt</string>
+      <string>AspeQt 2k25: Atari Serial Peripheral Emulator for Qt</string>
      </property>
      <property name="textFormat">
       <enum>Qt::AutoText</enum>

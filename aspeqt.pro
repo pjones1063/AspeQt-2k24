@@ -1,16 +1,5 @@
-# -------------------------------------------------
-# Project created by QtCreator 2009-11-22T14:13:00
-# Last Update: Nov 29, 2014
-# -------------------------------------------------
-#
-# Copyright 2015,2016 Joseph Zatarski
-#
-# This file is copyrighted by either Fatih Aygun, Ray Ataergin, or both.
-# However, the years for these copyrights are unfortunately unknown. If you
-# know the specific year(s) please let the current maintainer know.
-#
 #CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
-DEFINES += VERSION=\\\"r2k24\\\"
+DEFINES += VERSION=\\\"r2k25\\\"
 TARGET = AspeQt
 TEMPLATE = app
 CONFIG += qt

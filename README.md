@@ -1,13 +1,13 @@
-#  Atari AspeQt-2k24 -- 2024 Release
+#  Atari AspeQt-2K24 -- 2024 Release
 
 ###  Atari 8-bit in 2024 - 45 years after the 400/800 first release!
 
-![image](https://github.com/pjones1063/AspeQt-2k24/assets/3331718/40ce3dff-649a-4c0f-b48b-58a508433905)
+![image](https://github.com/pjones1063/AspeQt-2K24/assets/3331718/40ce3dff-649a-4c0f-b48b-58a508433905)
 
 
 
 ### Atari Serial Peripheral Emulator for Qt With 8bit Cartridge
-![image](https://github.com/pjones1063/AspeQt-2k24/assets/3331718/6b1424c8-2fa6-49d4-9e18-7fa3bdc0a39a)
+![image](https://github.com/pjones1063/AspeQt-2K24/assets/3331718/6b1424c8-2fa6-49d4-9e18-7fa3bdc0a39a)
 
 
 ### Summary
@@ -32,7 +32,7 @@ See readme.txt for more info
 #### Support and other inquiries can be made on our BBS at:   $ telnet 13leader.net 8023 or http://13leader.net
 
 
-### AspeQt 2k24 Cartridge
+### AspeQt 2K24 Cartridge
 
 The AspeQt 8bit Cartridge can be run from most Atari cart emulators (UnoCart, Ultimate Cart, etc.)  
 All AspeQt disk and most printer functions can be done using the cartridge. 
