@@ -1,6 +1,6 @@
 #  Atari AspeQt-2K24 -- 2024 Release
 
-#  See out latest fork at https://github.com/pjones1063/AspeQt-2k26
+##  *** See our latest fork at https://github.com/pjones1063/AspeQt-2k26 ***
 
 ![image](https://github.com/pjones1063/AspeQt-2K24/assets/3331718/40ce3dff-649a-4c0f-b48b-58a508433905)
 
